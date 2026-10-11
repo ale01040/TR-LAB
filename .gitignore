@@ -1,0 +1,20 @@
+node_modules/
+.analysis/
+dist/
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+coverage/
+*.tsbuildinfo
+supabase/.temp/
+supabase/.branches/
+*.log
+# L'originale resta nella consegna locale; GitHub contiene la fixture depurata.
+/SCHEDA PALESTRA 3 GIORNI.xlsx
+.local/
+**/*PASSWORD*.txt
+**/*password*.txt
+**/*credentials*.txt
+secrets/

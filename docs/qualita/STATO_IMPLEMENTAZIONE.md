@@ -1,0 +1,81 @@
+# TR LAB — stato dell'implementazione e collaudo
+
+11 ottobre 2026 · Versione 0.1.0 alpha locale. Questo rapporto distingue codice presente, prove eseguite e requisiti ancora aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
+
+## 1. Cosa è disponibile
+
+| Ambito / requisiti | Codice presente | Limite attuale |
+| --- | --- | --- |
+| Oggi e programma | Editor giorni/esercizi/serie/carichi/RIR/recupero/note/superserie/ciclo, bozza/approvazione/nuove versioni | Calendario e rinvio assistito da completare; alcuni target per serie/lati importati non hanno ancora editor avanzato |
+| Struttura Excel | Fixture A/B/C, 25 posizioni, 24 nomi distinti, 7 settimane, rapporto adattamenti prima dell'import | Non parser XLSX; dati personali e protocolli extra individuali esclusi |
+| Diario offline | Avvio da approvato, snapshot ciclo, risultati per lato, RIR 0, salvataggio, saltate, timer e chiusura anche parziale | Non audio/background garantiti; quota/eviction ed errori storage da ampliare sui telefoni |
+| Peso e misure | Registrazioni in g/mm, date/lati, grafico e tabella | Analisi avanzate e finestre confrontabili da completare |
+| Nutrizione | Target manuali kcal/macro, decorrenza e controllo 4/9/4 | Nessun calcolo automatico di obiettivi ancora attivo |
+| Catalogo | 27 esercizi iniziali, ricerca/filtro/dettagli | CRUD esercizi privati, media e varianti avanzate da completare |
+| Copia e recupero | JSON v1, anteprima, ID nuovi, note opt-in, export locale di base/overlay/coda/conflitti | Link privati, export completo account/CSV, recupero importato e cancellazione cloud da implementare |
+| Auth e sync | BFF email/password, Google/PKCE, recovery, cookie HttpOnly, RPC/RLS, ricevute, pull/cursori | Non collegati al progetto cloud; prove reali provider, multi-device e restore ancora aperte |
+| Progressioni/AI | Contratti, fonti candidate e una funzione pura candidata sotto test | Nessun generatore o assistente attivo, nessuna modifica automatica ai target |
+
+Il codice implementa sezioni della roadmap in un percorso verticale anticipato. Le funzioni manuali locali permettono prove utili mentre si prepara Supabase. Questo non modifica il perimetro della versione completa e non chiude F3/F5 sulla base dei soli mock/PGlite.
+
+## 2. Prove realmente eseguite
+
+| Verifica | Esito / evidenza | Portata |
+| --- | --- | --- |
+| TypeScript strict | Superato con `npm run check` | Sorgenti inclusi nel progetto TS; non equivalenza a correctness runtime |
+| ESLint | Superato | Regole JS/TS e hooks, non revisione completa della sicurezza |
+| Unit | 16 test superati, 6 file | Dominio/ciclo/progressione candidata, contratti, crypto, input decimali, config, account GET/POST |
+| Integration API | 4 test superati | Fastify reale in-process, provider assente, payload/Origin, nessuna sync anonima |
+| Integration IndexedDB | 4 test superati | Persistenza/isolamento, base-overlay/ricevute, conflitti conservati, immutabilità anche offline |
+| Integration SQL | 6 test superati | Migrazione PGlite, RPC/RLS/grant, consenso/snapshot/retry, revisioni oltre 2^53, epoch/ID riusato e payload ostili |
+| Build e avvio | Web/PWA/server compilati; bundle server avviato realmente su loopback | Non deploy HTTPS, non hosting produzione |
+| Formattazione | Prettier check finale superato, compresi schema/esempio e configurazioni TS root | Sorgenti/configurazioni; Markdown verificato separatamente |
+| Dipendenze | `npm audit --json`: 0 advisory sul lockfile all'11 ottobre 2026 | Fotografia degli advisory disponibili, non assenza universale di vulnerabilità |
+| Config locale | `config:check`: valid true / supabaseConfigured false senza .env | Comando provato, nessuna credenziale reale validata |
+
+La prima fase del debug ha rilevato errori SQL, grant e bundle runtime che la sola lettura non aveva trovato; corretti e rieseguiti, con risultati registrati nel diario. Non nascondere quei fallimenti come se i test fossero stati verdi fin dall'inizio.
+
+Le suite Windows richiedono sottoprocessi Vite/esbuild: eseguite con autorizzazione fuori dal sandbox dell'agente dopo `spawn EPERM`. Il progetto non contiene bypass dei controlli o disabilitazioni di validazione per far passare i test.
+
+## 3. Prove browser e loro limiti
+
+Browser in-app Chromium, dati sintetici su origine `127.0.0.1:3001` separata da quella di utilizzo: creazione bozza con carico 12,5 kg, approvazione esplicita, avvio, serie 8 ripetizioni/RIR 0, salvataggio e timer. Server spento, ricarica riuscita dalla cache, campi/snapshot/timer conservati; nuova serie 9 ripetizioni e chiusura salvate senza server. Prova registrata in DEV-019. Non è una prova di modalità aereo su telefono, Auth o sync remota.
+
+Nuova build verificata su `localhost:3002` per non interrompere il processo già sulla porta 3001: desktop 1366×900, nessun overflow orizzontale della pagina iniziale; anteprima Excel con adattamenti visibili. Aggiornamento PWA notificato e accettato senza campi in corso; esempio JSON v1 importato con anteprima/conferma/editor, carico 12,5 digitato carattere per carattere e salvato come bozza sintetica. I browser di origini diverse hanno archivi separati: nessun trasferimento implicito di dati del committente.
+
+Le prove browser sono **manuali**, non una suite E2E Playwright automatica già completata. Mobile emulato non equivale a un iPhone/Android reale. Stampa CSS presente ma PDF e impaginazione multipagina da collaudare. Icone installazione/iOS da completare prima di dichiarare installabilità completa.
+
+Verifica finale anche a 390×844: pagina senza overflow orizzontale, navigazione mobile, carico 12,5 kg e target leggibili nel riepilogo; singolare/plurale corretto. Dialog di copia verificato con note personali escluse di default. Screenshot solo di dati sintetici: [desktop](evidenze/TR-LAB-desktop.jpg), [mobile](evidenze/TR-LAB-mobile.jpg). Viewport temporanea ripristinata dopo il controllo. Il primo tentativo di screenshot full-page non era supportato: sono state salvate le viewport effettivamente verificate.
+
+## 4. Raccolte applicate e controlli aperti
+
+| Fonte letta / WEB | Applicazione nel codice | Ancora aperto |
+| --- | --- | --- |
+| Indici e capitoli generali di entrambe le raccolte | Priorità istruzioni/DEC, commenti mirati, fonti originali conservate | Accettazione UX finale e manutenzione dei riferimenti |
+| Appunti HTML/CSS + guide HTML/CSS/web design | HTML semantico italiano, Grid/Flex/rem, focus, dialog nativo, temi e stampa | AA, contrasto completo, tastiera/screen reader, validatori e stampa multipagina |
+| Appunti JavaScript + guide JavaScript | Moduli TS, contratti, funzioni pure, lifecycle, input che conserva virgola/null/zero | Error boundary e gestione storage/quota su tutte le schermate |
+| Appunti dati/backend + guide sicurezza/stato/sessioni/cookie | Supabase DEC-18, query parametrizzate, RLS/RPC, HttpOnly/CSRF, hash DEC-23 | Provider reale, ruolo BFF minimo, revoca globale, rotazione, HTTPS e restore |
+| Guide struttura/performance/UX | Pagine separate, cache asset esplicita, stato locale/sync, nessuna cronologia fittizia | Budget performance su telefoni reali e test aggiornamento durante seduta |
+| Guide SEO | noindex/no-store dell'area privata, nessun dato personale esposto per SEO | Pagine pubbliche separate e inventario Google Search Central pertinente |
+
+Il refuso `use strinct` non è copiato nel codice; i moduli ESM applicano strict mode. Argon2id era un suggerimento, le password sono gestite dal provider. DEC-19 sostituisce il commento per ogni riga; DEC-23 autorizza digest differenti tra DB/server. Il requisito HttpOnly è implementato nel BFF ma il collaudo completo resta OPEN-06. Nessuna raccolta originale è stata modificata.
+
+## 5. Prossime consegne in ordine
+
+1. **Collegamento Supabase F2–F3 / OPEN-05–OPEN-07:** compilare `.env`, preflight read-only, inventario del progetto, prova/applicazione migrazione, SMTP e callback; due account sintetici, email/Google/recupero, cookie/CSRF/refresh concorrente, grant diretti e ruolo pg minimo. Evidenza: suite provider reale e controlli account fuori UI.
+2. **Completamento sync F5:** scenari offline su due device, dipendenze/operation-result, paginazione watermark, ricevute rifiutate stabili, cambi account e logout offline; confronto/risoluzione esplicita dei conflitti, restore con nuovo epoch, import sicuro del recupero e gestione quota. Evidenza: nessun log perso/duplicato, nessun rebase silenzioso.
+3. **Editor/catalogo/import F4 / WP-07:** CRUD privato, editor target per serie/lato/tempo, convenzioni macchina e assistenza, calendario/rinvii, parser XLSX con limiti ZIP/celle/formule e report; fixture reali/anomale. Schema normalizzato additivo quando necessario, nessuna riscrittura dello storico approvato.
+4. **Motore F6:** corpus selezionato con diritti e regole forza/corpo libero/nutrizione revisionate; generatore a vincoli, proposta versionata con prima/dopo/motivo/dati mancanti; validazione server, consenso dell'utente e scadenza su revisione cambiata. ALG/QA e simulazioni devono passare prima dell'attivazione.
+5. **Progressi/dati F7–F8:** finestre e confrontabilità, trend, volume, obiettivi proposti e manuali distinti, link per copia indipendente, export account/CSV/PDF, retention/cancellazione e recupero esercitato.
+6. **Assistente F9:** adapter provider, corpus consentito, citazioni, valutazione italiana, prompt injection/dati A-B; output può soltanto creare una proposta validata e nessun modello può premere l'approvazione.
+7. **Beta/rilascio F10–F11:** E2E automatici, accessibilità e telefoni reali, HTTPS, iconografia installazione, aggiornamenti PWA, test carico/backup/restore, osservabilità senza segreti, testi privacy/supporto e rilascio reversibile. Nessuna registrazione pubblica prima dei gate.
+
+I dettagli e tutti i requisiti restano nella [roadmap completa](../ROADMAP_SVILUPPO.md). Gli esempi scientifici sono candidati: una formula compilata o un test unitario non costituiscono approvazione del metodo.
+
+## 6. Consegna e riproduzione
+
+[Avvio/Supabase](../operazioni/AVVIO_LOCALE.md), [scelte del codice](../architettura/SCELTE_IMPLEMENTAZIONE.md), [diario](../DIARIO_SVILUPPO.md), [JSON Schema](../../schemas/workout-program.v1.schema.json), [esempio v1](../../examples/programma.v1.json).
+
+Il repository conserva le raccolte web, codice, lockfile, migrazione e fixture depurate. Esclude `.env`, certificati locali, cache, `node_modules`, build, originali Excel personali e vault privato. Non include licenze inventate per materiale altrui. Le modifiche alle API future devono documentare compatibilità dei client offline e aggiornare nello stesso commit specifiche/test/diario.
+
+Verifica documentale locale rieseguita: 22 Markdown, 92 link locali, 58 tabelle, 3 esempi JSON e riferimenti a 35 casi QA, zero errori automatici rilevati; hash e conteggi Excel confermati. Questo controllo non dimostra che i 35 casi QA siano già passati sul prodotto. Spazi finali presenti nelle due raccolte originali sono preservati, non corretti silenziosamente.

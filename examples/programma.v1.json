@@ -1,0 +1,53 @@
+{
+  "format": "workout-program",
+  "schema_version": 1,
+  "kind": "program_template",
+  "program": {
+    "id": "10000000-0000-4000-8000-000000000104",
+    "rootId": "10000000-0000-4000-8000-000000000104",
+    "name": "Esempio di formato · dati sintetici",
+    "goal": "hypertrophy",
+    "version": "1",
+    "status": "draft",
+    "days": [
+      {
+        "id": "10000000-0000-4000-8000-000000000001",
+        "name": "Giorno A",
+        "focus": "",
+        "exercises": [
+          {
+            "id": "10000000-0000-4000-8000-000000000002",
+            "exercise": {
+              "id": "xls-1",
+              "name": "Squat con bilanciere",
+              "muscle": "Quadricipiti",
+              "secondary": ["Glutei"],
+              "equipment": "barbell",
+              "pattern": "lower",
+              "unilateral": false,
+              "basis": "total",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000003",
+                "repsMin": 6,
+                "repsMax": 8,
+                "rir": 2,
+                "restSeconds": 180,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "",
+            "superset": null,
+            "accumulation": false
+          }
+        ]
+      }
+    ],
+    "weeks": [{ "name": "Base", "phase": "base", "extraSets": 0, "rir": null }],
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "source": ""
+  }
+}

@@ -1,0 +1,7 @@
+* text=auto eol=lf
+# Conservare i materiali originali senza conversioni di fine riga.
+"Appunti sviluppo web/**" -text
+"Linee guida sviluppo web/**" -text
+*.xlsx binary
+*.png binary
+*.jpg binary

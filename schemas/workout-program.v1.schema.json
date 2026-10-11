@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "format": { "type": "string", "const": "workout-program" },
+    "schema_version": { "type": "number", "const": 1 },
+    "kind": { "type": "string", "const": "program_template" },
+    "program": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "rootId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "goal": { "type": "string", "enum": ["hypertrophy", "strength", "bodyweight"] },
+        "version": { "type": "string", "pattern": "^(0|[1-9]\\d{0,18})$" },
+        "status": { "type": "string", "enum": ["draft", "approved"] },
+        "days": {
+          "minItems": 1,
+          "maxItems": 14,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "focus": { "type": "string", "maxLength": 200 },
+              "exercises": {
+                "minItems": 1,
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "exercise": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+                        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+                        "muscle": { "type": "string", "minLength": 1, "maxLength": 200 },
+                        "secondary": {
+                          "maxItems": 5,
+                          "type": "array",
+                          "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+                        },
+                        "equipment": {
+                          "type": "string",
+                          "enum": ["barbell", "dumbbell", "cable", "machine", "bodyweight"]
+                        },
+                        "pattern": { "type": "string", "minLength": 1, "maxLength": 200 },
+                        "unilateral": { "type": "boolean" },
+                        "basis": {
+                          "type": "string",
+                          "enum": [
+                            "total",
+                            "per_dumbbell",
+                            "bodyweight",
+                            "added",
+                            "assistance",
+                            "machine"
+                          ]
+                        },
+                        "instructions": { "type": "string", "maxLength": 3000 }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "muscle",
+                        "secondary",
+                        "equipment",
+                        "pattern",
+                        "unilateral",
+                        "basis",
+                        "instructions"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "targets": {
+                      "minItems": 1,
+                      "maxItems": 30,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "repsMin": { "type": "integer", "minimum": 1, "maximum": 100 },
+                          "repsMax": { "type": "integer", "minimum": 1, "maximum": 100 },
+                          "rir": { "type": "number", "minimum": 0, "maximum": 10 },
+                          "restSeconds": { "type": "integer", "minimum": 0, "maximum": 1800 },
+                          "loadGrams": {
+                            "anyOf": [
+                              { "type": "integer", "minimum": 0, "maximum": 1000000 },
+                              { "type": "null" }
+                            ]
+                          },
+                          "kind": { "type": "string", "enum": ["work", "warmup", "extra"] },
+                          "side": { "type": "string", "enum": ["both", "left", "right"] }
+                        },
+                        "required": [
+                          "id",
+                          "repsMin",
+                          "repsMax",
+                          "rir",
+                          "restSeconds",
+                          "loadGrams",
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "notes": { "type": "string", "maxLength": 3000 },
+                    "superset": {
+                      "anyOf": [{ "type": "string", "maxLength": 30 }, { "type": "null" }]
+                    },
+                    "accumulation": { "type": "boolean" }
+                  },
+                  "required": ["id", "exercise", "targets", "notes", "superset"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": ["id", "name", "focus", "exercises"],
+            "additionalProperties": false
+          }
+        },
+        "weeks": {
+          "minItems": 1,
+          "maxItems": 52,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "phase": {
+                "type": "string",
+                "enum": ["test", "base", "accumulation", "peak", "deload"]
+              },
+              "extraSets": { "type": "integer", "minimum": 0, "maximum": 3 },
+              "rir": {
+                "anyOf": [{ "type": "number", "minimum": 0, "maximum": 10 }, { "type": "null" }]
+              }
+            },
+            "required": ["name", "phase", "extraSets", "rir"],
+            "additionalProperties": false
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+        },
+        "source": { "type": "string", "maxLength": 300 }
+      },
+      "required": [
+        "id",
+        "rootId",
+        "name",
+        "goal",
+        "version",
+        "status",
+        "days",
+        "weeks",
+        "createdAt",
+        "source"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": ["format", "schema_version", "kind", "program"],
+  "additionalProperties": false,
+  "$id": "https://raw.githubusercontent.com/ale01040/TR-LAB/main/schemas/workout-program.v1.schema.json"
+}

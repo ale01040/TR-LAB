@@ -1,0 +1,1232 @@
+{
+  "format": "workout-program",
+  "schema_version": 1,
+  "kind": "program_template",
+  "program": {
+    "id": "10000000-0000-4000-8000-000000000104",
+    "rootId": "10000000-0000-4000-8000-000000000104",
+    "name": "Full body A / B / C",
+    "goal": "hypertrophy",
+    "version": "1",
+    "status": "draft",
+    "days": [
+      {
+        "id": "10000000-0000-4000-8000-000000000001",
+        "name": "Giorno A",
+        "focus": "Full body",
+        "exercises": [
+          {
+            "id": "10000000-0000-4000-8000-000000000002",
+            "exercise": {
+              "id": "xls-1",
+              "name": "Squat con bilanciere",
+              "muscle": "Quadricipiti",
+              "secondary": ["Glutei"],
+              "equipment": "barbell",
+              "pattern": "lower",
+              "unilateral": false,
+              "basis": "total",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000003",
+                "repsMin": 6,
+                "repsMax": 8,
+                "rir": 2,
+                "restSeconds": 180,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000004",
+                "repsMin": 6,
+                "repsMax": 8,
+                "rir": 2,
+                "restSeconds": 180,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000005",
+                "repsMin": 6,
+                "repsMax": 8,
+                "rir": 2,
+                "restSeconds": 180,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C7. RIR originale: 2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000006",
+            "exercise": {
+              "id": "xls-2",
+              "name": "Panca inclinata 30° con manubri",
+              "muscle": "Petto",
+              "secondary": ["Deltoidi anteriori", "Tricipiti"],
+              "equipment": "dumbbell",
+              "pattern": "push",
+              "unilateral": false,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000007",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000008",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000009",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C8. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000010",
+            "exercise": {
+              "id": "xls-3",
+              "name": "Rematore con manubrio a un braccio su panca",
+              "muscle": "Dorsali",
+              "secondary": ["Bicipiti", "Deltoidi posteriori"],
+              "equipment": "dumbbell",
+              "pattern": "pull",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000011",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000012",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000013",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C9. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000014",
+            "exercise": {
+              "id": "xls-4",
+              "name": "Hip thrust con bilanciere",
+              "muscle": "Glutei",
+              "secondary": ["Femorali"],
+              "equipment": "barbell",
+              "pattern": "lower",
+              "unilateral": false,
+              "basis": "total",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000015",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000016",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000017",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C10. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000018",
+            "exercise": {
+              "id": "xls-5",
+              "name": "Alzate laterali al cavo basso a un braccio",
+              "muscle": "Deltoidi laterali",
+              "secondary": [],
+              "equipment": "cable",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000019",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000020",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000021",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C11. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000022",
+            "exercise": {
+              "id": "xls-6",
+              "name": "Curl con manubrio su panca inclinata, un braccio",
+              "muscle": "Bicipiti",
+              "secondary": [],
+              "equipment": "dumbbell",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000023",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000024",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000025",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C12. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": "6",
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000026",
+            "exercise": {
+              "id": "xls-7",
+              "name": "Pushdown al cavo alto a un braccio",
+              "muscle": "Tricipiti",
+              "secondary": [],
+              "equipment": "cable",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000027",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000028",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000029",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C13. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": "6",
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000030",
+            "exercise": {
+              "id": "xls-8",
+              "name": "Polpacci in piedi a una gamba con manubrio",
+              "muscle": "Polpacci",
+              "secondary": [],
+              "equipment": "dumbbell",
+              "pattern": "lower",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000031",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000032",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000033",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C14. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          }
+        ]
+      },
+      {
+        "id": "10000000-0000-4000-8000-000000000034",
+        "name": "Giorno B",
+        "focus": "Full body",
+        "exercises": [
+          {
+            "id": "10000000-0000-4000-8000-000000000035",
+            "exercise": {
+              "id": "xls-9",
+              "name": "Panca piana con manubri",
+              "muscle": "Petto",
+              "secondary": ["Tricipiti", "Deltoidi anteriori"],
+              "equipment": "dumbbell",
+              "pattern": "push",
+              "unilateral": false,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000036",
+                "repsMin": 6,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000037",
+                "repsMin": 6,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000038",
+                "repsMin": 6,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C15. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000039",
+            "exercise": {
+              "id": "xls-10",
+              "name": "Lat machine a un braccio al cavo alto, in ginocchio",
+              "muscle": "Dorsali",
+              "secondary": ["Bicipiti"],
+              "equipment": "cable",
+              "pattern": "pull",
+              "unilateral": true,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000040",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000041",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000042",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C16. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000043",
+            "exercise": {
+              "id": "xls-11",
+              "name": "Bulgarian split squat con manubri",
+              "muscle": "Quadricipiti",
+              "secondary": ["Glutei"],
+              "equipment": "dumbbell",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000044",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 2,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000045",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 2,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000046",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 2,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C17. RIR originale: 2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000047",
+            "exercise": {
+              "id": "xls-12",
+              "name": "Meadows row al T-bar (landmine), un braccio",
+              "muscle": "Dorsali",
+              "secondary": ["Deltoidi posteriori", "Bicipiti"],
+              "equipment": "barbell",
+              "pattern": "pull",
+              "unilateral": true,
+              "basis": "total",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000048",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000049",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000050",
+                "repsMin": 8,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C18. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000051",
+            "exercise": {
+              "id": "xls-13",
+              "name": "Military press con manubri, seduto",
+              "muscle": "Deltoidi anteriori",
+              "secondary": ["Tricipiti", "Deltoidi laterali"],
+              "equipment": "dumbbell",
+              "pattern": "push",
+              "unilateral": false,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000052",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000053",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000054",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C19. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000055",
+            "exercise": {
+              "id": "xls-14",
+              "name": "Leg curl in piedi al cavo basso (cavigliera)",
+              "muscle": "Femorali",
+              "secondary": [],
+              "equipment": "cable",
+              "pattern": "lower",
+              "unilateral": true,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000056",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000057",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000058",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000059",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C20. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000060",
+            "exercise": {
+              "id": "xls-15",
+              "name": "Estensioni sopra la testa al cavo, un braccio",
+              "muscle": "Tricipiti",
+              "secondary": [],
+              "equipment": "cable",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000061",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000062",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000063",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C21. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": "7",
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000064",
+            "exercise": {
+              "id": "xls-16",
+              "name": "Curl a martello con manubri, alternato",
+              "muscle": "Bicipiti",
+              "secondary": [],
+              "equipment": "dumbbell",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000065",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000066",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000067",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C22. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": "7",
+            "accumulation": false
+          }
+        ]
+      },
+      {
+        "id": "10000000-0000-4000-8000-000000000068",
+        "name": "Giorno C",
+        "focus": "Full body",
+        "exercises": [
+          {
+            "id": "10000000-0000-4000-8000-000000000069",
+            "exercise": {
+              "id": "xls-1",
+              "name": "Squat con bilanciere",
+              "muscle": "Quadricipiti",
+              "secondary": ["Glutei"],
+              "equipment": "barbell",
+              "pattern": "lower",
+              "unilateral": false,
+              "basis": "total",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000070",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 2,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000071",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 2,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000072",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 2,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C23. RIR originale: 2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000073",
+            "exercise": {
+              "id": "xls-17",
+              "name": "Stacco rumeno con bilanciere",
+              "muscle": "Femorali",
+              "secondary": ["Glutei"],
+              "equipment": "barbell",
+              "pattern": "lower",
+              "unilateral": false,
+              "basis": "total",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000074",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 2,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000075",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 2,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000076",
+                "repsMin": 8,
+                "repsMax": 10,
+                "rir": 2,
+                "restSeconds": 150,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C24. RIR originale: 2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000077",
+            "exercise": {
+              "id": "xls-18",
+              "name": "Panca con manubri a 15°",
+              "muscle": "Petto",
+              "secondary": ["Deltoidi anteriori", "Tricipiti"],
+              "equipment": "dumbbell",
+              "pattern": "push",
+              "unilateral": false,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000078",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000079",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000080",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 120,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C25. RIR originale: 1-2. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000081",
+            "exercise": {
+              "id": "xls-19",
+              "name": "Rematore al cavo basso a un braccio",
+              "muscle": "Dorsali",
+              "secondary": ["Bicipiti", "Deltoidi posteriori"],
+              "equipment": "cable",
+              "pattern": "pull",
+              "unilateral": true,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000082",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000083",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000084",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 1,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C26. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000085",
+            "exercise": {
+              "id": "xls-20",
+              "name": "Alzate laterali con manubrio a un braccio, inclinato in fuori",
+              "muscle": "Deltoidi laterali",
+              "secondary": [],
+              "equipment": "dumbbell",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000086",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000087",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000088",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000089",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C27. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": null,
+            "accumulation": true
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000090",
+            "exercise": {
+              "id": "xls-21",
+              "name": "Face pull al cavo alto con corda",
+              "muscle": "Deltoidi posteriori",
+              "secondary": [],
+              "equipment": "cable",
+              "pattern": "accessory",
+              "unilateral": false,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000091",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000092",
+                "repsMin": 12,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C28. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": "6",
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000093",
+            "exercise": {
+              "id": "xls-8",
+              "name": "Polpacci in piedi a una gamba con manubrio",
+              "muscle": "Polpacci",
+              "secondary": [],
+              "equipment": "dumbbell",
+              "pattern": "lower",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000094",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000095",
+                "repsMin": 10,
+                "repsMax": 15,
+                "rir": 1,
+                "restSeconds": 60,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C29. RIR originale: 1. Verifica questi target prima dell'approvazione.",
+            "superset": "6",
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000096",
+            "exercise": {
+              "id": "xls-22",
+              "name": "Bayesian curl al cavo basso, un braccio",
+              "muscle": "Bicipiti",
+              "secondary": [],
+              "equipment": "cable",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "machine",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000097",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 0,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000098",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 0,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000099",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 0,
+                "restSeconds": 0,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C30. RIR originale: 0-1. Verifica questi target prima dell'approvazione.",
+            "superset": "7",
+            "accumulation": false
+          },
+          {
+            "id": "10000000-0000-4000-8000-000000000100",
+            "exercise": {
+              "id": "xls-23",
+              "name": "Estensioni sopra la testa con manubrio, un braccio",
+              "muscle": "Tricipiti",
+              "secondary": [],
+              "equipment": "dumbbell",
+              "pattern": "accessory",
+              "unilateral": true,
+              "basis": "per_dumbbell",
+              "instructions": "Verifica assetto, attrezzatura e tecnica prima di inserire il carico. Le note della tua scheda sono modificabili."
+            },
+            "targets": [
+              {
+                "id": "10000000-0000-4000-8000-000000000101",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 0,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000102",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 0,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              },
+              {
+                "id": "10000000-0000-4000-8000-000000000103",
+                "repsMin": 10,
+                "repsMax": 12,
+                "rir": 0,
+                "restSeconds": 90,
+                "loadGrams": null,
+                "kind": "work"
+              }
+            ],
+            "notes": "Fonte: Scheda!C31. RIR originale: 0-1. Verifica questi target prima dell'approvazione.",
+            "superset": "7",
+            "accumulation": false
+          }
+        ]
+      }
+    ],
+    "weeks": [
+      {
+        "name": "Test",
+        "phase": "test",
+        "extraSets": 0,
+        "rir": null
+      },
+      {
+        "name": "Base",
+        "phase": "base",
+        "extraSets": 0,
+        "rir": null
+      },
+      {
+        "name": "Accumulo 3",
+        "phase": "accumulation",
+        "extraSets": 1,
+        "rir": null
+      },
+      {
+        "name": "Accumulo 4",
+        "phase": "accumulation",
+        "extraSets": 1,
+        "rir": null
+      },
+      {
+        "name": "Accumulo 5",
+        "phase": "accumulation",
+        "extraSets": 1,
+        "rir": null
+      },
+      {
+        "name": "Picco",
+        "phase": "peak",
+        "extraSets": 1,
+        "rir": null
+      },
+      {
+        "name": "Scarico",
+        "phase": "deload",
+        "extraSets": 0,
+        "rir": 3
+      }
+    ],
+    "createdAt": "2026-10-11T00:00:00.000Z",
+    "source": "Struttura adattata da SCHEDA PALESTRA 3 GIORNI.xlsx; nessun risultato personale importato."
+  }
+}

@@ -1,0 +1,3 @@
+# JavaScript
+
+linguaggio di script pensato per il web (ma usato anche in altri ambienti ◼ es. Adobe PDF e Desktop App (chromium + node.js) ◼ eseguibile lato client o lato server ◼ introdotto in pagine HTML tramite: ◼ il tag &lt;script&gt; nell'head o nel body ◼ istruzioni specificate per un event-handler ◼ eseguito quando il browser incontra il codice Javascript in HTML (sospensione temporanea dell'interpretazione HTML) ◼ variabile sulla base delle ottimizazioni del browser ◼ node.js è un server web scritto in Javascript ◼ modello ad eventi (event-driven) ◼ registra funzioni JS di callback per gli eventi
