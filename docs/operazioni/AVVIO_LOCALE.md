@@ -102,6 +102,8 @@ git check-ignore .env .local/supabase-ca.crt
 
 Il primo comando deve riportare `valid: true` e `supabaseConfigured: true`. Il secondo deve indicare che quei percorsi sono ignorati. `config:check` verifica forma e completezza; **non** dimostra che chiave o password siano corrette.
 
+Se si annotano temporaneamente valori in un file di testo, conservarlo in `.local/` e nel gestore di segreti, non sotto `docs/`. La consegna esclude inoltre file `*PASSWORD*.txt`, `*password*.txt` e `*credentials*.txt`; l'esclusione non sostituisce il controllo del commit. Non inserire dati reali nemmeno nelle fixture o nelle issue.
+
 ## 7. Verificare il database prima della migrazione
 
 ```powershell
@@ -177,3 +179,25 @@ npm audit --audit-level=low
 ```
 
 Stato delle prove realmente eseguite, limiti e prossimi gate nel [rapporto implementazione](../qualita/STATO_IMPLEMENTAZIONE.md). Il database cloud, i telefoni reali, la beta e l'AI non sono dichiarati collaudati dalla sola esecuzione dei test locali.
+
+## 12. Accesso GitHub per caricare i commit
+
+Il repository remoto è `https://github.com/ale01040/TR-LAB.git`. Configurare il proprio account GitHub tramite Git Credential Manager già installato sul PC:
+
+```powershell
+git credential-manager github login --username ale01040 --web
+```
+
+Il proprietario completa personalmente login, eventuale secondo fattore e consenso richiesto da GitHub. Non incollare token nella chat, nei documenti o negli argomenti di un comando da condividere. Il nome/email Git di un commit non autenticano l'accesso al repository.
+
+Quando l'accesso è pronto, controllare branch/remote e pubblicare senza force:
+
+```powershell
+git status --short
+git remote -v
+git push --set-upstream origin main
+git rev-parse HEAD
+git ls-remote origin refs/heads/main
+```
+
+Gli SHA locale e remoto devono coincidere. Se `main` remoto è avanzato, recuperare e integrare il lavoro altrui prima di ritentare; non usare force per superare divergenze o protezioni del branch. Controllare la CI nel repository dopo il caricamento. Il push del codice non pubblica automaticamente il sito e non applica SQL a Supabase.

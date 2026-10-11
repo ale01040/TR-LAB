@@ -262,3 +262,10 @@ Questo file registra gli interventi sul progetto: file creati o modificati, moti
 - **Modificati:** screenshot desktop, rapporto implementazione, diario. La prima cattura via wrapper era limitata alla larghezza del pannello; sostituita con la cattura della pagina a 1366×900, aperta e verificata visivamente. Viewport ripristinata; nessun dato personale nelle evidenze.
 - **Verifica documentale aggiornata:** 22 Markdown, 94 link locali, 58 tabelle, 3 JSON e zero errori; soltanto documentazione, non nuovi test dell'app.
 - **Prossimo comando:** commit di queste evidenze/documenti, push non forzato e confronto SHA remoto/locale. Esito pubblicazione da verificare dopo l'esecuzione.
+
+## 11 ottobre 2026 · DEV-036 · Accesso GitHub mancante
+
+- **Commit locale:** `2c220d7` registra le evidenze finali dopo `0b53d8f`; working tree pulito prima della nuova istruzione documentale.
+- **Esito push:** comando avviato, ancora in attesa di autenticazione e senza esito positivo. `git ls-remote` conferma main remoto al commit iniziale `675b42b`; `git credential-manager github list` non mostra account memorizzati. Non dichiarato caricamento riuscito.
+- **Modificato:** guida avvio e diario, procedura di login/push senza token in chat, SHA da confrontare e divieto force. Documentata conservazione dei file di credenziali fuori docs.
+- **Richiesta al committente:** completare login/consenso GitHub sul PC o scegliere di fare il push personalmente. Non è un rifiuto automatico di approvazione: manca l'autenticazione del servizio. Codice e istruzioni Supabase già pronti; nessuna credenziale consultata o salvata nel repository.
