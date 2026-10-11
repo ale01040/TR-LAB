@@ -44,7 +44,11 @@ Cinque prove HTTP locale su porta effimera: sessione anonima no-store, CSRF 403,
 
 Con CLI autenticata verificare team/progetto e scegliere Preview. Il repository offre `vercel.json` e `api/index.ts`; build con Node/npm previsti dal progetto. Il pacchetto compilato evita strumenti diversi nella build remota. Non usare `--prod` per questa anteprima.
 
-Se la CLI manca, la skill Vercel Deploy offre il servizio rivendicabile. Caricare **solo il pacchetto minimo**, mai la radice con file ignorati/personali. Consegnare il link di gestione al proprietario senza pubblicarlo nel repository: permette di rivendicare il deployment. Registrare l'esito dopo la risposta, senza equiparare comando avviato a deploy riuscito.
+**Verificato l'11 ottobre 2026:** l'endpoint del fallback della skill restituisce ora istruzioni per la CLI, senza previewUrl/claimUrl. Non considerarlo un deploy riuscito e non continuare a ripetere il POST. La descrizione della skill locale non è aggiornata rispetto a questo comportamento del servizio.
+
+Se manca la CLI, usare quella ufficiale (versione verificata 63.1.2, Node >=20, compatibile con Node24), anche via `npx --yes vercel@63.1.2`. Prima leggere `whoami`, poi ispezionare esplicitamente il progetto dall'esatta directory del pacchetto. Login/consenso spettano al proprietario; non richiedere token in chat. Non lasciare che un monorepo scelga implicitamente un progetto diverso. Nuovo progetto soltanto nel contesto del deploy autorizzato, con proprietario/destinazione verificati.
+
+Caricare **solo il pacchetto minimo**, mai la radice con file ignorati/personali. Nessun segreto nel bundle né credenziali in Git. Registrare l'esito dopo la risposta, senza equiparare comando avviato a deploy riuscito. [CLI ufficiale](https://vercel.com/docs/cli).
 
 Mai token Vercel in comandi, chat o diario. Login/consenso spettano al proprietario. La preview non abilita automaticamente Git deploy continui e non assegna un dominio produzione.
 
@@ -63,3 +67,10 @@ La PWA propone aggiornamento con clic esplicito dopo aver salvato i campi. Conse
 5. Privacy/cancellazione/export, accessibilità e dispositivi secondo roadmap; poi produzione separata e reversibile.
 
 Registrare URL, ambiente, commit codice, hash artefatti, stato e prove effettive. Non chiamare «senza bug» o «produzione pronta» la sola preview.
+
+## 7. Stato della consegna all'11 ottobre 2026
+
+- Codice verificato caricato su main: `70c23a42d9cd34fc0d365840222ece81531812ad`. [CI Windows/Ubuntu superata](https://github.com/ale01040/TR-LAB/actions/runs/38161285628).
+- Pacchetto finale: 19 asset, funzione CJS verificata con cinque richieste HTTP locali. Tarball 866595 byte, SHA-256 `0d8714497c8dda42d9dae56c21d7ade1086b4fcb51a86c8206849baceb196559`.
+- CLI 63.1.2 installata nel solo ambiente locale ignorato, non nelle dipendenze dell'app. Accesso del proprietario richiesto tramite flusso ufficiale device OAuth; codice temporaneo non registrato nei documenti.
+- Nessun URL di deployment restituito dal vecchio fallback. Deploy non ancora confermato, account Supabase non collegati. Aggiornare questa sezione dopo l'esito effettivo CLI, indicando owner/progetto e URL preview.

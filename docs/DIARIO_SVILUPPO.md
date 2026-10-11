@@ -351,3 +351,21 @@ Questo file registra gli interventi sul progetto: file creati o modificati, moti
 - **Generati:** nuovo pacchetto minimo ignorato `.analysis/vercel-preview-1791724350920`, 19 asset (chunk condiviso incorporato dopo ultimo import), funzione CJS SHA-256 `e4e729f7d7669f108ea6ba04dc3f3783e1255930400e123f35e9faf8dbf81bf7`; inventario senza documenti, dati utente o ambiente. **Modificato:** diario.
 - **Controlli:** cinque prove HTTP locali sul bundle finale superate, format check superato. Verifica documentale: 24 Markdown, 111 link locali, 62 tabelle, 3 JSON, 35 riferimenti QA, zero errori; hash Excel originale invariato. Non equivale all'esecuzione dei 35 casi QA.
 - **GitHub:** autenticazione funzionante; main remota confermata al commit `836ba1b` prima del caricamento. Stage/scan/commit/push delle correzioni e deploy da eseguire in sequenza; nessun force push, nessuna migrazione cloud.
+
+## 11 ottobre 2026 · DEV-050 · Push riuscito e diagnostica del deploy
+
+- **Git:** commit codice `70c23a42d9cd34fc0d365840222ece81531812ad`, 44 file modificati/aggiunti. Scanner indice su 124 file senza problemi; diff check superato. Primo push respinto prima dell'esecuzione dal controllo approvazioni per crediti workspace; dopo richiesta di continuare, stesso controllo completato e push riuscito. HEAD remota confermata uguale; nessun bypass o force push.
+- **Generati:** tarball minimo ignorato (866595 byte), SHA-256 `0d8714497c8dda42d9dae56c21d7ade1086b4fcb51a86c8206849baceb196559`; inventario controllato, solo API compilata/config/pubblici. Usato input tgz alla skill ufficiale per evitare la pulizia ricorsiva di un path temporaneo non verificato.
+- **Deploy:** sandbox ha impedito avvio Git Bash (signal pipe), eseguito tramite approvazione normale. Il primo POST si è interrotto senza URL; HEAD del solo endpoint di gestione risponde 405, rete raggiungibile. Nessuna richiesta manuale a URL di app distribuita. **Creato:** `.analysis/deploy-diagnostic.sh`, copia ignorata dello script ufficiale con il solo `--show-error` aggiunto al POST per rendere visibile l'errore curl; originale skill invariato. **Modificato:** diario. Deploy ancora non confermato.
+
+## 11 ottobre 2026 · DEV-051 · Fallback superato e CLI ufficiale
+
+- **Diagnosi:** non era un errore rete. Risposta JSON del servizio: raccomanda ora CLI/login/deploy, nessuna previewUrl o claimUrl. La pipeline grep dello script con set -e usciva prima di stampare questa risposta. Non continuati i POST dopo aver identificato il comportamento.
+- **File locali ignorati:** aggiunta cattura della risposta a `.analysis/deploy-diagnostic.sh`, generato `.analysis/deploy-response.json` (istruzioni, nessuna credenziale); copia originale della skill invariata. **Modificati:** guida Vercel e diario per documentare l'incompatibilità con il servizio attuale, senza riscrivere silenziosamente fonti esterne.
+- **CLI:** documentazione ufficiale e skill Vercel CLI lette; registro npm conferma 63.1.2/Node >=20. Installazione isolata prevista in `.analysis/vercel-cli`, estranea a dipendenze/lockfile dell'app; owner/progetto da verificare, niente acquisti o cambi di protezione. Login, se assente, richiederà intervento del proprietario.
+
+## 11 ottobre 2026 · DEV-052 · CI remota superata e accesso Vercel
+
+- **Verificato:** run GitHub Actions `38161285628` sul commit `70c23a4`: completato/success, job ubuntu-latest e windows-latest entrambi success senza passi falliti. **Modificati:** rapporto revisione app, guida Vercel e diario con evidenze e stato effettivo.
+- **Installazione locale:** CLI ufficiale 63.1.2, 285 pacchetti nella cartella ignorata, nessuna modifica al lockfile dell'app. npm segnala postinstall esbuild 0.27.0 non incluso nella allowlist degli script: CLI version/help/whoami funzionano, non cambiata la policy degli script.
+- **Auth:** whoami JSON conferma loggedIn false. Avviato login ufficiale device OAuth e richiesto al proprietario di completare accesso/consenso. Codice temporaneo consegnato solo nel messaggio, nessun token/password nel diario o nel repository. Nessuna pubblicazione finché login/owner/destinazione non sono verificati; manca un URL preview effettivo.

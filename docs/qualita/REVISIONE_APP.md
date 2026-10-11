@@ -34,11 +34,14 @@ L'Excel rimane una fonte di struttura: giorni A/B/C, ciclo, serie, carichi, RIR,
 | Controlli dopo ultime modifiche UI | Formattazione, typecheck, lint e nuova build superati | Non una ripetizione automatica E2E di ogni vista |
 | `npm run format:check` | Sorgenti/configurazioni uniformati con Prettier | I Markdown e le fonti originali hanno controlli separati |
 | `npm audit --json` | Zero advisory noti sul lockfile alla data del rapporto | Nessuna certificazione di sicurezza generale |
+| GitHub Actions | Job `local-checks` Windows e Ubuntu superati sul commit codice `70c23a4`, nessun passo fallito | Controlli locali della CI; non cloud Auth o browser su telefoni |
 | `check-vercel-preview.mjs` | Cinque richieste HTTP reali sul bundle CJS locale: sessione 200/no-store, CSRF 403, login 503, sync 401, API ignota 404 | Non verifica il routing/CDN del deployment remoto |
 
 Le integration comprendono 6 prove SQL, 5 IndexedDB e 4 API. Sono 36 test di suite, cui si aggiungono 5 controlli del bundle. Il dominio resta puro, senza SDK/rete; il BFF tiene le credenziali fuori dal frontend. Nella preview non viene creata né migrata alcuna risorsa Supabase.
 
 La build finale ha entry JS circa 481kB, 152kB gzip, più chunk delle sezioni caricati al bisogno. La dipendenza Workbox segnala una deprecazione `inlineDynamicImports`: build riuscita, aggiornamento del plugin da monitorare. Non è una misura Lighthouse, LCP, INP o CLS su telefono reale.
+
+Evidenza remota: [run CI del commit verificato](https://github.com/ale01040/TR-LAB/actions/runs/38161285628). Entrambi i job sono stati letti dall'API GitHub, non dedotti dalla sola presenza del workflow nel repository.
 
 ## 4. Collaudo manuale browser
 
