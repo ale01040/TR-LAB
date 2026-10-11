@@ -24,6 +24,11 @@ async function copyAssets(directory, prefix = '') {
 }
 await mkdir(join(staging, 'api'), { recursive: true });
 await copyAssets(source);
+// Il link CLI può creare .env.local/OIDC: la whitelist non lo include nel deploy.
+await writeFile(
+  join(staging, '.vercelignore'),
+  '*\n!public\n!public/**\n!api\n!api/**\n!package.json\n!vercel.json\n',
+);
 // Bundle CJS standalone: nessun node_modules Windows, documento privato o ambiente entra nel pacchetto.
 await build({
   entryPoints: [join(root, 'apps/server/src/vercel.ts')],

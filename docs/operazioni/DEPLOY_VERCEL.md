@@ -50,7 +50,9 @@ Se manca la CLI, usare quella ufficiale (versione verificata 63.1.2, Node >=20, 
 
 Caricare **solo il pacchetto minimo**, mai la radice con file ignorati/personali. Nessun segreto nel bundle né credenziali in Git. Registrare l'esito dopo la risposta, senza equiparare comando avviato a deploy riuscito. [CLI ufficiale](https://vercel.com/docs/cli).
 
-Mai token Vercel in comandi, chat o diario. Login/consenso spettano al proprietario. La preview non abilita automaticamente Git deploy continui e non assegna un dominio produzione.
+Mai token Vercel in comandi, chat o diario. Login/consenso spettano al proprietario. La CLI può generare `.env.local` con OIDC durante link: conservarlo soltanto nella directory ignorata, escluderlo dall'upload con `.vercelignore` e verificare l'elenco reale via `deploy --dry --json`. Il pacchetto preparato usa whitelist di public/api e due manifest; la prova corrente include 22 file ed esclude ambiente/metadati.
+
+La CLI 63.1.2 espone anche `--temporary`, alternativa per un deploy temporaneo senza accesso. Qui è stato scelto l'account autenticato del proprietario, per gestione stabile e protezioni del suo workspace. Nessun Git deploy continuo è stato attivato. Verificare **sempre** target/alias del risultato: il primo caricamento nel nuovo progetto è stato autoassegnato a production dal servizio pur richiedendo preview; vedere §7, senza generalizzare la causa non ancora verificata.
 
 ## 5. Routing, cache e aggiornamenti
 
@@ -71,6 +73,19 @@ Registrare URL, ambiente, commit codice, hash artefatti, stato e prove effettive
 ## 7. Stato della consegna all'11 ottobre 2026
 
 - Codice verificato caricato su main: `70c23a42d9cd34fc0d365840222ece81531812ad`. [CI Windows/Ubuntu superata](https://github.com/ale01040/TR-LAB/actions/runs/38161285628).
-- Pacchetto finale: 19 asset, funzione CJS verificata con cinque richieste HTTP locali. Tarball 866595 byte, SHA-256 `0d8714497c8dda42d9dae56c21d7ade1086b4fcb51a86c8206849baceb196559`.
-- CLI 63.1.2 installata nel solo ambiente locale ignorato, non nelle dipendenze dell'app. Accesso del proprietario richiesto tramite flusso ufficiale device OAuth; codice temporaneo non registrato nei documenti.
-- Nessun URL di deployment restituito dal vecchio fallback. Deploy non ancora confermato, account Supabase non collegati. Aggiornare questa sezione dopo l'esito effettivo CLI, indicando owner/progetto e URL preview.
+- Pacchetto effettivo CLI: 22 file (19 asset, API e due manifest), 4384466 byte; cinque prove HTTP locali superate sull'API CJS. SHA-256 funzione `e4e729f7d7669f108ea6ba04dc3f3783e1255930400e123f35e9faf8dbf81bf7`. Il tarball precedente da 866595 byte/hash `0d8714497c8dda42d9dae56c21d7ade1086b4fcb51a86c8206849baceb196559` era il tentativo diagnostico sul fallback, non il nuovo upload CLI dopo link.
+- CLI 63.1.2 locale, installata fuori dalle dipendenze dell'app; build remota CLI62.7.0. Login completato dal proprietario, progetto `pere01040/tr-lab`, ID `prj_IpG5DKSPZX4Tn1yw90eAfILehujH`, Node24/Other. Nessun token, email o codice OAuth nel repository.
+- **Preview pronta:** [apri TR LAB](https://tr-90s24efqi-pere01040.vercel.app), ID `dpl_BeG6cBSh9p2etjnGHgFzW8rHDS99`; `inspect --json` conferma `readyState: READY`, `target: preview`, API lambda `api/index` su `nodejs24.x`. [Gestione deployment](https://vercel.com/pere01040/tr-lab/BeG6cBSh9p2etjnGHgFzW8rHDS99). Nessuna richiesta manuale alle pagine dell'app per attestare un E2E remoto non eseguito.
+- Primo deploy `dpl_4iQ9KFC3eVqHMQTFKgGEpuftsanp` era stato assegnato automaticamente a production, senza `--prod`. Ripubblicato in Preview; rimosso l'alias automatico `tr-lab.vercel.app` con esito confermato. Primo deployment conservato nella cronologia e ancora disponibile al proprio URL immutabile: non dichiarato cancellato o inesistente. Per una futura produzione serve un rilascio separato dopo i gate della roadmap.
+- Deployment Protection Vercel mantenuta; può richiedere l'accesso al workspace. Applicazione in device-preview senza Supabase collegato, senza migrazioni o account dell'app attivati. Origine HTTPS distinta da localhost e dai due deployment: IndexedDB non migra automaticamente. Le prove provider e dispositivi reali restano aperte.
+
+Per aggiornamenti successivi del pacchetto usare il progetto già verificato, leggere help della CLI corrente e ispezionare il risultato:
+
+```powershell
+npx --yes vercel@63.1.2 link --project tr-lab --scope pere01040 --yes --non-interactive --cwd <PACCHETTO>
+npx --yes vercel@63.1.2 deploy --dry --json --target=preview --scope pere01040 --cwd <PACCHETTO>
+npx --yes vercel@63.1.2 deploy --target=preview --project tr-lab --scope pere01040 --yes --json --cwd <PACCHETTO>
+npx --yes vercel@63.1.2 inspect <URL_RESTITUITO> --json --scope pere01040 --cwd <PACCHETTO>
+```
+
+Sostituire i placeholder; verificare prima owner/progetto con `project inspect`. `--skip-domain` è riservato a production, non usarlo come correzione di una preview. Nessun `--prod` in questo flusso.

@@ -369,3 +369,32 @@ Questo file registra gli interventi sul progetto: file creati o modificati, moti
 - **Verificato:** run GitHub Actions `38161285628` sul commit `70c23a4`: completato/success, job ubuntu-latest e windows-latest entrambi success senza passi falliti. **Modificati:** rapporto revisione app, guida Vercel e diario con evidenze e stato effettivo.
 - **Installazione locale:** CLI ufficiale 63.1.2, 285 pacchetti nella cartella ignorata, nessuna modifica al lockfile dell'app. npm segnala postinstall esbuild 0.27.0 non incluso nella allowlist degli script: CLI version/help/whoami funzionano, non cambiata la policy degli script.
 - **Auth:** whoami JSON conferma loggedIn false. Avviato login ufficiale device OAuth e richiesto al proprietario di completare accesso/consenso. Codice temporaneo consegnato solo nel messaggio, nessun token/password nel diario o nel repository. Nessuna pubblicazione finché login/owner/destinazione non sono verificati; manca un URL preview effettivo.
+
+## 11 ottobre 2026 · DEV-053 · Account confermato e destinazione esplicita
+
+- **Accesso:** primo flusso device terminato, avviato nuovo login ufficiale. Whoami conferma autenticazione dell'account `ale01040`, workspace personale `pere01040`, piano Hobby. Email/codici/token omessi dal registro; nessuna credenziale letta da file o inviata in chat.
+- **Destinazione:** inspect dalla directory esatta restituisce link_required; elenco progetti nello scope termina senza ulteriori pagine e non contiene TR LAB. Non utilizzati i progetti esistenti di altre app. Per il deploy esplicitamente richiesto, scelto nuovo progetto dedicato `tr-lab` nello scope verificato; creazione/link espliciti previsti, poi nuova inspect prima di deploy con target preview.
+- **Scelta:** help CLI 63.1.2 espone anche temporary senza login. Per questa consegna preferito progetto nell'account del proprietario: gestione stabile e protezioni del suo workspace; il precedente fallback HTTP resta superato. Nessun cambio di piano, acquisto, disattivazione di protezione o abilitazione Supabase. **Modificato:** diario; stato remoto da registrare dopo risposta.
+
+## 11 ottobre 2026 · DEV-054 · Link verificato e whitelist del caricamento
+
+- **Vercel:** creato progetto `pere01040/tr-lab`, ID `prj_IpG5DKSPZX4Tn1yw90eAfILehujH`, Node24/Other. Inspect esplicita prima e dopo link conferma owner/nome corretti. Nessuna modifica agli altri progetti o alle protezioni.
+- **Generati dalla CLI nella sola directory ignorata:** `.vercel` (metadati link), `.env.local` con OIDC e `.gitignore`. Nessun valore letto/stampato; token non destinato al pacchetto o al repository.
+- **Modificati:** script prepare e diario; **creata:** `.vercelignore` del pacchetto, generata anche nelle preparazioni future. Whitelist di public/api/package/config soltanto, escludendo ambiente, metadati e inventario locale. Dry-run CLI previsto prima di upload per verificare l'elenco reale; non disabilitate validazioni o controlli.
+- **Dry-run iniziale:** segnalati solo due manifest: le negazioni con slash finale non riaprivano le directory nel matcher CLI. Corrette a `!public`/`!api` con regole discendenti; ambiente/metadati restano esclusi. Nessun pacchetto incompleto caricato; nuovo dry-run richiesto.
+- **Dry-run corretto:** 22 file, 4384466 byte: 19 asset public, una API, due manifest; `.env.local`, `.vercel`, `.gitignore` e inventario esclusi. Script formattato e lint dedicato superato. Upload CLI sul progetto verificato e target preview avviato; nessuna promessa di READY prima dell'esito.
+
+## 11 ottobre 2026 · DEV-055 · Primo esito Vercel e correzione del target
+
+- **Risposta reale:** primo deploy completato READY, ID `dpl_4iQ9KFC3eVqHMQTFKgGEpuftsanp`, 22 file scaricati, build remota Node24 completata. Pur passando `--target preview`, CLI/servizio ha restituito `target: production` e creato alias `tr-lab.vercel.app`. Non descritto come preview riuscita; causa tecnica dell'autopromozione non ancora attribuita con certezza.
+- **Contenuto:** sempre device-preview senza Supabase/account/credenziali; whitelist confermata prima dell'upload. Nessun uso di `--prod`, nessuna disattivazione di Deployment Protection; risposta riporta vercel_authentication.
+- **Correzione prevista:** nuova pubblicazione dopo esistenza del primo deployment con target preview e skip-domain, verifica metadata effettivi, rimozione reversibile dell'alias creato automaticamente se non necessario. Conservare deployment/storia, nessuna cancellazione irreversibile. **Modificato:** diario.
+- **CLI:** skip-domain rifiutato prima dell'upload perché disponibile solo con production. Non trasformato il comando in prod; ripresa pubblicazione con il solo target esplicito `--target=preview`, mantenendo il progetto già verificato.
+
+## 11 ottobre 2026 · DEV-056 · Preview READY e documenti della consegna
+
+- **Esito:** Preview `https://tr-90s24efqi-pere01040.vercel.app`, ID `dpl_BeG6cBSh9p2etjnGHgFzW8rHDS99`, build completata e READY. Inspect separata conferma target preview e lambda api/index Node24. Conservate protezioni Vercel, nessun token/servizio Supabase configurato. Non effettuati curl/fetch manuali dell'app distribuita; non dichiarati E2E remoti.
+- **Correzione reversibile:** alias automatico tr-lab.vercel.app rimosso con Success; primo deployment ancora conservato nella cronologia e al suo URL immutabile. Il servizio non è stato descritto come se non avesse effettuato l'autopromozione iniziale. Altri progetti invariati.
+- **Modificati:** README root/docs, stato implementazione, rapporto revisione, guida Vercel e diario: URL/stato/progetto, upload 22 file, whitelist, OIDC locale escluso, distinzione tarball diagnostico/upload CLI, comandi aggiornamento, protezione accesso e archivio separato per origine. Nessuna promessa di login/sync/AI attivi.
+- **Consegna finale:** scanner indice, controlli Markdown/formato, commit e push degli aggiornamenti da completare. Il solo script preparazione è cambiato dopo i test dell'app; formato/lint dedicati già superati, bundle applicativo pubblicato invariato rispetto alla CI codice 70c23a4.
+- **Esiti documenti:** 24 Markdown, 112 link locali, 62 tabelle, 3 JSON, 26 blocchi codice e 35 casi QA referenziati, nessun errore automatico; format check superato. Ancora distinti dai test del prodotto e dal collaudo cloud.

@@ -1,6 +1,6 @@
 # TR LAB — stato dell'implementazione e collaudo
 
-11 ottobre 2026 · Versione 0.1.0 alpha locale. Questo rapporto distingue codice presente, prove eseguite e requisiti ancora aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
+11 ottobre 2026 · Versione 0.1.0 alpha in modalità dispositivo, con preview HTTPS su Vercel. Questo rapporto distingue codice presente, prove eseguite e requisiti ancora aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
 
 Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La preview non chiude i gate cloud della versione completa.
 

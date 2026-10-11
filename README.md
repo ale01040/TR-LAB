@@ -1,8 +1,8 @@
 # TR LAB
 
-Deploy preview: [procedura e limiti](docs/operazioni/DEPLOY_VERCEL.md).
+Anteprima HTTPS: [TR LAB su Vercel](https://tr-90s24efqi-pere01040.vercel.app), stato READY verificato nei metadati. Accesso soggetto alla protezione Vercel del workspace. [Procedura e limiti](docs/operazioni/DEPLOY_VERCEL.md).
 
-PWA per schede, diario di allenamento offline, misure e target nutrizionali personali. Versione **0.1.0 alpha locale**: codice avviabile, contratti, migrazione PostgreSQL e test. Il progetto Supabase indicato è predisposto nella configurazione d'esempio, ma non ancora collegato: mancano i valori locali e il collaudo cloud.
+PWA per schede, diario di allenamento offline, misure e target nutrizionali personali. Versione **0.1.0 alpha in modalità dispositivo**: codice avviabile, contratti, migrazione PostgreSQL e test. Il progetto Supabase indicato è predisposto nella configurazione d'esempio, ma non ancora collegato: mancano i valori locali e il collaudo cloud. La preview non trasferisce l'archivio del browser locale su telefono/PC o tra domini.
 
 ```powershell
 npm ci

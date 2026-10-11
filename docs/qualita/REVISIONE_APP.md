@@ -1,6 +1,6 @@
 # TR LAB — revisione dell'app e preparazione del deploy
 
-11 ottobre 2026 · Alpha 0.1.0 · Verifica del codice presente e della build, distinta dalla futura versione completa. Il deploy è una preview in modalità dispositivo; l'esito remoto viene registrato nella guida Vercel e nel diario dopo il caricamento.
+11 ottobre 2026 · Alpha 0.1.0 · Verifica del codice presente e della build, distinta dalla futura versione completa. Preview in modalità dispositivo pubblicata; [esito e URL Vercel](../operazioni/DEPLOY_VERCEL.md) confermati tramite metadata READY/preview, funzione Node24 presente. Il routing e i flussi dell'app distribuita non sono stati collaudati via HTTP remoto; restano distinti dalle cinque prove locali sul bundle.
 
 ## 1. Esito e perimetro
 
