@@ -46,21 +46,21 @@ Non serve un prefisso `VITE_`: le credenziali Supabase non vengono esportate nel
 
 ## 4. Recuperare DATABASE_URL e configurare SSL
 
-Nel progetto aprire **Connect**, scegliere una connection string PostgreSQL e copiarla senza indovinare host o regione. Per questo server persistente, **Session pooler, porta 5432**, è la scelta iniziale quando il PC usa IPv4. La connessione diretta richiede normalmente IPv6. Il pooler transaction, porta 6543, è destinato soprattutto a connessioni brevi e comporta limiti sullo stato di sessione. [Connessioni Supabase](https://supabase.com/docs/guides/database/connecting-to-postgres).
+Nel progetto aprire **Connect**, scegliere una connection string PostgreSQL e copiarla senza indovinare host o regione. Su questo PC è già verificata la connessione diretta IPv6, porta 5432; su Vercel è verificato il shared transaction pooler, porta 6543. Il session pooler 5432 resta un'alternativa per server persistenti su IPv4, ma non è stato dichiarato funzionante con questa credenziale: vedere [esiti e incompatibilità](../qualita/INTEGRAZIONE_SUPABASE.md#3-tls-credenziale-e-pool). Il transaction pooler limita lo stato di sessione e usa la configurazione serverless dell'app. [Connessioni Supabase](https://supabase.com/docs/guides/database/connecting-to-postgres).
 
-La password è quella del **database**, non la password del proprio login Supabase. Se non la si conosce, seguire la funzione di reset della Dashboard verificando prima quali altri servizi la utilizzano. Sostituire il segnaposto della connection string con la password codificata per URL; caratteri come `@`, `#`, `%`, `?`, `/` non possono essere incollati senza codifica. Un password manager o l'editor devono conservare il valore finale fuori dai documenti del progetto.
+Il BFF usa la password del ruolo limitato **tr_lab_runtime**, già predisposto su questo progetto; non usa la password del proprietario Supabase o del ruolo postgres. Non resettare la password amministrativa per riconfigurare l'app. Su una nuova installazione, predisporre la credenziale runtime con una procedura privata approvata dopo le migrazioni. Sostituire il segnaposto con la password codificata per URL; caratteri come `@`, `#`, `%`, `?`, `/` richiedono codifica. Conservare il valore finale nel file ambiente locale e nel gestore di segreti, fuori dai documenti pubblici.
 
-Usare `sslmode=verify-full`. Quando è necessaria la CA del progetto, scaricarla dalla sezione **Database settings → SSL Configuration**, conservarla in `.local/supabase-ca.crt` e aggiungere `sslrootcert=.local%2Fsupabase-ca.crt` alla connection string. Il driver installato legge il certificato da quel percorso rispetto alla radice di avvio. Verificare che sia un certificato pubblico PEM, non una chiave privata. SSL cifrato senza verifica dell'identità non offre la stessa protezione. [SSL Supabase](https://supabase.com/docs/guides/database/connecting-to-postgres#ssl).
+Usare `sslmode=verify-full`. Verificare la CA nella sezione **Database settings → SSL Configuration**: il certificato pubblico usato qui è anche in `certificates/supabase-prod-ca-2021.crt`, con fingerprint e scadenza nel rapporto di integrazione. Per la connessione locale, usare `sslrootcert` con **percorso assoluto codificato per URL**; gli script npm dei workspace possono cambiare directory di lavoro. Per Vercel, usare invece `DATABASE_CA_CERT_BASE64`, senza percorsi del PC e senza `sslrootcert/sslcert/sslkey` nella stessa URL. Verificare sempre che il PEM sia un certificato pubblico. [SSL Supabase](https://supabase.com/docs/guides/database/connecting-to-postgres#ssl).
 
 Esempio **fittizio**, da completare con host e utente copiati dalla propria Dashboard:
 
 ```dotenv
-DATABASE_URL="postgresql://UTENTE_COPIATO:PASSWORD_CODIFICATA@HOST_COPIATO:5432/postgres?sslmode=verify-full&sslrootcert=.local%2Fsupabase-ca.crt"
+DATABASE_URL="postgresql://tr_lab_runtime:PASSWORD_CODIFICATA@HOST_DIRETTO_COPIATO:5432/postgres?sslmode=verify-full&sslrootcert=PERCORSO_ASSOLUTO_CODIFICATO"
 ```
 
 Se l'URL contiene già `?`, aggiungere le opzioni successive con `&`, senza duplicare `sslmode`. Non disattivare la verifica TLS per aggirare errori: controllare CA, percorso, host, data del PC e rete. `.local/` è esclusa da Git.
 
-Per il collaudo iniziale il proprietario può usare la connessione amministrativa fornita dalla Dashboard. **Prima del rilascio** configurare un ruolo BFF con i soli permessi necessari sulle sessioni e sui flussi PKCE, separato dal ruolo delle migrazioni. Le RPC di dominio continuano a usare il JWT dell'utente, non questa connessione amministrativa. Non considerare chiuso il gate pubblico con il server collegato come amministratore.
+Il ruolo BFF deve avere soltanto i permessi sulle sessioni e sui flussi PKCE, separati da quelli del migratore. Le RPC di dominio continuano a usare il JWT dell'utente via Supabase, non la connessione PostgreSQL del BFF. I permessi effettivi del ruolo già installato sono stati provati sia sul database cloud sia da Vercel.
 
 ## 5. Generare e conservare la chiave delle sessioni
 
@@ -87,9 +87,10 @@ SUPABASE_URL=https://mxaogzjquvhwurngktyz.supabase.co
 SUPABASE_PUBLISHABLE_KEY=INCOLLA_LA_CHIAVE_PUBLISHABLE
 DATABASE_URL="INCOLLA_LA_CONNECTION_STRING_CON_SSL_VERIFICATO"
 SESSION_ENCRYPTION_KEY=INCOLLA_LA_CHIAVE_GENERATA_LOCALMENTE
+GOOGLE_AUTH_ENABLED=false
 ```
 
-I segnaposto non sono valori utilizzabili. Non scrivere `export`, parentesi o virgolette tipografiche. La chiave base64 può terminare con `=`: conservarla interamente. I quattro valori devono essere tutti presenti oppure tutti assenti; una configurazione parziale blocca l'avvio.
+I segnaposto non sono valori utilizzabili. Non scrivere `export`, parentesi o virgolette tipografiche. La chiave base64 può terminare con `=`: conservarla interamente. I quattro valori Supabase/sessione devono essere tutti presenti oppure tutti assenti; una configurazione parziale blocca l'avvio. `DATABASE_CA_CERT_BASE64` è un'opzione aggiuntiva per il certificato pubblico; Google resta disabilitato finché il provider non è configurato e collaudato.
 
 Per la modalità dispositivo senza provider, non creare ancora `.env`, oppure lasciare **tutti e quattro** i campi vuoti nel file effettivo. L'URL già compilato nell'esempio serve per il collegamento cloud, non rende valido da solo un `.env` parziale.
 
@@ -112,23 +113,23 @@ npm run db:preflight
 
 Questo comando esegue soltanto SELECT: controlla connessione, presenza di tabella/RPC/sessioni e flag RLS. Non stampa password, email o connection string. Su un progetto nuovo le verifiche di presenza saranno `false`: è atteso. Un collegamento riuscito non prova il comportamento di Auth/PostgREST né tutti i grant.
 
-La migrazione locale è `supabase/migrations/202610110001_core.sql`. Prima di applicarla al cloud:
+Il repository contiene quattro migrazioni SQL, da applicare in ordine su una **nuova installazione**: core, runtime_session_role, database_access_hardening e verified_request_identity. La suite `db:verify` le esegue tutte come migratore non-superuser. Prima di applicarle a un altro progetto:
 
 1. Verificare che il progetto sia quello corretto; inventariare tabelle, ruoli, funzioni e migrazioni già presenti. Cercare collisioni `tr_lab_*`, ruolo `tr_lab_command` e schema `tr_lab_private`.
 2. Su un database già utilizzato preparare un backup verificabile; non usare `db reset`, DROP o comandi che cancellano dati.
 3. Provare il SQL su un ambiente di collaudo. La suite PGlite locale verifica SQL e RLS, ma non sostituisce Supabase reale.
-4. Applicare la migrazione una sola volta con il percorso migrazioni concordato o SQL Editor della Dashboard. Non rilanciare l'intero file dopo un errore senza controllare lo stato; non contiene una strategia di upgrade idempotente per installazioni già parziali.
+4. Applicare ogni migrazione una sola volta con il percorso concordato. Non rilanciare un file dopo un errore senza controllare lo stato; il core non è una strategia di upgrade idempotente per installazioni parziali. La credenziale del ruolo runtime viene configurata separatamente, senza password o verifier nel repository.
 5. Registrare commit, checksum, ambiente, esito, ruolo usato e piano di rollback. Rieseguire `db:preflight` e i casi di isolamento di due utenti reali di test.
 
-Il codice non applica migrazioni automaticamente al primo avvio. L'URL ricevuto non autorizza a presumere che lo schema sia già pronto. Il registro di questa consegna segnala esplicitamente che non è ancora stata eseguita alcuna migrazione cloud.
+Il codice non applica migrazioni al primo avvio. **Sul progetto mxaogzjquvhwurngktyz lo schema è già installato e verificato**: non ripetere queste istruzioni come prima installazione. Timestamp remoti del connettore e provisioning privato differiscono dai nomi locali; prima di usare `db push` o una nuova pipeline, riconciliare il baseline secondo la [corrispondenza registrata](../qualita/INTEGRAZIONE_SUPABASE.md#4-migrazioni-corrispondenza-da-conservare). Nessun reset o repair alla cieca.
 
 ## 8. Configurare Auth: email, callback e Google
 
-Per l'ambiente Vite impostare la **Site URL** a `http://localhost:5173`. Autorizzare il callback applicativo `http://localhost:5173/api/auth/callback?state=*`. Per provare la build aggiungere separatamente `http://localhost:3001/api/auth/callback?state=*`. Limitare i pattern all'origine e al percorso corretti; non autorizzare domini arbitrari.
+Per l'ambiente Vite aggiungere il callback applicativo `http://localhost:5173/api/auth/callback\?state=*`. Per provare la build aggiungere separatamente `http://localhost:3001/api/auth/callback\?state=*`. Il backslash rende `?` letterale nel pattern Supabase. La Site URL deve corrispondere all'ambiente principale: non sostituire quella della preview se si stanno solo aggiungendo callback locali. URL esatti e collaudo nella [guida Auth](COMPLETARE_AUTH.md).
 
 Abilitare email/password, conferma email e policy minima di 12 caratteri coerente con l'app. Verificare SMTP e limiti effettivi prima di invitare gli amici: l'alpha non configura un mittente, non promette consegna email e non aggira i limiti del provider. Conferma email e recupero PKCE vanno aperti nello **stesso browser** da cui sono stati richiesti. [Flusso PKCE](https://supabase.com/docs/guides/auth/sessions/pkce-flow).
 
-Per Google: creare/configurare un client OAuth web nel proprio Google Cloud, copiare dalla Dashboard il callback **del provider Supabase** e autorizzarlo in Google. Inserire client ID e client secret nella configurazione del provider Google di Supabase; il secret non va nel frontend né nel `.env` di questa app. Abilitare il provider e provare un utente consentito dalla schermata di consenso Google. [Guida ufficiale Google Auth](https://supabase.com/docs/guides/auth/social-login/auth-google).
+Per Google: creare/configurare un client OAuth web nel proprio Google Cloud, copiare dalla Dashboard il callback **del provider Supabase** e autorizzarlo in Google. Inserire client ID e client secret nella configurazione del provider di Supabase; il secret non va nel frontend né nel `.env` dell'app. Abilitare il provider, impostare `GOOGLE_AUTH_ENABLED=true` nel server e provare un utente consentito dalla schermata Google. [Guida ufficiale Google Auth](https://supabase.com/docs/guides/auth/social-login/auth-google).
 
 Il callback Google verso Supabase e quello Supabase verso TR LAB sono due passaggi distinti. Non sostituire uno con l'altro. I flussi email, recupero e Google restano gate aperti finché non vengono collaudati sul progetto reale.
 
@@ -201,3 +202,25 @@ git ls-remote origin refs/heads/main
 ```
 
 Gli SHA locale e remoto devono coincidere. Se `main` remoto è avanzato, recuperare e integrare il lavoro altrui prima di ritentare; non usare force per superare divergenze o protezioni del branch. Controllare la CI nel repository dopo il caricamento. Il push del codice non pubblica automaticamente il sito e non applica SQL a Supabase.
+
+## 13. Stato della configurazione su questo PC
+
+L'11 ottobre 2026 URL e chiave publishable del committente sono stati integrati con una credenziale runtime dedicata e una chiave sessioni locale. `.env` è ora attivo; `.local/supabase-connection.env` conserva il preparatorio, entrambi ignorati da Git. Connessione diretta TLS verificata, `config:check` valido/configured true e `db:preflight` riuscito. Non sovrascrivere questi file o rigenerare la chiave a ogni avvio.
+
+Per proseguire:
+
+1. Conservare la configurazione e le copie private nel gestore di segreti; non pubblicarle o condividerle in chat.
+2. Dalla radice verificare senza stampare valori:
+
+```powershell
+npm run config:check
+npm run db:preflight
+```
+
+3. Completare callback/account secondo [COMPLETARE_AUTH](COMPLETARE_AUTH.md), quindi collaudare con §9. Il committente ha indicato che sta configurando callback e account; SMTP ancora da scegliere. Questa intenzione non è un esito positivo di login.
+
+La Preview Vercel usa cinque valori autorizzati esplicitamente dal committente, più DEPLOYMENT_MODE=connected. La chiave di cifratura Preview è distinta da quella locale; la password runtime è la stessa sul progetto condiviso. Il preparatorio `.local/vercel-connection.env` e i verifier di provisioning restano privati. Nessuna password amministrativa trasferita. Rapporto delle prove: [INTEGRAZIONE_SUPABASE](../qualita/INTEGRAZIONE_SUPABASE.md).
+
+Il quickstart React/Vite fornito dal committente è valido per un client Supabase diretto. TR LAB ha già `@supabase/supabase-js` 2.117.3 e il client nel BFF Fastify: nessuna installazione o modifica dei lockfile è necessaria. Le variabili effettive sono `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY`, senza prefisso `VITE_`; non aggiungere una seconda autenticazione o sostituire l'app con l'esempio `todos`. Il client diretto con comportamento Auth predefinito conserva i token nel browser; il requisito di progetto li mantiene invece nel server con cookie opaca HttpOnly. Questa differenza è documentata, non una dichiarazione che il quickstart sia errato. [Quickstart React](https://supabase.com/docs/guides/getting-started/quickstarts/reactjs), [storage dei token](https://supabase.com/docs/guides/auth/server-side/advanced-guide).
+
+Per Netlify il pacchetto statico resta senza server. Il collegamento online richiede una nuova distribuzione con BFF, origine HTTPS, callback e collaudo; i valori di questo file sono preparati per lo sviluppo locale, non una configurazione di produzione pronta.

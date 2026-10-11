@@ -10,6 +10,7 @@ const messages: Record<string, string> = {
   NOT_CONFIGURED:
     'Accesso non disponibile in questa anteprima. Schede e diario restano sul dispositivo.',
   INVALID_CREDENTIALS: 'Accesso non riuscito. Controlla email e password.',
+  GOOGLE_NOT_CONFIGURED: 'Accesso Google non ancora configurato. Usa email e password.',
   RATE_LIMITED: 'Troppi tentativi. Attendi prima di riprovare.',
   INVALID_PASSWORD: 'Usa una passphrase di almeno 12 caratteri, entro 72 byte UTF-8.',
   CSRF_REJECTED: 'La sessione è cambiata. Ricarica la pagina e riprova.',

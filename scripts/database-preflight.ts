@@ -1,10 +1,11 @@
 import { Pool } from 'pg';
 import { loadConfig } from '../apps/server/src/config';
+import { databasePoolConfig } from '../apps/server/src/database';
 let pool: Pool | undefined;
 try {
   const config = loadConfig();
   if (!config.DATABASE_URL) throw new Error('NOT_CONFIGURED');
-  pool = new Pool({ connectionString: config.DATABASE_URL, max: 1, connectionTimeoutMillis: 5000 });
+  pool = new Pool({ ...databasePoolConfig(config), max: 1 });
   const result = await pool.query(`select
     current_database() as database,
     to_regclass('public.tr_lab_records') is not null as records_present,

@@ -19,3 +19,5 @@ supabase/.branches/
 **/*credentials*.txt
 secrets/
 .vercel/
+.netlify/
+/TR-LAB-Netlify*.zip

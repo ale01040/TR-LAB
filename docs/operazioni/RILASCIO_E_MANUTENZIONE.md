@@ -2,6 +2,8 @@
 
 Versione 1.1 · Procedure da rendere eseguibili in F2–F11. Account e servizi appartengono al committente o alla sua organizzazione.
 
+Stato all'11 ottobre 2026: alpha locale e Preview Vercel collegata al progetto Supabase fornito, con ruolo limitato e TLS verificato. La preview corrente non ha un database staging separato; Auth positivo, SMTP, restore e altri gate restano aperti. Evidenze nel [rapporto integrazione](../qualita/INTEGRAZIONE_SUPABASE.md); questo manuale descrive anche procedure future e non le dichiara già eseguite.
+
 ## 1. Ambienti
 
 | Ambiente | Dati | Accessi e utilizzo |
@@ -15,19 +17,21 @@ Separare progetti Supabase, bucket, redirect OAuth, domini cookie, chiavi AI/ema
 
 ## 2. Comandi che il repository dovrà offrire
 
-Questa è una convenzione da implementare in F2, non una lista di comandi già funzionanti:
+Distinguere gli script già presenti dalle consegne ancora aperte. I comandi attuali sono in package.json; non aggiungere credenziali per far girare la suite locale:
 
-| Comando | Risultato |
+| Comando | Stato / risultato |
 | --- | --- |
-| `npm ci` | Dipendenze esatte dal lockfile |
-| `npm run dev` | Web e server locali con configurazione documentata |
-| `npm run typecheck` | Tutti i pacchetti, senza emissione |
-| `npm run lint` / `npm run format:check` | Errori statici e stile |
-| `npm run test:unit` / `test:integration` / `test:e2e` | Livelli separati, esito non ambiguo |
-| `npm run db:verify` | Ricostruzione e aggiornamento schema in ambiente isolato + RLS |
-| `npm run contracts:check` | Coerenza DTO, OpenAPI e fixture |
-| `npm run build` | Asset versionati e artefatti server |
-| `npm run check` | Sequenza dei controlli richiesti prima del merge |
+| `npm ci` | Presente: dipendenze esatte dal lockfile |
+| `npm run dev` | Presente: web e server locali con configurazione documentata |
+| `npm run typecheck` | Presente: genera tipi CSS, poi controlla tutti i pacchetti senza emissione JS |
+| `npm run lint` / `npm run format:check` | Presenti: errori statici e stile |
+| `npm run test:unit` / `test:integration` | Presenti: regole/contratti, API, IndexedDB e SQL incorporato |
+| `npm run test:e2e` | Da implementare: percorsi browser/provider automatici |
+| `npm run db:verify` | Presente: schema vuoto PGlite da quattro migrazioni, ACL/RLS/consenso; upgrade dalla release precedente e Supabase reale separati |
+| `npm run contracts:check` | Presente: test DTO/fixture; OpenAPI completa ancora da implementare |
+| `npm run config:check` / `db:preflight` | Presenti: validazione senza valori in output e letture cloud; non provano login positivo |
+| `npm run build` | Presente: asset versionati e artefatti server |
+| `npm run check` | Presente: typecheck, lint, unit, integration e build; formato/audit eseguiti separatamente |
 
 Gli script che possono resettare database controllano ambiente e project reference e rifiutano produzione. Documentare prerequisiti, runtime, porte, file ambiente di esempio e recupero dopo errore. Non salvare segreti negli esempi.
 

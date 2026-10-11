@@ -7,6 +7,7 @@ import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
+import type { Pool } from 'pg';
 import {
   commandSchema,
   pullSchema,
@@ -17,7 +18,10 @@ import {
 import { AuthService, authRoutes, HttpError } from './auth.js';
 import { loadConfig, type Config } from './config.js';
 import { readCursor, signCursor } from './crypto.js';
-export async function buildApp(config: Config = loadConfig(), { serveWeb = true } = {}) {
+export async function buildApp(
+  config: Config = loadConfig(),
+  { serveWeb = true, onPool }: { serveWeb?: boolean; onPool?: (pool: Pool) => void } = {},
+) {
   const app = Fastify({
     bodyLimit: 262144,
     trustProxy: false,
@@ -33,6 +37,7 @@ export async function buildApp(config: Config = loadConfig(), { serveWeb = true 
     logController: new LogController({ disableRequestLogging: true }),
   });
   const auth = new AuthService(config);
+  if (auth.pool) onPool?.(auth.pool);
   await app.register(cookie);
   await app.register(helmet, {
     contentSecurityPolicy: {
@@ -97,6 +102,17 @@ export async function buildApp(config: Config = loadConfig(), { serveWeb = true 
     return reply.status(500).send({ code: 'INTERNAL_ERROR' });
   });
   app.get('/api/health', () => ({ name: 'TR LAB', version: '0.1.0', configured: !!auth.pool }));
+  app.get('/api/ready', async (_request, reply) => {
+    if (!auth.pool) return reply.status(503).send({ ready: false, code: 'NOT_CONFIGURED' });
+    try {
+      // Prova sia la connessione sia il grant realmente necessario al BFF; nessun dato personale.
+      await auth.pool.query('select token_hash from tr_lab_private.sessions limit 0');
+      return { ready: true };
+    } catch {
+      app.log.error({ code: 'DATABASE_UNAVAILABLE' }, 'Database non disponibile');
+      return reply.status(503).send({ ready: false, code: 'DATABASE_UNAVAILABLE' });
+    }
+  });
   authRoutes(app, auth);
   app.post('/api/sync/command', async (request) => {
     const current = await auth.require(request);

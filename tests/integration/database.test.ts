@@ -12,13 +12,54 @@ beforeAll(async () => {
   await db.exec(
     `create role anon nologin;create role authenticated nologin;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql as 'select nullif(current_setting(''request.jwt.claim.sub'',true),'''')::uuid';grant usage on schema auth to authenticated;insert into auth.users values('${owner}'),('${other}');`,
   );
+  // Il deploy deve funzionare anche senza superuser, come nel PostgreSQL gestito.
+  await db.exec(`create role tr_lab_migrator createrole;
+    grant connect, create on database postgres to tr_lab_migrator with grant option;
+    grant create, usage on schema public to tr_lab_migrator with grant option;
+    grant usage on schema auth to tr_lab_migrator;
+    grant references on auth.users to tr_lab_migrator;
+    set role tr_lab_migrator;`);
   await db.exec(await readFile('supabase/migrations/202610110001_core.sql', 'utf8'));
+  await db.exec(
+    await readFile('supabase/migrations/20261011205512_runtime_session_role.sql', 'utf8'),
+  );
+  await db.exec(
+    await readFile('supabase/migrations/20261011205803_database_access_hardening.sql', 'utf8'),
+  );
+  await db.exec(
+    await readFile('supabase/migrations/20261011210811_verified_request_identity.sql', 'utf8'),
+  );
+  await db.exec('reset role');
   epoch =
     (await db.query<{ value: string }>('select value from tr_lab_private.epoch')).rows[0]?.value ??
     '';
 });
 afterAll(async () => {
   await db?.close();
+});
+it('le RPC leggono i claim JSON verificati da PostgREST e rifiutano una richiesta senza identità', async () => {
+  await db.exec('set role authenticated');
+  await db.query("select set_config('request.jwt.claim.sub','',false)");
+  await db.query("select set_config('request.jwt.claims',$1,false)", [
+    JSON.stringify({ sub: owner }),
+  ]);
+  const p = program();
+  try {
+    const r = await db.query<{ result: unknown }>('select public.tr_lab_apply($1::jsonb) result', [
+      JSON.stringify(command('SaveProgramDraft', p, epoch)),
+    ]);
+    expect(receiptSchema.parse(r.rows[0]?.result).status).toBe('applied');
+    await db.query("select set_config('request.jwt.claims','{}',false)");
+    await expect(db.query('select public.tr_lab_bootstrap()')).rejects.toThrow('UNAUTHENTICATED');
+  } finally {
+    await db.exec('reset role');
+    await db.query("select set_config('request.jwt.claims','',false)");
+  }
+  const result = await db.query<{ owner_id: string }>(
+    'select owner_id from public.tr_lab_records where id=$1',
+    [p.id],
+  );
+  expect(result.rows[0]?.owner_id).toBe(owner);
 });
 async function apply(c: Command, user = owner) {
   await db.exec('set role authenticated');
@@ -32,6 +73,47 @@ async function apply(c: Command, user = owner) {
     await db.exec('reset role');
   }
 }
+it('il ruolo BFF usa solo sessioni e PKCE, senza dominio, DDL o bypass RLS', async () => {
+  const flags = await db.query<{
+    ddl: boolean;
+    records: boolean;
+    rpc: boolean;
+    sessions: boolean;
+    flows: boolean;
+    bypass: boolean;
+  }>(`select
+    has_schema_privilege('tr_lab_command', 'public', 'CREATE') as ddl,
+    has_table_privilege('tr_lab_runtime', 'public.tr_lab_records', 'SELECT,INSERT,UPDATE,DELETE') as records,
+    has_function_privilege('tr_lab_runtime', 'public.tr_lab_apply(jsonb)', 'EXECUTE') as rpc,
+    has_table_privilege('tr_lab_runtime', 'tr_lab_private.sessions', 'SELECT,INSERT,UPDATE,DELETE') as sessions,
+    has_table_privilege('tr_lab_runtime', 'tr_lab_private.auth_flows', 'SELECT,INSERT,UPDATE,DELETE') as flows,
+    (select rolbypassrls from pg_roles where rolname='tr_lab_runtime') as bypass`);
+  expect(flags.rows[0]).toEqual({
+    ddl: false,
+    records: false,
+    rpc: false,
+    sessions: true,
+    flows: true,
+    bypass: false,
+  });
+  await db.exec('set role tr_lab_runtime');
+  try {
+    await expect(db.query('select * from public.tr_lab_records')).rejects.toThrow(
+      /permission denied/,
+    );
+    await expect(db.query('select public.tr_lab_bootstrap()')).rejects.toThrow(/permission denied/);
+    await expect(db.query('select * from tr_lab_private.receipts')).rejects.toThrow(
+      /permission denied/,
+    );
+    await expect(db.query('create table public.invalid_runtime_write(id int)')).rejects.toThrow(
+      /permission denied/,
+    );
+    expect((await db.query('select * from tr_lab_private.sessions')).rows).toEqual([]);
+    expect((await db.query('select * from tr_lab_private.auth_flows')).rows).toEqual([]);
+  } finally {
+    await db.exec('reset role');
+  }
+});
 it('migrazione, RPC, consenso, snapshot e retry idempotente · QA-SEC/SYNC/APP', async () => {
   const p = program();
   const draft = command('SaveProgramDraft', p, epoch);

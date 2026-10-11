@@ -81,7 +81,7 @@ Ogni ticket o revisione deve indicare i capitoli applicabili, come sono stati ap
 
 La consegna finale include le due raccolte originali, questa matrice aggiornata, le decisioni architetturali, i rapporti di validazione HTML/CSS, accessibilità, contrasto e prestazioni, le prove dei form e delle sessioni, i controlli di stampa e cache e gli eventuali punti ancora aperti. Un buon punteggio automatico non sostituisce la verifica funzionale del diario e delle conferme.
 
-Questa integrazione registra vincoli e verifiche. La prima alpha locale è implementata; conformità, esiti effettivi e controlli aperti sono distinti nel rapporto collegato. La presenza di codice non chiude automaticamente i requisiti della versione completa.
+Questa integrazione registra vincoli e verifiche. Alpha locale e Preview Vercel collegata a Supabase sono implementate; conformità, esiti effettivi e controlli aperti sono distinti nel rapporto collegato e nelle [prove cloud](qualita/INTEGRAZIONE_SUPABASE.md). La presenza di codice non chiude automaticamente i requisiti della versione completa.
 
 ## 6. Organizzazione, nomi e confini
 

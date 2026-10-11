@@ -1,7 +1,11 @@
 -- WP-04/05/08 · RF-01/03/06/14 · ADR-04/07/12–15 · WEB-11/12/14.
 create schema if not exists tr_lab_private;
 create role tr_lab_command nologin nobypassrls;
+grant tr_lab_command to current_user with inherit true, set true;
 grant usage on schema public, auth, tr_lab_private to tr_lab_command;
+-- PostgreSQL gestito non usa un superuser: il nuovo owner deve poter creare nello schema.
+-- Permesso solo durante il trasferimento; revocato alla fine della migrazione.
+grant create on schema public to tr_lab_command;
 
 create table tr_lab_private.sessions (
   token_hash text primary key,
@@ -34,7 +38,7 @@ insert into tr_lab_private.epoch(id) values(true);
 create table tr_lab_private.receipts(owner_id uuid not null references auth.users(id) on delete cascade, operation_id uuid not null, fingerprint bytea not null, receipt jsonb not null, primary key(owner_id,operation_id));
 create table tr_lab_private.events(owner_id uuid not null references auth.users(id) on delete cascade, sequence bigint not null, record jsonb not null, primary key(owner_id,sequence));
 alter table public.tr_lab_records enable row level security;
-create policy read_own on public.tr_lab_records for select to authenticated using(owner_id=auth.uid());
+create policy read_own on public.tr_lab_records for select to authenticated using(owner_id=(select auth.uid()));
 create policy command_own on public.tr_lab_records to tr_lab_command using(owner_id=auth.uid()) with check(owner_id=auth.uid());
 grant select on public.tr_lab_records to authenticated;
 revoke insert,update,delete,truncate,references,trigger on public.tr_lab_records from public,anon,authenticated;
@@ -285,3 +289,7 @@ end $$;
 alter function public.tr_lab_pull(text,text,uuid) owner to tr_lab_command;
 revoke all on function public.tr_lab_pull(text,text,uuid) from public,anon;
 grant execute on function public.tr_lab_pull(text,text,uuid) to authenticated;
+revoke create on schema public from tr_lab_command;
+revoke set option for tr_lab_command from current_user;
+revoke inherit option for tr_lab_command from current_user;
+revoke all on public.tr_lab_records from anon;

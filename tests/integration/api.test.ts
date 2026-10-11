@@ -45,3 +45,20 @@ it('niente sync anonima né accesso alla sessione del DB', async () => {
   expect((await app.inject('/api/sync/bootstrap')).statusCode).toBe(401);
   expect((await app.inject('/api/tr_lab_private.sessions')).statusCode).toBe(404);
 });
+it('readiness senza database restituisce 503 anziché simulare una connessione', async () => {
+  const response = await app.inject('/api/ready');
+  expect(response.statusCode).toBe(503);
+  expect(response.json()).toEqual({ ready: false, code: 'NOT_CONFIGURED' });
+  expect(response.headers['cache-control']).toBe('no-store');
+});
+it('Google disabilitato non crea flussi o redirect verso un provider non configurato', async () => {
+  const response = await app.inject({
+    method: 'POST',
+    url: '/api/auth/google',
+    headers: { origin: 'http://localhost:5173', 'x-tr-lab': '1' },
+    payload: {},
+  });
+  expect(response.statusCode).toBe(503);
+  expect(response.json()).toEqual({ code: 'GOOGLE_NOT_CONFIGURED' });
+  expect(response.headers['set-cookie']).toBeUndefined();
+});

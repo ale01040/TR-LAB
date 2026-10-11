@@ -1,8 +1,8 @@
 # TR LAB — stato dell'implementazione e collaudo
 
-11 ottobre 2026 · Versione 0.1.0 alpha in modalità dispositivo, con preview HTTPS su Vercel. Questo rapporto distingue codice presente, prove eseguite e requisiti ancora aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
+11 ottobre 2026 · Versione 0.1.0 alpha, con Supabase collegato a locale/Preview HTTPS Vercel. Questo rapporto distingue codice presente, prove eseguite e requisiti aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
 
-Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La preview non chiude i gate cloud della versione completa.
+Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [integrazione reale](INTEGRAZIONE_SUPABASE.md), [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La preview non chiude tutti i gate cloud della versione completa.
 
 ## 1. Cosa è disponibile
 
@@ -15,7 +15,7 @@ Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [procedura Vercel](..
 | Nutrizione | Target manuali kcal/macro, decorrenza e controllo 4/9/4 | Nessun calcolo automatico di obiettivi ancora attivo |
 | Catalogo | 26 esercizi iniziali (23 movimenti adattati + 3 a corpo libero), ricerca/filtro/dettagli | CRUD esercizi privati, media e varianti avanzate da completare |
 | Copia e recupero | JSON v1, anteprima, ID nuovi, note opt-in, export locale di base/overlay/coda/conflitti | Link privati, export completo account/CSV, recupero importato e cancellazione cloud da implementare |
-| Auth e sync | BFF email/password, Google/PKCE, recovery, cookie HttpOnly, RPC/RLS, ricevute, pull/cursori | Non collegati al progetto cloud; prove reali provider, multi-device e restore ancora aperte |
+| Auth e sync | BFF collegato, ruolo minimo e RPC/RLS/grant/consenso verificati sul cloud, ricevute/pull | Login positivo/email/recovery/refresh/multi-device/restore aperti; Google da configurare, SMTP ancora da scegliere |
 | Progressioni/AI | Contratti, fonti candidate e una funzione pura candidata sotto test | Nessun generatore o assistente attivo, nessuna modifica automatica ai target |
 
 Il codice implementa sezioni della roadmap in un percorso verticale anticipato. Le funzioni manuali locali permettono prove utili mentre si prepara Supabase. Questo non modifica il perimetro della versione completa e non chiude F3/F5 sulla base dei soli mock/PGlite.
@@ -26,14 +26,16 @@ Il codice implementa sezioni della roadmap in un percorso verticale anticipato. 
 | --- | --- | --- |
 | TypeScript strict | Superato con `npm run check` | Sorgenti inclusi nel progetto TS; non equivalenza a correctness runtime |
 | ESLint | Superato | Regole JS/TS e hooks, non revisione completa della sicurezza |
-| Unit | 21 test superati, 7 file | Dominio/ciclo/progressione candidata, contratti, crypto, input decimali, config, account GET/POST e isolamento UI con lettura ritardata |
-| Integration API | 4 test superati | Fastify reale in-process, provider assente, payload/Origin, nessuna sync anonima |
+| Unit | 23 test superati, 7 file | Dominio/ciclo/progressione candidata, contratti, crypto, input, account/isolamento UI, TLS portabile e pool serverless |
+| Integration API | 6 test superati | Fastify reale in-process, payload/Origin, anonimo, readiness503 e Google disabilitato senza flusso |
 | Integration IndexedDB | 5 test superati | Persistenza/isolamento, base-overlay/ricevute, conflitti conservati, immutabilità anche offline, overflow contatore con rollback |
-| Integration SQL | 6 test superati | Migrazione PGlite, RPC/RLS/grant, consenso/snapshot/retry, revisioni oltre 2^53, epoch/ID riusato e payload ostili |
+| Integration SQL | 8 test superati | Migrazioni come non-superuser, runtime minimo, claim JSON/null, RPC/RLS/grant, consenso/snapshot/retry, revisioni oltre 2^53 e input ostili |
 | Build e avvio | Web/PWA/server compilati; bundle server avviato realmente su loopback; CJS Vercel verificato su HTTP reale con 5 controlli | Esito del deploy HTTPS registrato separatamente; nessuna beta account implicita |
 | Formattazione | Prettier check finale superato, compresi schema/esempio e configurazioni TS root | Sorgenti/configurazioni; Markdown verificato separatamente |
 | Dipendenze | `npm audit --json`: 0 advisory sul lockfile all'11 ottobre 2026 | Fotografia degli advisory disponibili, non assenza universale di vulnerabilità |
-| Config locale | `config:check`: valid true / supabaseConfigured false senza .env | Comando provato, nessuna credenziale reale validata |
+| Config locale | valid true / supabaseConfigured true; preflight collegato, RLS/RPC/sessioni presenti e non-superuser | Collegamento reale; login positivo non provato |
+| Database cloud | RPC/consenso/retry/pull/isolation superati in transazione annullata; grant runtime su connessione reale | Non equivale a E2E Auth/PostgREST |
+| Vercel cloud | READY/preview; undici controlli HTTP reali, incluso ready200 sul DB | Protezione mantenuta; email/account confermato, telefoni e carico da provare |
 
 La prima fase del debug ha rilevato errori SQL, grant e bundle runtime che la sola lettura non aveva trovato; corretti e rieseguiti, con risultati registrati nel diario. Non nascondere quei fallimenti come se i test fossero stati verdi fin dall'inizio.
 
@@ -64,7 +66,7 @@ Il refuso `use strinct` non è copiato nel codice; i moduli ESM applicano strict
 
 ## 5. Prossime consegne in ordine
 
-1. **Collegamento Supabase F2–F3 / OPEN-05–OPEN-07:** compilare `.env`, preflight read-only, inventario del progetto, prova/applicazione migrazione, SMTP e callback; due account sintetici, email/Google/recupero, cookie/CSRF/refresh concorrente, grant diretti e ruolo pg minimo. Evidenza: suite provider reale e controlli account fuori UI.
+1. **Completamento Supabase F2–F3 / OPEN-05–OPEN-07:** schema/ruolo/connessione già verificati; completare [Auth](../operazioni/COMPLETARE_AUTH.md), SMTP/callback, due account, Google/recupero, cookie/CSRF/refresh concorrente e lease. Riconciliare baseline migrazioni prima di db push, predisporre staging separato. Evidenza: E2E provider reale e controlli account fuori UI.
 2. **Completamento sync F5:** scenari offline su due device, dipendenze/operation-result, paginazione watermark, ricevute rifiutate stabili, cambi account e logout offline; confronto/risoluzione esplicita dei conflitti, restore con nuovo epoch, import sicuro del recupero e gestione quota. Evidenza: nessun log perso/duplicato, nessun rebase silenzioso.
 3. **Editor/catalogo/import F4 / WP-07:** CRUD privato, editor target per serie/lato/tempo, convenzioni macchina e assistenza, calendario/rinvii, parser XLSX con limiti ZIP/celle/formule e report; fixture reali/anomale. Schema normalizzato additivo quando necessario, nessuna riscrittura dello storico approvato.
 4. **Motore F6:** corpus selezionato con diritti e regole forza/corpo libero/nutrizione revisionate; generatore a vincoli, proposta versionata con prima/dopo/motivo/dati mancanti; validazione server, consenso dell'utente e scadenza su revisione cambiata. ALG/QA e simulazioni devono passare prima dell'attivazione.
@@ -78,6 +80,6 @@ I dettagli e tutti i requisiti restano nella [roadmap completa](../ROADMAP_SVILU
 
 [Avvio/Supabase](../operazioni/AVVIO_LOCALE.md), [scelte del codice](../architettura/SCELTE_IMPLEMENTAZIONE.md), [diario](../DIARIO_SVILUPPO.md), [JSON Schema](../../schemas/workout-program.v1.schema.json), [esempio v1](../../examples/programma.v1.json).
 
-Il repository conserva le raccolte web, codice, lockfile, migrazione e fixture depurate. Esclude `.env`, certificati locali, cache, `node_modules`, build, originali Excel personali e vault privato. Non include licenze inventate per materiale altrui. Le modifiche alle API future devono documentare compatibilità dei client offline e aggiornare nello stesso commit specifiche/test/diario.
+Il repository conserva le raccolte web, codice, lockfile, quattro migrazioni, fixture depurate e la CA pubblica documentata in certificates/. Esclude `.env`, configurazioni/certificati locali, verifier privati, cache, `node_modules`, build, originali Excel personali e vault privato. Non include licenze inventate per materiale altrui. Le modifiche alle API future devono documentare compatibilità dei client offline e aggiornare nello stesso commit specifiche/test/diario.
 
 La verifica documentale precedente comprendeva 22 Markdown, 94 link locali, 58 tabelle, 3 esempi JSON e riferimenti a 35 casi QA, zero errori automatici rilevati; hash e conteggi Excel confermati. L'esito sul pacchetto ampliato è registrato nel diario. Questo controllo non dimostra che i 35 casi QA siano già passati sul prodotto. Spazi finali presenti nelle due raccolte originali sono preservati, non corretti silenziosamente.

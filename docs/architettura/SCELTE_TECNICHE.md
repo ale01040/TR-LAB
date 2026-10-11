@@ -1,6 +1,6 @@
 # Architettura e registro delle scelte tecniche
 
-Versione 1.1 · 10 ottobre 2026. PWA (DEC-01) e Supabase (DEC-18) sono confermati. Le soluzioni implementative raccomandate devono rispettare tutte le decisioni utente e sono da verificare con le prove indicate. Nessun servizio remoto è stato attivato.
+Versione 1.1 · Piano del 10 ottobre 2026. PWA (DEC-01) e Supabase (DEC-18) sono confermati. Le soluzioni raccomandate rispettano le decisioni utente e richiedono le prove indicate. Collegamento remoto autorizzato e verificato successivamente: [rapporto integrazione](../qualita/INTEGRAZIONE_SUPABASE.md).
 
 Aggiornamento implementativo 11 ottobre: [strumenti effettivi, adattamento JSONB, confini e compromessi dell'alpha](SCELTE_IMPLEMENTAZIONE.md). La struttura delle cartelle e le tabelle qui proposte descrivono l'obiettivo; il rapporto collegato distingue ciò che è già nel codice da ciò che manca.
 

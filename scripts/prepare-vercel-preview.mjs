@@ -4,6 +4,8 @@ import { resolve, join, extname } from 'node:path';
 import { createHash } from 'node:crypto';
 
 const root = resolve('.');
+const mode = process.argv[2] ?? 'device-preview';
+if (!['device-preview', 'connected'].includes(mode)) throw new Error('Modalità deploy non valida.');
 const staging = resolve('.analysis', `vercel-preview-${Date.now()}`);
 const source = resolve('apps/web/dist');
 const allowed = new Set(['.html', '.js', '.css', '.svg', '.webmanifest', '.png', '.woff2']);
@@ -50,7 +52,9 @@ await writeFile(
       buildCommand: '',
       installCommand: '',
       outputDirectory: 'public',
-      env: { DEPLOYMENT_MODE: 'device-preview' },
+      env: { DEPLOYMENT_MODE: mode },
+      regions: ['dub1'],
+      functions: { 'api/index.js': { maxDuration: 60 } },
     },
     null,
     2,
@@ -75,16 +79,12 @@ const digest = createHash('sha256')
   .digest('hex');
 await writeFile(
   join(staging, 'inventory.json'),
-  JSON.stringify(
-    { mode: 'device-preview', assets: inventory.sort(), serverSha256: digest },
-    null,
-    2,
-  ),
+  JSON.stringify({ mode, assets: inventory.sort(), serverSha256: digest }, null, 2),
 );
 console.log(
   JSON.stringify({
     staging,
-    mode: 'device-preview',
+    mode,
     assets: inventory.length,
     serverSha256: digest,
   }),

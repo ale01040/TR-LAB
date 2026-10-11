@@ -4,7 +4,7 @@
 
 ## 1. Strumenti effettivi e alternative
 
-È ora presente anche l'adapter preview Vercel: frontend CDN + stessa API in una funzione Node, senza cloud configurato. Motivazioni, alternativa persistente, pool/rate limiter e gate connected nella [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La riga Fastify descrive il server locale; il deploy non certifica ancora refresh/sync sul provider reale.
+Adapter Vercel collegato: frontend CDN + stessa API Node24, pooler Supabase reale, ruolo minimo e CA verificata. [Prove e compromessi](../qualita/INTEGRAZIONE_SUPABASE.md), [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). Il deploy non certifica ancora refresh/sync multi-device o login positivo.
 
 | Scelta | Motivazione nel codice | Costi / alternativa / condizione di revisione |
 | --- | --- | --- |
@@ -16,7 +16,7 @@
 | CSS Modules / custom properties | Stili espliciti, temi, Grid/Flex, stampa e adattamento palestra | Richiede controllo accessibilità; nessun kit acquisito senza prova. Tailwind non risolve i requisiti di diario/stampa da solo |
 | Fetch e API same-origin | Un solo percorso per Auth/sync, nessun SDK Supabase nel browser | Timeout ed esiti sconosciuti da gestire. TanStack Query aggiungerebbe una seconda cache senza un bisogno misurato |
 | Workbox injectManifest | Cache soltanto asset/navigation, niente risposte `/api`; aggiornamento su scelta esplicita | PWA installabile da collaudare su telefoni reali; precache comprende anche chunk lazy. Non promettere sync o timer affidabili in background |
-| pg per session store | Transazioni e lock per coordinare refresh; query parametrizzate | Ruolo runtime limitato da preparare prima del pubblico. ORM non elimina RLS, consenso o controllo delle ricevute |
+| pg per session store | Transazioni e lock per coordinare refresh; query parametrizzate, ruolo runtime minimo verificato | Pool serverless max2/idle5s, attachDatabasePool; lease e carico ancora da collaudare. ORM non elimina RLS, consenso o controllo delle ricevute |
 | Vitest / Testing Library / PGlite | Prove di dominio, input, IndexedDB, HTTP e PostgreSQL reale incorporato | PGlite non contiene GoTrue/PostgREST. Browser verificato manualmente; Playwright/axe presenti come strumenti, suite E2E automatica non ancora implementata |
 
 Versioni esatte in manifest e `package-lock.json`, toolchain in `engines`/`packageManager`. Esbuild 0.28.2 è un override motivato da un advisory Windows del vecchio dev server; build e test ne verificano la compatibilità con tsup. Audit corrente senza advisory rilevati, non garanzia assoluta. Non eseguire aggiornamenti major o `audit fix --force` alla cieca.
@@ -64,7 +64,7 @@ Refresh serializzato con lock di riga; verifica del provider prima di utilizzare
 
 SHA-256 nel ledger SQL e SHA-3 nel server rispettano DEC-23. Non sono algoritmi per le password. AES-256-GCM gestisce cifratura con nonce casuale/tag; i cursori HMAC sono legati a owner, epoch e contatori esatti. Nessuna crittografia inventata per le progressioni.
 
-In HTTP loopback la cookie non può essere Secure; produzione richiede HTTPS e prefisso `__Host-`. Prima del pubblico: ruolo pg minimo, verifiche login/email/Google/refresh/revoca/CSRF reali, session cleanup/rotazione, logout globale e processo cancellazione dati. Il logout offline conserva una richiesta di revoca e sospende il sync; non promette revoca istantanea del provider mentre il PC è offline.
+In HTTP loopback la cookie non può essere Secure; produzione richiede HTTPS e prefisso `__Host-`. Ruolo pg minimo verificato; prima del pubblico restano login/email/Google/refresh/revoca, CSRF con sessione reale, cleanup/rotazione, logout globale e cancellazione dati. Google resta false finché provider/flag non sono pronti. Il logout offline conserva una richiesta di revoca e sospende il sync; non promette revoca istantanea del provider mentre il PC è offline.
 
 ## 5. Offline e consenso
 

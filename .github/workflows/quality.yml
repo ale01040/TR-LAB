@@ -22,5 +22,5 @@ jobs:
       - run: npm run check
       - run: npm run format:check
       - run: npm audit --audit-level=low
-# Predisposta, non eseguita su GitHub. Nessun deploy, segreto o servizio remoto.
+# Eseguita su GitHub: verifica il commit corrente su Ubuntu e Windows, senza deploy o segreti.
 # SHA verificati su repository ufficiali l'11 ottobre 2026; nessun deploy.

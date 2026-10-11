@@ -1,6 +1,6 @@
 # Decisioni confermate e domande residue
 
-Versione 1.2 · 11 ottobre 2026. Registro delle decisioni del committente e dei punti da chiudere. Prima alpha locale sviluppata su autorizzazione successiva alla pianificazione; nessun servizio remoto attivato o modificato. Progetto Supabase e repository esistenti indicati dal committente. Indice in [README](README.md).
+Versione 1.2 · 11 ottobre 2026. Registro delle decisioni del committente e dei punti da chiudere. Sviluppo, collegamento Supabase e preview Vercel autorizzati dopo la pianificazione; esiti nel rapporto di integrazione. Progetto Supabase e repository appartengono al committente. Indice in [README](README.md).
 
 ## 1. Registro delle decisioni confermate
 
@@ -30,9 +30,11 @@ Versione 1.2 · 11 ottobre 2026. Registro delle decisioni del committente e dei 
 | DEC-22 | Nome dell'app TR LAB | Sostituisce i nomi provvisori precedenti; visual identity alpha modificabile |
 | DEC-23 | SHA-256 nel database e SHA-3 nel server | Eccezione crittografica esplicita confermata; password gestite da Supabase Auth, non da questi digest |
 | DEC-24 | Risolvere autonomamente scelte tecniche con analisi dei trade-off e fonti | Documentare motivazioni e alternative; non cambiare requisiti di prodotto o consenso senza istruzione |
-| DEC-25 | Usare il progetto Supabase esistente mxaogzjquvhwurngktyz; prima preparare istruzioni | Configurazione d'esempio e procedura senza segreti; nessuna migrazione cloud eseguita in questa consegna |
+| DEC-25 | Usare il progetto Supabase esistente mxaogzjquvhwurngktyz; prima preparare istruzioni | Istruzioni consegnate; successivo collegamento autorizzato in DEC-28, migrazioni e prove registrate senza segreti |
 | DEC-26 | Caricare il progetto nel repository ale01040/TR-LAB | Conservare main e cronologia esistente; pubblicare codice/documenti/fixture depurate, ignorare segreti e originale Excel personale |
 | DEC-27 | Dopo le verifiche fare il deploy su Vercel | Preview richiesta e autorizzata; senza configurazione Supabase resta modalità dispositivo, nessuna beta account o migrazione automatica |
+| DEC-28 | Collegare Supabase e far funzionare il backend su Vercel | Schema/ruolo minimo, pooler/TLS e prove reali; non elimina i gate Auth, SMTP, sincronizzazione e pubblico |
+| DEC-29 | Trasferire i cinque valori indicati al solo Preview pere01040/tr-lab | Consenso esplicito a URL/provider/CA e a DATABASE_URL/SESSION_ENCRYPTION_KEY come Secret; nessuna credenziale amministrativa o produzione implicita |
 
 La generazione usa solo contenuti e metodi pertinenti all'ambito confermato. Il diario è uno strumento di registrazione; non deve classificare condizioni mediche o formulare diagnosi dalle misure.
 

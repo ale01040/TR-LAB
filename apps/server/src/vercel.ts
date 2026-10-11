@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { buildApp } from './app.js';
 import { loadConfig } from './config.js';
+import { attachDatabasePool } from '@vercel/functions';
 
 // La piattaforma controlla questi valori; l'Host di una richiesta non decide mai l'origine CSRF.
 export function deploymentConfig(input: NodeJS.ProcessEnv = process.env) {
@@ -8,6 +9,7 @@ export function deploymentConfig(input: NodeJS.ProcessEnv = process.env) {
   return loadConfig({
     ...input,
     NODE_ENV: 'production',
+    SERVER_RUNTIME: 'serverless',
     APP_ORIGIN: origin,
     DEPLOYMENT_MODE:
       input.DEPLOYMENT_MODE ?? (input.VERCEL_ENV === 'preview' ? 'device-preview' : 'connected'),
@@ -17,7 +19,10 @@ export function deploymentConfig(input: NodeJS.ProcessEnv = process.env) {
 let application: Promise<Awaited<ReturnType<typeof buildApp>>> | undefined;
 export default async function handler(request: IncomingMessage, response: ServerResponse) {
   // Stessa API del server locale, senza porta in ascolto né file personali nella funzione.
-  application ??= buildApp(deploymentConfig(), { serveWeb: false }).then(async (app) => {
+  application ??= buildApp(deploymentConfig(), {
+    serveWeb: false,
+    onPool: attachDatabasePool,
+  }).then(async (app) => {
     await app.ready();
     return app;
   });

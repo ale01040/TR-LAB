@@ -1,12 +1,48 @@
 import { expect, it } from 'vitest';
 import { loadConfig } from '../../apps/server/src/config';
 import { deploymentConfig } from '../../apps/server/src/vercel';
+import { databasePoolConfig } from '../../apps/server/src/database';
+import { readFileSync } from 'node:fs';
 const configured = {
   SUPABASE_URL: 'https://example.supabase.co',
   SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_synthetic',
   DATABASE_URL: 'postgresql://test:synthetic@example.test:5432/postgres?sslmode=verify-full',
   SESSION_ENCRYPTION_KEY: Buffer.alloc(32, 1).toString('base64'),
 };
+it('TLS portabile mantiene la verifica completa e rifiuta configurazioni ambigue', () => {
+  const ca = readFileSync('certificates/supabase-prod-ca-2021.crt');
+  const config = loadConfig({ ...configured, DATABASE_CA_CERT_BASE64: ca.toString('base64') });
+  const pool = databasePoolConfig(config);
+  expect(new URL(pool.connectionString!).searchParams.has('sslmode')).toBe(false);
+  expect(pool.ssl).toEqual({ ca, rejectUnauthorized: true });
+  expect(() =>
+    loadConfig({
+      ...configured,
+      DATABASE_CA_CERT_BASE64: Buffer.from('PRIVATE KEY').toString('base64'),
+    }),
+  ).toThrow('CA');
+  expect(() =>
+    loadConfig({
+      ...configured,
+      DATABASE_CA_CERT_BASE64: ca.toString('base64'),
+      DATABASE_URL: `${configured.DATABASE_URL}&sslrootcert=local.pem`,
+    }),
+  ).toThrow('sola configurazione');
+  expect(databasePoolConfig(loadConfig(configured)).connectionString).toBe(configured.DATABASE_URL);
+});
+it('runtime Vercel usa un pool riutilizzabile limitato e non invia opzioni di startup al pooler', () => {
+  const config = deploymentConfig({
+    ...configured,
+    DEPLOYMENT_MODE: 'connected',
+    VERCEL_URL: 'tr-lab-synthetic.vercel.app',
+  });
+  const pool = databasePoolConfig(config);
+  expect(config.SERVER_RUNTIME).toBe('serverless');
+  expect(pool.max).toBe(2);
+  expect(pool.idleTimeoutMillis).toBe(5000);
+  expect(pool.options).toBeUndefined();
+  expect(pool.query_timeout).toBe(25000);
+});
 it('configurazione cloud rifiuta segreti API elevati e SSL non verificato', () => {
   expect(loadConfig(configured).SUPABASE_URL).toBe(configured.SUPABASE_URL);
   expect(() =>

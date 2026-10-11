@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { credentialsSchema } from '@tr-lab/contracts';
 import type { Config } from './config.js';
 import { decrypt, encrypt, hash, opaque } from './crypto.js';
+import { databasePoolConfig } from './database.js';
 
 type TokenPair = { access_token: string; refresh_token: string; expires_at: number };
 type StoredSession = {
@@ -37,15 +38,7 @@ export class AuthService {
   readonly key: Buffer;
   readonly cookie: string;
   constructor(readonly config: Config) {
-    this.pool = config.DATABASE_URL
-      ? new Pool({
-          connectionString: config.DATABASE_URL,
-          max: 10,
-          connectionTimeoutMillis: 5000,
-          idleTimeoutMillis: 30000,
-          options: '-c statement_timeout=25000',
-        })
-      : null;
+    this.pool = config.DATABASE_URL ? new Pool(databasePoolConfig(config)) : null;
     this.key = config.SESSION_ENCRYPTION_KEY
       ? Buffer.from(config.SESSION_ENCRYPTION_KEY, 'base64')
       : Buffer.alloc(32);
@@ -285,6 +278,7 @@ export function authRoutes(app: FastifyInstance, auth: AuthService) {
     };
   });
   app.post('/api/auth/google', async (_request, reply) => {
+    if (!auth.config.GOOGLE_AUTH_ENABLED) throw new HttpError(503, 'GOOGLE_NOT_CONFIGURED');
     const flow = await auth.flow('google', reply);
     const result = await auth.client(undefined, flow.storage).auth.signInWithOAuth({
       provider: 'google',
