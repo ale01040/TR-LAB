@@ -255,3 +255,10 @@ Questo file registra gli interventi sul progetto: file creati o modificati, moti
 - **Scansione commit:** 112 file preparati, nessun file riservato/possibile segreto rilevato; scanner stampa solo nomi/diagnosi, mai valori. Primo avvio scanner dentro sandbox impedito da spawn Git, riesecuzione autorizzata riuscita. Nessun rifiuto auto-review.
 - **Consegna Git:** commit/push verso main richiesti dal committente, senza force, con cronologia iniziale conservata. Risultato remoto da verificare dopo il comando; questa voce non afferma che il push sia già riuscito.
 - **Cloud:** soltanto istruzioni, schema e configurazione d'esempio; Supabase non ancora collegato, regole/AI non operative.
+
+## 11 ottobre 2026 · DEV-035 · Commit locale e cattura desktop corretta
+
+- **Commit locale:** `0b53d8f`, 114 file, cronologia iniziale preservata. Controllo Git dei file nuovi senza errori whitespace; le raccolte originali restano distinte.
+- **Modificati:** screenshot desktop, rapporto implementazione, diario. La prima cattura via wrapper era limitata alla larghezza del pannello; sostituita con la cattura della pagina a 1366×900, aperta e verificata visivamente. Viewport ripristinata; nessun dato personale nelle evidenze.
+- **Verifica documentale aggiornata:** 22 Markdown, 94 link locali, 58 tabelle, 3 JSON e zero errori; soltanto documentazione, non nuovi test dell'app.
+- **Prossimo comando:** commit di queste evidenze/documenti, push non forzato e confronto SHA remoto/locale. Esito pubblicazione da verificare dopo l'esecuzione.
