@@ -1,6 +1,6 @@
 # TR LAB — revisione dell'app e preparazione del deploy
 
-11 ottobre 2026 · Alpha 0.1.0 · Verifica del codice presente e della build, distinta dalla futura versione completa. Preview in modalità dispositivo pubblicata; [esito e URL Vercel](../operazioni/DEPLOY_VERCEL.md) confermati tramite metadata READY/preview, funzione Node24 presente. Il routing e i flussi dell'app distribuita non sono stati collaudati via HTTP remoto; restano distinti dalle cinque prove locali sul bundle.
+11 ottobre 2026 · Alpha 0.1.0 · Rapporto della revisione precedente al collegamento cloud: preview dispositivo e cinque prove HTTP locali sul bundle, senza E2E remoto in quella fase. Conserva le evidenze di codice/layout di quella consegna. L'aggiornamento successivo ha collegato Supabase e superato undici controlli HTTP reali su Vercel: [integrazione corrente e limiti](INTEGRAZIONE_SUPABASE.md), [deploy](../operazioni/DEPLOY_VERCEL.md).
 
 ## 1. Esito e perimetro
 

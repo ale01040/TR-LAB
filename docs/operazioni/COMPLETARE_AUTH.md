@@ -10,7 +10,7 @@ Aprire il progetto `mxaogzjquvhwurngktyz` in Supabase, **Authentication → URL 
 - Redirect URL: `https://tr-9lstvuhyr-pere01040.vercel.app/api/auth/callback\?state=*`.
 - Per sviluppo Vite: `http://localhost:5173/api/auth/callback\?state=*`.
 
-Nel pattern il backslash prima del punto interrogativo lo rende letterale per il matcher glob. L'asterisco copre lo state UUID; dominio e percorso restano specifici. Non usare wildcard su tutti i domini Vercel. Ogni nuova origine necessita della propria autorizzazione; per produzione scegliere un dominio stabile e allineare APP_ORIGIN. [Pattern e Site URL ufficiali](https://supabase.com/docs/guides/auth/redirect-urls).
+Nel pattern il backslash prima del punto interrogativo lo rende letterale per il matcher glob. L'asterisco copre il valore casuale state; dominio e percorso restano specifici. Non usare wildcard su tutti i domini Vercel. Ogni nuova origine necessita della propria autorizzazione; per produzione scegliere un dominio stabile e allineare APP_ORIGIN. [Pattern e Site URL ufficiali](https://supabase.com/docs/guides/auth/redirect-urls).
 
 Nella preview APP_ORIGIN deriva dal VERCEL_URL affidabile della piattaforma, non dall'Host inviato dal client. Usare esattamente il dominio sopra: un alias diverso può essere rifiutato dal controllo Origin. La protezione Vercel richiede anche accesso al workspace; non equivale al login personale TR LAB e non è stata disabilitata.
 
@@ -21,6 +21,31 @@ Email/password e conferma email sono già abilitate nel provider. Mantenere la v
 In **Authentication → Email / SMTP Settings** inserire host, porta, account/password del proprio servizio, mittente verificato e nome TR LAB. Conservare il segreto nel provider/gestore di segreti, non nell'app web. Verificare dominio mittente e requisiti SPF/DKIM/DMARC del servizio scelto; non acquistare un servizio o cambiare DNS senza il relativo incarico.
 
 Controllare i template di conferma e recupero: per il flusso attuale usare il link di verifica del provider (`ConfirmationURL`) e preservare redirectTo/state/PKCE. Non copiare template che puntano a una rotta `/auth/confirm` non presente in questa app. Il browser apre il provider e ritorna a `/api/auth/callback` con code/state. Non aggiungere token Auth al frontend o ai log.
+
+### 2.1 Scelta SMTP proposta e istruzioni
+
+Per il primo collegamento consiglio **Resend via SMTP**: si configura nel provider Auth senza aggiungere SDK, chiavi o chiamate email al BFF. È una scelta tecnica di semplicità, non una prova di consegna superiore. Richiede un account del committente, un dominio verificato e la chiave del servizio; nessuno è stato creato o acquistato in questa consegna. [Prerequisiti e SMTP Resend](https://resend.com/docs/send-with-smtp).
+
+| Opzione | Perché usarla | Compromesso |
+| --- | --- | --- |
+| Resend SMTP | Configurazione host/utente/chiave diretta, invii visibili nella dashboard | Dominio e quote da gestire; non espone log SMTP completi per il debug |
+| AWS SES SMTP | Alternativa se si gestiscono già servizi AWS e invio per regione | Endpoint e credenziali SMTP specifici della regione, identità verificata e quote; più configurazione operativa per questo progetto |
+| SMTP di test Supabase | Primo collaudo con indirizzo di un membro del team | Destinatari limitati e consegna senza SLA; non adatto all'accesso degli amici |
+
+La valutazione di semplicità è un'inferenza dalle procedure ufficiali; non è un benchmark. Fonti: [Resend SMTP](https://resend.com/docs/send-with-smtp), [SES SMTP](https://docs.aws.amazon.com/ses/latest/dg/send-email-smtp.html), [Supabase SMTP](https://supabase.com/docs/guides/auth/auth-smtp). Verificare quote/prezzi prima dell'attivazione; non fissare quantità nel codice.
+
+Configurazione proposta in Supabase, dopo la verifica del dominio:
+
+| Campo | Valore |
+| --- | --- |
+| Host | smtp.resend.com |
+| Porta | 465, TLS implicito supportato dal servizio |
+| Utente | resend |
+| Password | Chiave privata Resend inserita direttamente nel provider, mai in questo documento |
+| Sender email | Indirizzo del dominio verificato del committente, da definire |
+| Sender name | TR LAB |
+
+Completare DNS/verifica con i valori forniti dal servizio, senza inventarli o sostituire record esistenti alla cieca. Salvare SMTP nel progetto Supabase corretto; verificare i limiti Auth e del servizio. Eseguire conferma e recupero con indirizzi di prova controllati, verificando email ricevuta, link e ritorno con sessione. Ripetere poi con un destinatario di prova esterno al team. Il cambio SMTP non modifica il codice o i segreti già autorizzati su Vercel.
 
 ## 3. Primo collaudo con account reale di prova
 

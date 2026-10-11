@@ -59,6 +59,7 @@ Il core locale include correzioni di grant emerse durante il collaudo remoto e p
 | RPC nel PostgreSQL cloud | Bozza/approvazione/retry/pull/lettura propria superati; account B isolato, scrittura generica/anonimo respinti |
 | Pulizia fixture cloud | Transazione ROLLBACK; utenti Auth e record applicativi rimasti zero |
 | Suite completa locale finale | 23 unit +19 integration (API6, IndexedDB5, SQL8) superati; typecheck/lint/build e format:check passati |
+| CI GitHub sul codice collegato | Commit 3b750db90d2c9dea21c2edac57a7281635d1ec11, run38177747128 success su Ubuntu/Windows: installazione, check, formato e audit |
 | Bundle CJS collegato, HTTP locale | Cinque prove su pooler reale: ready, sessione anonima, login errato, sync anonima e CSRF |
 | Vercel reale, CLI protetta | Undici prove: health/ready/sessione, sync401, API404, SPA200, asset mancante404, worker200/no-cache, CSRF403, login errato401, Google non configurato503 |
 | Pacchetto / segreti | 22 file di upload; confronto con password/connection string/chiave reali senza corrispondenze; .env.local/OIDC escluso dalla whitelist |
@@ -66,6 +67,8 @@ Il core locale include correzioni di grant emerse durante il collaudo remoto e p
 Queste prove SQL simulano il contesto authenticated nella transazione: non sono un login GoTrue/PostgREST end-to-end. I tentativi HTTP con credenziali errate verificano il rifiuto del provider, non il successo di registrazione/login o refresh. Nessuna email inviata e nessun account persistente artificiale creato.
 
 Il primo tentativo della suite finale nel sandbox Windows si è fermato su spawn EPERM di Vitest/Vite dopo typecheck/lint; la ripresa con i permessi necessari ai processi ha superato tutti i 42 test. Build riuscita con un warning di deprecazione inlineDynamicImports nel plugin PWA: non è un errore di compilazione, va seguito nell'aggiornamento del plugin. Audit dipendenze: zero vulnerabilità rilevate nel controllo eseguito; non equivale a un audit completo dell'app.
+
+[Run GitHub verificata](https://github.com/ale01040/TR-LAB/actions/runs/38177747128). Aggiornamenti successivi delle sole guide non cambiano gli artefatti già pubblicati; verificare la CI associata a ogni nuovo SHA e non usare una run precedente per attestare modifiche di codice successive.
 
 Provider settings reali: email abilitata, registrazione consentita, conferma email richiesta, Google disabilitato. Callback/Site URL/SMTP non modificati in questa consegna; login positivo, conferma, recupero, refresh concorrente, due dispositivi, cancellazione/restore restano aperti. Procedura concreta: [completare Auth](../operazioni/COMPLETARE_AUTH.md).
 

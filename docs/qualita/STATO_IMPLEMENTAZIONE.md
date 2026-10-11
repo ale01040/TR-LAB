@@ -18,7 +18,7 @@ Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [integrazione reale](
 | Auth e sync | BFF collegato, ruolo minimo e RPC/RLS/grant/consenso verificati sul cloud, ricevute/pull | Login positivo/email/recovery/refresh/multi-device/restore aperti; Google da configurare, SMTP ancora da scegliere |
 | Progressioni/AI | Contratti, fonti candidate e una funzione pura candidata sotto test | Nessun generatore o assistente attivo, nessuna modifica automatica ai target |
 
-Il codice implementa sezioni della roadmap in un percorso verticale anticipato. Le funzioni manuali locali permettono prove utili mentre si prepara Supabase. Questo non modifica il perimetro della versione completa e non chiude F3/F5 sulla base dei soli mock/PGlite.
+Il codice implementa sezioni della roadmap in un percorso verticale anticipato. Le funzioni manuali locali restano utilizzabili durante l'indisponibilità del servizio online. Questo non modifica il perimetro della versione completa e non chiude F3/F5 sulla base dei soli mock/PGlite.
 
 ## 2. Prove realmente eseguite
 
