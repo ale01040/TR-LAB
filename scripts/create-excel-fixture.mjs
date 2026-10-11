@@ -120,8 +120,9 @@ writeFileSync(
   JSON.stringify(
     {
       sha256: hash,
-      positions: 25,
-      distinct: 24,
+      positions: rows.length,
+      distinct: new Set(rows.map((r) => r[2])).size,
+      adaptedDistinct: new Set(days.flatMap((d) => d.exercises.map((e) => e.exercise.id))).size,
       adapted: true,
       exclusions: [
         'Profilo, pesate, misure e risultati personali',
@@ -129,6 +130,7 @@ writeFileSync(
         'Note tecniche individuali e formule Excel',
       ],
       choices: [
+        'Lo stesso movimento indicato come più leggero/più ripetizioni usa una voce catalogo comune; i target delle posizioni restano distinti',
         'RIR di intervallo: minimo conservato e intervallo riportato nelle note',
         'Settimana test: target base da verificare manualmente',
         'Scarico: metà serie arrotondata in alto, RIR 3 da verificare',

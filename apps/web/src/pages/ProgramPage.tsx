@@ -57,6 +57,7 @@ export function ProgramPage() {
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const [draft, setDraft] = useState<Program | null>(null);
   const [preview, setPreview] = useState<Program | null>(null);
+  const [previewFromExcel, setPreviewFromExcel] = useState(false);
   const [approval, setApproval] = useState<Program | null>(null);
   const [sharing, setSharing] = useState<Program | null>(null);
   const [shareNotes, setShareNotes] = useState(false);
@@ -105,6 +106,7 @@ export function ProgramPage() {
           'In questa alpha è supportato il modello JSON TR LAB. Il parser XLSX completo è previsto nel pacchetto WP-07.',
         );
       const model = templateSchema.parse(JSON.parse(await file.text()));
+      setPreviewFromExcel(false);
       setPreview(copyProgram(model.program, () => crypto.randomUUID(), new Date().toISOString()));
     } catch (error) {
       notify(errorMessage(error));
@@ -132,15 +134,16 @@ export function ProgramPage() {
       </div>
       <div className={styles.actionStrip}>
         <button
-          onClick={() =>
+          onClick={() => {
+            setPreviewFromExcel(true);
             setPreview(
               copyProgram(
                 templateSchema.parse(rawTemplate).program,
                 () => crypto.randomUUID(),
                 new Date().toISOString(),
               ),
-            )
-          }
+            );
+          }}
         >
           <Copy size={18} aria-hidden="true" />
           Parti dalla struttura Excel
@@ -244,7 +247,9 @@ export function ProgramPage() {
                     <span>SETT. {i + 1}</span>
                     <strong>{w.name}</strong>
                     <small>
-                      {w.extraSets ? `+${w.extraSets} serie dove previsto` : 'Serie base'}
+                      {w.extraSets
+                        ? `+${counted(w.extraSets, 'serie', 'serie')} dove previsto`
+                        : 'Serie base'}
                       {w.rir !== null ? ` · RIR ${w.rir}` : ''}
                     </small>
                   </div>
@@ -336,7 +341,7 @@ export function ProgramPage() {
             La copia avrà nuovi identificativi. Non contiene diario, pesate o dati dell'altra
             persona. Potrai modificarla prima di approvarla.
           </p>
-          {preview.source.includes('Excel') || preview.source.includes('.xlsx') ? (
+          {previewFromExcel ? (
             <>
               <h3>Adattamenti dichiarati</h3>
               <ul>
@@ -571,6 +576,11 @@ function ProgramEditor({
           <legend>
             {index + 1}. {p.exercise.name}
           </legend>
+          <p className={styles.hint}>
+            I campi numerici mostrano la prima serie: modificarli applica il nuovo valore a tutte le
+            serie di questo esercizio. Le differenze tra serie importate restano conservate finché
+            non cambi il campo corrispondente. Controlla il riepilogo prima di approvare.
+          </p>
           <div className={styles.doseGrid}>
             <label>
               Serie
@@ -796,7 +806,7 @@ function ProgramEditor({
             />
           </label>
           <label>
-            Override RIR
+            RIR della settimana
             <select
               value={w.rir ?? ''}
               onChange={(e) =>

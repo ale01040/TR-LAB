@@ -126,6 +126,10 @@ export async function saveLocally(
           'La scheda supera il limite cloud di 200 KiB. Riduci il contenuto o dividi le giornate prima di salvarla.',
         );
       const nowOrder = Number((await metadata(`${account}:order`, database)) ?? '0') + 1;
+      if (!Number.isSafeInteger(nowOrder) || nowOrder < 1)
+        throw new Error(
+          'Contatore locale non valido. Esporta il backup prima di ripristinare il dispositivo.',
+        );
       await setMetadata(`${account}:order`, String(nowOrder), database);
       const changed = [entity, ...related];
       if (account === localAccount) {
@@ -197,25 +201,32 @@ export async function storeNewer(account: string, entity: Entity, database = db)
     await database.base.put({ key: key(account, entity.id), account, entity });
 }
 export async function emergencyExport(account: string, database = db): Promise<string> {
-  const [base, overlay, outbox, conflicts] = await Promise.all([
-    database.base.where('account').equals(account).toArray(),
-    database.overlay.where('account').equals(account).toArray(),
-    database.outbox.where('account').equals(account).toArray(),
-    database.conflicts.where('account').equals(account).toArray(),
-  ]);
-  return JSON.stringify(
-    {
-      format: 'tr-lab-local-recovery',
-      schema_version: 1,
-      warning: 'Include dati locali non sincronizzati. Non è un modello condivisibile.',
-      account,
-      exportedAt: new Date().toISOString(),
-      base,
-      overlay,
-      outbox,
-      conflicts,
+  // Una sola fotografia consistente: una ricevuta non può separare coda e overlay nel backup.
+  return database.transaction(
+    'r',
+    [database.base, database.overlay, database.outbox, database.conflicts],
+    async () => {
+      const [base, overlay, outbox, conflicts] = await Promise.all([
+        database.base.where('account').equals(account).toArray(),
+        database.overlay.where('account').equals(account).toArray(),
+        database.outbox.where('account').equals(account).toArray(),
+        database.conflicts.where('account').equals(account).toArray(),
+      ]);
+      return JSON.stringify(
+        {
+          format: 'tr-lab-local-recovery',
+          schema_version: 1,
+          warning: 'Include dati locali non sincronizzati. Non è un modello condivisibile.',
+          account,
+          exportedAt: new Date().toISOString(),
+          base,
+          overlay,
+          outbox,
+          conflicts,
+        },
+        null,
+        2,
+      );
     },
-    null,
-    2,
   );
 }

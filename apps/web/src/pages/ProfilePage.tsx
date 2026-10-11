@@ -3,12 +3,12 @@ import { ArrowDownToLine, ArrowRight, LogOut, Moon, Sun } from 'lucide-react';
 import { useApp } from '../components/AppProvider';
 import { emergencyExport, metadata, setMetadata } from '../data/database';
 import { api, ApiError } from '../data/sync';
-import { downloadJson, errorMessage } from '../components/Shared';
+import { counted, downloadJson, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
 
 const messages: Record<string, string> = {
   NOT_CONFIGURED:
-    'Supabase non è ancora collegato. Segui docs/operazioni/AVVIO_LOCALE.md per configurarlo.',
+    'Accesso non disponibile in questa anteprima. Schede e diario restano sul dispositivo.',
   INVALID_CREDENTIALS: 'Accesso non riuscito. Controlla email e password.',
   RATE_LIMITED: 'Troppi tentativi. Attendi prima di riprovare.',
   INVALID_PASSWORD: 'Usa una passphrase di almeno 12 caratteri, entro 72 byte UTF-8.',
@@ -74,7 +74,9 @@ export function ProfilePage() {
       window.location.assign(result.url);
     } catch (error) {
       setError(
-        error instanceof ApiError ? (messages[error.code] ?? error.code) : errorMessage(error),
+        error instanceof ApiError
+          ? (messages[error.code] ?? 'Accesso Google non riuscito. Riprova tra poco.')
+          : errorMessage(error),
       );
       setBusy(false);
     }
@@ -99,7 +101,9 @@ export function ProfilePage() {
       <div className={styles.twoColumns}>
         <section className={styles.panel}>
           <div className={styles.sectionHeading}>
-            <h2>{user ? 'Account personale' : 'Accedi a TR LAB'}</h2>
+            <h2>
+              {user ? 'Account personale' : configured ? 'Accedi a TR LAB' : 'Modalità dispositivo'}
+            </h2>
             <span className={styles.badge}>{user ? 'Personale' : 'Modalità dispositivo'}</span>
           </div>
           {user?.recovery ? (
@@ -154,13 +158,21 @@ export function ProfilePage() {
                 </button>
               </div>
               <p className={styles.hint}>
-                {pending} operazioni locali · {conflicts} conflitti da rivedere
+                {counted(pending, 'operazione locale', 'operazioni locali')} ·{' '}
+                {counted(conflicts, 'conflitto da rivedere', 'conflitti da rivedere')}
                 {lastSync
                   ? ` · Ultima sincronizzazione: ${new Date(lastSync).toLocaleString('it-IT')}`
                   : ''}
                 .
               </p>
             </>
+          ) : !configured ? (
+            <p className={styles.setupNote}>
+              In questa anteprima puoi usare schede, diario e misure sul dispositivo. Login e
+              sincronizzazione saranno disponibili dopo il collegamento e il collaudo del servizio
+              account. Esporta regolarmente un backup: i dati locali non si trasferiscono
+              automaticamente tra telefono e PC.
+            </p>
           ) : (
             <>
               <div className={styles.tabs} role="group" aria-label="Modalità di accesso">
@@ -177,12 +189,6 @@ export function ProfilePage() {
                   Registrati
                 </button>
               </div>
-              {!configured && (
-                <p className={styles.setupNote}>
-                  Ambiente locale: collegamento Supabase da configurare. Puoi già usare schede e
-                  diario sul dispositivo.
-                </p>
-              )}
               <form onSubmit={(e) => void submit(e)}>
                 <label>
                   Email
@@ -316,7 +322,7 @@ export function ProfilePage() {
             <summary>Stato di questa versione</summary>
             <p>
               Schede manuali, struttura Excel adattata, diario offline, peso, circonferenze e target
-              manuali. Supabase è predisposto per il collegamento locale.
+              manuali. Il servizio account è predisposto per il collegamento e il collaudo.
             </p>
             <p>
               Progressioni, generatore, assistente AI, parser XLSX completo e condivisione tramite

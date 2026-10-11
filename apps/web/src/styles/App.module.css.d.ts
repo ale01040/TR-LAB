@@ -69,10 +69,13 @@ declare const styles: {
   readonly selectedProgram: string;
   readonly setActions: string;
   readonly setError: string;
+  readonly setField: string;
+  readonly setFieldCaption: string;
   readonly setHeader: string;
   readonly setLabel: string;
   readonly setRow: string;
   readonly setSaved: string;
+  readonly setStatus: string;
   readonly setupNote: string;
   readonly shell: string;
   readonly sidebar: string;

@@ -887,6 +887,13 @@
   padding: 0.5rem 0.65rem;
   min-width: 0;
 }
+.setField {
+  min-width: 0;
+  margin: 0;
+}
+.setFieldCaption {
+  display: none;
+}
 .setLabel strong {
   display: block;
   font-size: 0.85rem;
@@ -1209,7 +1216,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     align-items: center;
     justify-content: space-around;
     background: var(--background);
@@ -1224,7 +1232,7 @@
     align-items: center;
     text-decoration: none;
     color: var(--muted);
-    min-width: 3.8rem;
+    min-width: 0;
     min-height: 2.75rem;
     font-size: 0.58rem;
   }
@@ -1374,10 +1382,28 @@
   .doseGrid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .setHeader,
+  .setHeader {
+    display: none;
+  }
   .setRow {
-    gap: 0.3rem;
-    grid-template-columns: minmax(3.9rem, 1fr) repeat(3, minmax(2rem, 0.6fr)) minmax(2.75rem, 0.6fr);
+    gap: 0.75rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .setLabel,
+  .setActions,
+  .setStatus {
+    grid-column: 1 / -1;
+  }
+  .setLabel span {
+    font-size: 0.75rem;
+  }
+  .setFieldCaption {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+  .setActions {
+    justify-content: flex-end;
   }
   .macroStrip {
     grid-template-columns: repeat(2, 1fr);

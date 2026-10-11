@@ -1,5 +1,8 @@
 # Manuale di progetto — indice e ordine di lettura
 
+Per il deploy preview richiesto: [guida Vercel](operazioni/DEPLOY_VERCEL.md).
+Per l'ultima verifica del prodotto: [revisione dell'app](qualita/REVISIONE_APP.md), con difetti corretti, prove eseguite e limiti.
+
 Versione 1.2 · 11 ottobre 2026 · Stato: specifiche della versione completa e prima alpha locale implementata. Le specifiche non sono una dichiarazione di chiusura di tutte le fasi.
 
 Per usare il codice iniziare da [avvio e Supabase](operazioni/AVVIO_LOCALE.md); per conoscere ciò che funziona e ciò che manca usare il [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md). Il [diario](DIARIO_SVILUPPO.md) registra file, motivazioni, prove ed errori corretti. Le [scelte implementative](architettura/SCELTE_IMPLEMENTAZIONE.md) esplicitano adattamenti e compromessi del codice rispetto alla progettazione.

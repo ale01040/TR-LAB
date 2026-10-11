@@ -269,3 +269,85 @@ Questo file registra gli interventi sul progetto: file creati o modificati, moti
 - **Esito push:** comando avviato, ancora in attesa di autenticazione e senza esito positivo. `git ls-remote` conferma main remoto al commit iniziale `675b42b`; `git credential-manager github list` non mostra account memorizzati. Non dichiarato caricamento riuscito.
 - **Modificato:** guida avvio e diario, procedura di login/push senza token in chat, SHA da confrontare e divieto force. Documentata conservazione dei file di credenziali fuori docs.
 - **Richiesta al committente:** completare login/consenso GitHub sul PC o scegliere di fare il push personalmente. Non è un rifiuto automatico di approvazione: manca l'autenticazione del servizio. Codice e istruzioni Supabase già pronti; nessuna credenziale consultata o salvata nel repository.
+
+## 11 ottobre 2026 · DEV-037 · Revisione funzionale e autorizzazione deploy
+
+- **Autorizzazioni:** il committente ha completato GitHub e richiesto deploy Vercel dopo il collaudo. Account GCM `ale01040` e main remoto `836ba1b` verificati: i commit precedenti risultano caricati. Nessun token letto o trascritto.
+- **Applicati:** raccolte HTML/CSS/web design/form, regole generali; RF account/diario/import, ADR BFF/offline e WEB accessibilità/validazione. Skill React, Supabase e Vercel lette per la revisione e il deploy preview. Nessuna migrazione cloud autorizzata implicitamente dal deploy.
+- **Modificati:** DecimalInput/test, database locale, contratto programma, AppProvider/App e diario. Separatore numerico finale resta digitabile ma invalido anche con Invio; backup in una transazione di lettura, controllo overflow del contatore locale; versione scheda >=1 coerente con SQL; query marcate per account e form rimontati al cambio account per evitare dati/form del precedente proprietario.
+- **Osservazione:** pagina utente su 3001 ancora con bundle precedente; revisione della build corrente su 3002, nessun processo altrui interrotto. Prove aggiuntive e deploy ancora da eseguire.
+
+## 11 ottobre 2026 · DEV-038 · Difetto responsive riprodotto e contenuti
+
+- **Riproduzione:** a viewport 320×740, clientWidth 305 per scrollbar, ultimo link mobile a x=311,98: deborda di circa 7 pixel pur senza overflow del documento. Corretto Flex con cinque colonne Grid `minmax(0, 1fr)`; verificare tutti i link, non soltanto scrollWidth.
+- **Modificati:** CSS globale/modulo, ProgramPage, ProgressPage, ProfilePage, diario. Titoli/testi lunghi possono spezzarsi e campi ridursi; singolare pesata; etichetta RIR italiana; editor dichiara l'applicazione dei campi a tutte le serie invece di nascondere questo limite.
+- **Profilo preview:** quando il provider è assente mostra modalità dispositivo e limiti di trasferimento/backup senza form di login inutilizzabili o nomi di file tecnici nel percorso normale. Errori Google senza codici grezzi. Login resta disponibile quando il provider è configurato, da collaudare con account sintetici.
+- **Prova dati:** pesata sintetica 70,5 salvata sul solo origin di test localhost:3002; nessun dato del profilo utente su 3001 alterato. Consistenza contratti/API e nuove prove da eseguire prima del deploy.
+
+## 11 ottobre 2026 · DEV-039 · Adapter Vercel e test di regressione
+
+- **Creati:** `apps/server/src/vercel.ts`, `api/index.ts`, `vercel.json`; **modificati:** config/server factory, test contratti/config/IndexedDB, ProgressPage, manifest/tsconfig/gitignore e diario.
+- **Scelta:** frontend CDN e un'unica funzione Node per le stesse API Fastify. Nessuna riscrittura in Next.js né login browser con JWT: preservati BFF, HttpOnly e isolamento. Entry `ready`/`server.emit` dalla guida Fastify, origine da env piattaforma e non da Host. Cloud non configurato: preview dispositivo esplicita, rifiuta qualunque credenziale; produzione con account continua a richiedere tutti i valori e HTTPS.
+- **Sicurezza:** CSP e noindex anche su asset statici; worker/HTML rivalidati, asset con hash cache lunga; `.vercel` ignorata. Messaggi di URL malformata depurati per non divulgare connection string. Il rate limiter per istanza richiederà protezione condivisa/WAF prima della beta account.
+- **Fonti:** documentazione ufficiale Vercel Fastify/Node24/routing e guida Fastify serverless consultate; changelog Supabase letto (recupero Markdown via richiesta HTTPS dopo formato non supportato da web). Nessun GraphQL o adapter server deprecato utilizzato; cambi PostgreSQL/grant da ricontrollare nel gate cloud.
+- **Regressioni aggiunte:** Invio numerico incompleto, versione scheda zero, overflow contatore con transazione annullata, separazione preview/connected e URL sensibile nel messaggio. Risultati da eseguire, nessuna certificazione implicita.
+
+## 11 ottobre 2026 · DEV-040 · Isolamento UI e pacchetto preview minimo
+
+- **Creati:** test UI account con lettura ritardata, `scripts/prepare-vercel-preview.mjs`; **modificati:** factory server e diario. Il test deve dimostrare che il vecchio risultato non riappare durante la lettura del nuovo account.
+- **Pacchetto:** generazione in nuova directory ignorata, soli asset build ammessi e funzione BFF standalone CJS; niente `.env`, documenti, vault, Excel originale, password, credenziali Git/Vercel o node_modules Windows. Inventario e SHA server generati, zero reset/delete di directory esistenti. La preview rifiuta cloud; non equivale a beta con login.
+- **Correzione adapter:** risoluzione path statico eseguita soltanto nel server che serve il frontend, evitando `import.meta.url` nel bundle CJS API-only. Nessuna rete nel dominio puro; adapter e packaging separati.
+- **Esiti intermedi:** primo `npm run check` superato (20 unit/15 integration e build). Nuovi test/pacchetto ancora da collaudare. Formattazione ha cambiato solo i file elencati nelle voci DEV-037–DEV-040.
+
+## 11 ottobre 2026 · DEV-041 · Collaudo del bundle e dipendenza esplicita
+
+- **Creato:** `scripts/check-vercel-preview.mjs`; **modificati:** package.json/lockfile (esbuild 0.28.2 ora dipendenza dev esplicita, già presente tramite override), diario; formattazione dei nuovi file. npm segnala lo script postinstall esbuild non ancora presente nella allowlist npm11: installazione completata, nessun pacchetto da fonte estranea al registro.
+- **Prova prevista:** HTTP reale su porta effimera locale con il bundle esatto, sessione anonima no-store, CSRF 403, login indisponibile 503, sync anonima 401 e API ignota 404. Nessuna chiamata al deploy remoto nel controllo.
+- **Esiti:** 21 unit superati incluso cambio account con query ritardata; typecheck superato. Pacchetto minimo generato (20 asset), hash server in inventario ignorato. Non trascritte credenziali o dati personali nelle evidenze.
+
+## 11 ottobre 2026 · DEV-042 · Risultato adapter e configurazione lint Node
+
+- **Esito bundle:** tutte le cinque prove HTTP reali superate sul CJS standalone. Nessun token esposto e nessuna connessione cloud.
+- **Modificati:** ESLint config (globali Node/fetch nativo per i soli script MJS), schema/esempio rigenerati, diario; Prettier sul nuovo script. Il lint iniziale ha correttamente segnalato globali MJS non dichiarati; corretto nella configurazione dedicata, senza disabilitare regole. Format check prima del formato sul file nuovo ha segnalato lo stile da uniformare.
+- **Schema:** generazione da Zod rieseguita dopo il vincolo versione >=1. Le refinement semantiche continuano a richiedere validazione Zod; nessuna pretesa che il solo JSON Schema basti.
+
+## 11 ottobre 2026 · DEV-043 · Conteggio catalogo e provenienza
+
+- **Rilevato nel browser:** 26 esercizi in libreria, mentre il rapporto dichiarava 27. Verificato lo script: i 24 nomi originali includono la descrizione «più leggero, più ripetizioni», normalizzata nello stesso movimento; la fixture ha 25 posizioni e 23 movimenti distinti, più 3 a corpo libero. Nessun esercizio perso, target separati per posizione.
+- **Modificati:** script fixture, output provenance rigenerato, ProgramPage, rapporto implementazione, diario. Conteggi calcolati, trasformazione dichiarata nel preview. Provenienza del template integrato controllata da stato interno, non dal campo source arbitrario di un JSON altrui.
+- **Verifica intermedia:** check finale precedente superato, 21 unit + 15 integration, formato/build. Mobile barra ora entro clientWidth 305; libreria/ricerca/dettaglio senza controlli fuori bordo. Nuova build delle sole modifiche fixture/UI da verificare; test precedenti non attribuiti al codice successivo.
+
+## 11 ottobre 2026 · DEV-044 · Focus dopo chiusura dialog
+
+- **Rilevato:** chiusura con Escape del dettaglio libreria lasciava il focus alla pagina, anziché al controllo che lo aveva aperto. **Modificati:** Shared/Dialog e diario: trigger catturato prima di showModal e focus ripristinato al cleanup solo se ancora connesso; titolo con useId invece di ID globale ripetibile.
+- **Verifica prevista:** chiusura con Escape e pulsante, focus al trigger dopo il rimontaggio effettivo; QA accessibilità ancora parziale, nessuna dichiarazione WCAG AA basata su questo singolo controllo.
+
+## 11 ottobre 2026 · DEV-045 · Procedura Vercel e pacchetto pubblicabile
+
+- **Creato:** `docs/operazioni/DEPLOY_VERCEL.md`; **modificati:** indici README, script package/check, diario. Due tentativi di patch rifiutati per contesto parziale dell'indice, nessun file alterato; applicata patch corretta dopo lettura. Filename function `index.js` con type commonjs, formato CJS invariato, routing `/api/index`.
+- **Guida:** cosa è pubblicato, isolamento origini/device-only, pro/contro, comandi riproducibili, cinque prove HTTP, ownership tramite claim da non pubblicare in Git, cache/CSP, gate cloud e pool/rate limiter serverless. Nessun segreto o link di gestione nel repository.
+- **Controlli restanti:** ultima build UI/fixture e focus browser, format/lint, inventario pacchetto e deploy. Autorizzazione Vercel esplicita confermata; non serve chiedere di nuovo il permesso di caricare il codice già richiesto.
+
+## 11 ottobre 2026 · DEV-046 · Navigazione e decisioni allineate
+
+- **Rilevato:** dalla pagina Profilo scorsa alla home, scrollY restava 332 e il titolo poteva risultare fuori vista. **Modificati:** App scroll reset su nuovo pathname, titolo Profilo coerente quando login assente, registro DEC-27, UX (nome TR LAB già confermato), architettura e diario; checker locale DEC portato a 27.
+- **Trade-off:** reset semplice delle nuove sezioni, niente animazione o cambio dello scroll alla digitazione/rerender. Il ripristino della posizione precedente con Back richiede futura gestione storico, non dichiarato implementato.
+- **Prove:** tema chiaro/scuro del solo origin sintetico, pulsanti Profilo almeno 44px, nessun controllo fuori bordo a 320. Tema scuro ripristinato. Appunti/reference originali invariati; nessuna modifica alle preferenze del profilo utente 3001.
+
+## 11 ottobre 2026 · DEV-047 · Serie leggibili e concordanze italiane
+
+- **Rilevato nel browser:** a 320px il carico aveva un input largo circa 34px; nessuna uscita dal bordo, ma lettura e tocco difficili. **Modificati:** WorkoutPage, CSS, TodayPage, ProfilePage, App e diario: sotto 400px serie su più righe, tre campi più ampi con etichette visibili e azioni separate. Anche i risultati conclusi hanno unità visibili; disposizione tabellare conservata oltre il breakpoint.
+- **Testi:** conteggi singolari/plurali corretti per esercizi, registrazioni, serie, coda e conflitti; verbo coerente nel riepilogo di una registrazione mancante. Non aggiunti test che ripetano i testi statici; collaudo browser e controlli TypeScript/lint/build da eseguire dopo formattazione.
+
+## 11 ottobre 2026 · DEV-048 · Rapporto e prove finali dell'interfaccia
+
+- **Creati:** `docs/qualita/REVISIONE_APP.md`, evidenze `TR-LAB-diario-mobile.jpg` e `TR-LAB-revisione-desktop.jpg`; **modificati:** indici docs e stato implementazione, diario. La prima acquisizione mobile dopo resize era ritagliata: sostituita dopo osservazione stabile con la viewport effettiva completa. Le evidenze contengono soltanto dati sintetici. Tipi CSS rigenerati automaticamente dal typecheck dopo DEV-047.
+- **Esiti ultime modifiche:** formato, typecheck, lint, build superati; entry 480,90kB/151,51kB gzip. Cinque controlli bundle precedenti superati; da ripetere una volta sul pacchetto finale da caricare. Warning Workbox di deprecazione registrato, nessun errore build.
+- **Browser:** 320px diario completo con ricarica e chiusura, 390px risultati/focus Escape e Chiudi, 768px programma/progressi/profilo, 1366px home/programma; nessun controllo fuori bordo nelle viste misurate. RIR zero conservato, target originale RIR2 distinto dal risultato. Console finale senza warning/errori. Viewport ripristinata, archivio utente sulla porta 3001 invariato.
+- **Consegna:** rapporto separa 36 test suite, 5 prove bundle, verifiche manuali e gate aperti; nessuna dichiarazione di app completa, assenza universale di bug o WCAG AA. Deploy ancora da eseguire, link di gestione non destinato al repository.
+
+## 11 ottobre 2026 · DEV-049 · Pacchetto finale e verifica della consegna
+
+- **Generati:** nuovo pacchetto minimo ignorato `.analysis/vercel-preview-1791724350920`, 19 asset (chunk condiviso incorporato dopo ultimo import), funzione CJS SHA-256 `e4e729f7d7669f108ea6ba04dc3f3783e1255930400e123f35e9faf8dbf81bf7`; inventario senza documenti, dati utente o ambiente. **Modificato:** diario.
+- **Controlli:** cinque prove HTTP locali sul bundle finale superate, format check superato. Verifica documentale: 24 Markdown, 111 link locali, 62 tabelle, 3 JSON, 35 riferimenti QA, zero errori; hash Excel originale invariato. Non equivale all'esecuzione dei 35 casi QA.
+- **GitHub:** autenticazione funzionante; main remota confermata al commit `836ba1b` prima del caricamento. Stage/scan/commit/push delle correzioni e deploy da eseguire in sequenza; nessun force push, nessuna migrazione cloud.

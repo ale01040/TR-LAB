@@ -3,7 +3,7 @@ import { Check, Plus, Ruler, Scale } from 'lucide-react';
 import { measurementSchema, nutritionSchema, type Measurement } from '@tr-lab/contracts';
 import { parseDecimal, workoutVolume } from '@tr-lab/domain';
 import { useApp } from '../components/AppProvider';
-import { errorMessage } from '../components/Shared';
+import { counted, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
 
 const labels = { weight: 'Peso', waist: 'Vita', chest: 'Torace', arm: 'Braccio', thigh: 'Coscia' };
@@ -123,7 +123,9 @@ export function ProgressPage() {
               <details>
                 <summary>Mostra i dati del grafico</summary>
                 <table>
-                  <caption>Ultime {weights.length} pesate, senza medie inventate</caption>
+                  <caption>
+                    {counted(weights.length, 'pesata', 'pesate')}, senza medie inventate
+                  </caption>
                   <thead>
                     <tr>
                       <th>Data</th>
@@ -342,7 +344,7 @@ export function ProgressPage() {
         <section className={styles.panel}>
           <div className={styles.sectionHeading}>
             <h2>Registro misure</h2>
-            <span className={styles.eyebrow}>{measurements.length} DATI</span>
+            <span className={styles.eyebrow}>{counted(measurements.length, 'DATO', 'DATI')}</span>
           </div>
           {measurements.length ? (
             <div className={styles.tableScroll}>
@@ -398,7 +400,7 @@ function WeightChart({ measurements }: { measurements: Measurement[] }) {
       aria-labelledby="weight-chart-title"
     >
       <title id="weight-chart-title">
-        Andamento delle ultime {measurements.length} pesate. Dati nella tabella seguente.
+        Andamento: {counted(measurements.length, 'pesata', 'pesate')}. Dati nella tabella seguente.
       </title>
       {[35, 92, 150].map((y) => (
         <line key={y} x1="25" x2="575" y1={y} y2={y} stroke="currentColor" opacity="0.12" />

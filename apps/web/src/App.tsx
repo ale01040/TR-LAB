@@ -1,5 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense, useEffect, useLayoutEffect, useState } from 'react';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import {
   ArrowUpRight,
   CalendarDays,
@@ -11,6 +11,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { useApp } from './components/AppProvider';
+import { counted } from './components/Shared';
 import styles from './styles/App.module.css';
 
 const TodayPage = lazy(() => import('./pages/TodayPage').then((m) => ({ default: m.TodayPage })));
@@ -38,7 +39,12 @@ const links = [
   { to: '/profilo', name: 'Profilo', icon: UserRound },
 ];
 export function App() {
-  const { user, online, loading, pending, blocked, notice, syncing, sync } = useApp();
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    // Le nuove sezioni partono dal titolo, non dallo scroll della pagina precedente.
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  const { account, user, online, loading, pending, blocked, notice, syncing, sync } = useApp();
   const [update, setUpdate] = useState<(() => Promise<void>) | null>(null);
   useEffect(() => {
     const receive = (event: Event) =>
@@ -78,7 +84,7 @@ export function App() {
         <div className={styles.sidebarFoot}>
           <span className={styles.eyebrow}>DA UN'IDEA, A UN'ABITUDINE</span>
           <p>Una serie alla volta.</p>
-          <span className={styles.alpha}>ALPHA LOCALE · 0.1</span>
+          <span className={styles.alpha}>ALPHA · 0.1</span>
         </div>
       </aside>
       <div className={styles.content}>
@@ -91,9 +97,9 @@ export function App() {
                 ? 'Offline · dati sul dispositivo'
                 : user
                   ? blocked
-                    ? `${blocked} conflitti da rivedere`
+                    ? counted(blocked, 'conflitto da rivedere', 'conflitti da rivedere')
                     : pending
-                      ? `${pending} operazioni in attesa`
+                      ? counted(pending, 'operazione in attesa', 'operazioni in attesa')
                       : 'Account personale'
                   : 'Solo su questo dispositivo'}
             </span>
@@ -123,7 +129,7 @@ export function App() {
             <button onClick={() => void update()}>Aggiorna ora</button>
           </div>
         )}
-        <main id="main" className={styles.main}>
+        <main id="main" className={styles.main} key={account}>
           {loading ? (
             <p role="status">Apro il tuo spazio…</p>
           ) : (

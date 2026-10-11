@@ -2,16 +2,18 @@
 
 11 ottobre 2026 · Versione 0.1.0 alpha locale. Questo rapporto distingue codice presente, prove eseguite e requisiti ancora aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
 
+Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La preview non chiude i gate cloud della versione completa.
+
 ## 1. Cosa è disponibile
 
 | Ambito / requisiti | Codice presente | Limite attuale |
 | --- | --- | --- |
 | Oggi e programma | Editor giorni/esercizi/serie/carichi/RIR/recupero/note/superserie/ciclo, bozza/approvazione/nuove versioni | Calendario e rinvio assistito da completare; alcuni target per serie/lati importati non hanno ancora editor avanzato |
-| Struttura Excel | Fixture A/B/C, 25 posizioni, 24 nomi distinti, 7 settimane, rapporto adattamenti prima dell'import | Non parser XLSX; dati personali e protocolli extra individuali esclusi |
+| Struttura Excel | Fixture A/B/C, 25 posizioni, 7 settimane; 24 nomi originali diventano 23 movimenti catalogo dopo normalizzazione dichiarata | Non parser XLSX; dati personali e protocolli extra individuali esclusi |
 | Diario offline | Avvio da approvato, snapshot ciclo, risultati per lato, RIR 0, salvataggio, saltate, timer e chiusura anche parziale | Non audio/background garantiti; quota/eviction ed errori storage da ampliare sui telefoni |
 | Peso e misure | Registrazioni in g/mm, date/lati, grafico e tabella | Analisi avanzate e finestre confrontabili da completare |
 | Nutrizione | Target manuali kcal/macro, decorrenza e controllo 4/9/4 | Nessun calcolo automatico di obiettivi ancora attivo |
-| Catalogo | 27 esercizi iniziali, ricerca/filtro/dettagli | CRUD esercizi privati, media e varianti avanzate da completare |
+| Catalogo | 26 esercizi iniziali (23 movimenti adattati + 3 a corpo libero), ricerca/filtro/dettagli | CRUD esercizi privati, media e varianti avanzate da completare |
 | Copia e recupero | JSON v1, anteprima, ID nuovi, note opt-in, export locale di base/overlay/coda/conflitti | Link privati, export completo account/CSV, recupero importato e cancellazione cloud da implementare |
 | Auth e sync | BFF email/password, Google/PKCE, recovery, cookie HttpOnly, RPC/RLS, ricevute, pull/cursori | Non collegati al progetto cloud; prove reali provider, multi-device e restore ancora aperte |
 | Progressioni/AI | Contratti, fonti candidate e una funzione pura candidata sotto test | Nessun generatore o assistente attivo, nessuna modifica automatica ai target |
@@ -24,11 +26,11 @@ Il codice implementa sezioni della roadmap in un percorso verticale anticipato. 
 | --- | --- | --- |
 | TypeScript strict | Superato con `npm run check` | Sorgenti inclusi nel progetto TS; non equivalenza a correctness runtime |
 | ESLint | Superato | Regole JS/TS e hooks, non revisione completa della sicurezza |
-| Unit | 16 test superati, 6 file | Dominio/ciclo/progressione candidata, contratti, crypto, input decimali, config, account GET/POST |
+| Unit | 21 test superati, 7 file | Dominio/ciclo/progressione candidata, contratti, crypto, input decimali, config, account GET/POST e isolamento UI con lettura ritardata |
 | Integration API | 4 test superati | Fastify reale in-process, provider assente, payload/Origin, nessuna sync anonima |
-| Integration IndexedDB | 4 test superati | Persistenza/isolamento, base-overlay/ricevute, conflitti conservati, immutabilità anche offline |
+| Integration IndexedDB | 5 test superati | Persistenza/isolamento, base-overlay/ricevute, conflitti conservati, immutabilità anche offline, overflow contatore con rollback |
 | Integration SQL | 6 test superati | Migrazione PGlite, RPC/RLS/grant, consenso/snapshot/retry, revisioni oltre 2^53, epoch/ID riusato e payload ostili |
-| Build e avvio | Web/PWA/server compilati; bundle server avviato realmente su loopback | Non deploy HTTPS, non hosting produzione |
+| Build e avvio | Web/PWA/server compilati; bundle server avviato realmente su loopback; CJS Vercel verificato su HTTP reale con 5 controlli | Esito del deploy HTTPS registrato separatamente; nessuna beta account implicita |
 | Formattazione | Prettier check finale superato, compresi schema/esempio e configurazioni TS root | Sorgenti/configurazioni; Markdown verificato separatamente |
 | Dipendenze | `npm audit --json`: 0 advisory sul lockfile all'11 ottobre 2026 | Fotografia degli advisory disponibili, non assenza universale di vulnerabilità |
 | Config locale | `config:check`: valid true / supabaseConfigured false senza .env | Comando provato, nessuna credenziale reale validata |
@@ -78,4 +80,4 @@ I dettagli e tutti i requisiti restano nella [roadmap completa](../ROADMAP_SVILU
 
 Il repository conserva le raccolte web, codice, lockfile, migrazione e fixture depurate. Esclude `.env`, certificati locali, cache, `node_modules`, build, originali Excel personali e vault privato. Non include licenze inventate per materiale altrui. Le modifiche alle API future devono documentare compatibilità dei client offline e aggiornare nello stesso commit specifiche/test/diario.
 
-Verifica documentale locale rieseguita: 22 Markdown, 94 link locali, 58 tabelle, 3 esempi JSON e riferimenti a 35 casi QA, zero errori automatici rilevati; hash e conteggi Excel confermati. Questo controllo non dimostra che i 35 casi QA siano già passati sul prodotto. Spazi finali presenti nelle due raccolte originali sono preservati, non corretti silenziosamente.
+La verifica documentale precedente comprendeva 22 Markdown, 94 link locali, 58 tabelle, 3 esempi JSON e riferimenti a 35 casi QA, zero errori automatici rilevati; hash e conteggi Excel confermati. L'esito sul pacchetto ampliato è registrato nel diario. Questo controllo non dimostra che i 35 casi QA siano già passati sul prodotto. Spazi finali presenti nelle due raccolte originali sono preservati, non corretti silenziosamente.

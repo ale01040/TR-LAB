@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { ZodError } from 'zod';
 import type { Exercise } from '@tr-lab/contracts';
 import styles from '../styles/App.module.css';
@@ -13,15 +13,22 @@ export function Dialog({
   close: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   useEffect(() => {
     const dialog = ref.current;
+    const trigger = document.activeElement;
     dialog?.showModal();
-    return () => dialog?.close();
+    return () => {
+      dialog?.close();
+      // React rimuove il dialog: ripristiniamo il focus anche se il browser perde il trigger.
+      if (trigger instanceof HTMLElement && trigger.isConnected)
+        trigger.focus({ preventScroll: true });
+    };
   }, []);
   return (
-    <dialog ref={ref} className={styles.dialog} onCancel={close} aria-labelledby="dialog-title">
+    <dialog ref={ref} className={styles.dialog} onCancel={close} aria-labelledby={titleId}>
       <div className={styles.dialogHeader}>
-        <h2 id="dialog-title">{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         <button className={styles.iconButton} onClick={close} aria-label="Chiudi">
           ×
         </button>

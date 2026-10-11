@@ -1,11 +1,16 @@
 import { expect, it } from 'vitest';
-import { nutritionSchema, revisionSchema, templateSchema } from '@tr-lab/contracts';
+import { nutritionSchema, programSchema, revisionSchema, templateSchema } from '@tr-lab/contracts';
 import { copyProgram } from '@tr-lab/domain';
 import { now, program } from '../helpers/fixtures';
 it('revisioni bigint non perdono precisione e non accettano padding/overflow', () => {
   expect(revisionSchema.parse('9007199254740993')).toBe('9007199254740993');
   expect(revisionSchema.safeParse('01').success).toBe(false);
   expect(revisionSchema.safeParse('9223372036854775808').success).toBe(false);
+});
+it('versioni di scheda positive restano distinte dalla revisione zero di un record nuovo', () => {
+  expect(programSchema.safeParse({ ...program(), version: '0' }).success).toBe(false);
+  expect(programSchema.safeParse({ ...program(), version: '1' }).success).toBe(true);
+  expect(revisionSchema.safeParse('0').success).toBe(true);
 });
 it('copia standard preserva contenuti e cambia tutti gli ID, resta bozza', () => {
   const p = program();

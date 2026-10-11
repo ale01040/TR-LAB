@@ -5,7 +5,7 @@ import { setSchema, type Prescription, type SetLog, type Target } from '@tr-lab/
 import { countRequired, parseDecimal, targetSides } from '@tr-lab/domain';
 import { useApp } from '../components/AppProvider';
 import { metadata, setMetadata } from '../data/database';
-import { Dialog, errorMessage, kilos } from '../components/Shared';
+import { counted, Dialog, errorMessage, kilos } from '../components/Shared';
 import styles from '../styles/App.module.css';
 
 export function WorkoutPage() {
@@ -94,8 +94,14 @@ export function WorkoutPage() {
           </span>
           <h1>{session.snapshot.name}</h1>
           <p>
-            {completed} serie eseguite · {logs.filter((l) => l.status === 'skipped').length} saltate
-            · {Math.max(0, missing)} da registrare
+            {counted(completed, 'serie eseguita', 'serie eseguite')} ·{' '}
+            {counted(
+              logs.filter((l) => l.status === 'skipped').length,
+              'serie saltata',
+              'serie saltate',
+            )}
+            {' · '}
+            {Math.max(0, missing)} da registrare
           </p>
         </div>
         {session.status === 'active' && (
@@ -119,7 +125,7 @@ export function WorkoutPage() {
       )}
       <div
         className={styles.progressTrack}
-        aria-label={`${logs.length} registrazioni su ${expected}`}
+        aria-label={`${counted(logs.length, 'registrazione', 'registrazioni')} su ${expected}`}
       >
         <span style={{ width: `${Math.min(100, (logs.length / expected) * 100)}%` }} />
       </div>
@@ -204,9 +210,9 @@ export function WorkoutPage() {
       {finish && (
         <Dialog title="Concludi questa seduta" close={() => setFinish(false)}>
           <p>
-            {completed} serie eseguite.{' '}
+            {counted(completed, 'serie eseguita', 'serie eseguite')}.{' '}
             {missing > 0
-              ? `${missing} registrazioni mancanti rimarranno tali: non vengono inventati risultati.`
+              ? `${counted(missing, 'registrazione mancante', 'registrazioni mancanti')} ${missing === 1 ? 'rimarrà tale' : 'rimarranno tali'}: non vengono inventati risultati.`
               : 'Tutte le serie sono registrate.'}
           </p>
           <label>
@@ -311,45 +317,63 @@ function SetRow({
       </div>
       {readOnly ? (
         <>
-          <strong>{kilos(log?.loadGrams ?? null)}</strong>
-          <strong>{log?.reps ?? '—'}</strong>
-          <strong>{log?.rir ?? '—'}</strong>
-          <span>
+          <div className={styles.setField}>
+            <span className={styles.setFieldCaption}>Kg</span>
+            <strong>{kilos(log?.loadGrams ?? null)}</strong>
+          </div>
+          <div className={styles.setField}>
+            <span className={styles.setFieldCaption}>Ripetizioni</span>
+            <strong>{log?.reps ?? '—'}</strong>
+          </div>
+          <div className={styles.setField}>
+            <span className={styles.setFieldCaption}>RIR</span>
+            <strong>{log?.rir ?? '—'}</strong>
+          </div>
+          <span className={styles.setStatus}>
             {log ? (log.status === 'completed' ? 'Eseguita' : 'Saltata') : 'Non registrata'}
           </span>
         </>
       ) : (
         <>
-          <input
-            aria-label={`${label}, carico in kg`}
-            inputMode="decimal"
-            placeholder="—"
-            value={load}
-            onChange={(e) => {
-              setLoad(e.target.value);
-              setDirty(true);
-            }}
-          />
-          <input
-            aria-label={`${label}, ripetizioni`}
-            inputMode="numeric"
-            placeholder="—"
-            value={reps}
-            onChange={(e) => {
-              setReps(e.target.value);
-              setDirty(true);
-            }}
-          />
-          <input
-            aria-label={`${label}, RIR`}
-            inputMode="decimal"
-            placeholder="—"
-            value={rir}
-            onChange={(e) => {
-              setRir(e.target.value);
-              setDirty(true);
-            }}
-          />
+          <label className={styles.setField}>
+            <span className={styles.setFieldCaption}>Kg</span>
+            <input
+              aria-label={`${label}, carico in kg`}
+              inputMode="decimal"
+              placeholder="—"
+              value={load}
+              onChange={(e) => {
+                setLoad(e.target.value);
+                setDirty(true);
+              }}
+            />
+          </label>
+          <label className={styles.setField}>
+            <span className={styles.setFieldCaption}>Ripetizioni</span>
+            <input
+              aria-label={`${label}, ripetizioni`}
+              inputMode="numeric"
+              placeholder="—"
+              value={reps}
+              onChange={(e) => {
+                setReps(e.target.value);
+                setDirty(true);
+              }}
+            />
+          </label>
+          <label className={styles.setField}>
+            <span className={styles.setFieldCaption}>RIR</span>
+            <input
+              aria-label={`${label}, RIR`}
+              inputMode="decimal"
+              placeholder="—"
+              value={rir}
+              onChange={(e) => {
+                setRir(e.target.value);
+                setDirty(true);
+              }}
+            />
+          </label>
           <div className={styles.setActions}>
             <button
               aria-label={`${log && !dirty ? 'Salvata' : 'Salva'} ${label}`}

@@ -18,3 +18,4 @@ supabase/.branches/
 **/*password*.txt
 **/*credentials*.txt
 secrets/
+.vercel/

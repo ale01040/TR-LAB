@@ -17,7 +17,7 @@ import {
 import { AuthService, authRoutes, HttpError } from './auth.js';
 import { loadConfig, type Config } from './config.js';
 import { readCursor, signCursor } from './crypto.js';
-export async function buildApp(config: Config = loadConfig()) {
+export async function buildApp(config: Config = loadConfig(), { serveWeb = true } = {}) {
   const app = Fastify({
     bodyLimit: 262144,
     trustProxy: false,
@@ -171,8 +171,10 @@ export async function buildApp(config: Config = loadConfig()) {
       events: raw.events,
     });
   });
-  const webRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../web/dist');
-  if (existsSync(webRoot)) {
+  const webRoot = serveWeb
+    ? resolve(dirname(fileURLToPath(import.meta.url)), '../../web/dist')
+    : null;
+  if (webRoot && existsSync(webRoot)) {
     await app.register(staticFiles, { root: webRoot });
     app.setNotFoundHandler((request, reply) =>
       request.url.startsWith('/api/')

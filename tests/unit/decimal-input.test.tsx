@@ -38,3 +38,22 @@ it('zero valido, dato invalido visibile e required senza valore non sono sostitu
   expect(input.checkValidity()).toBe(false);
   expect(commit).toHaveBeenLastCalledWith(0);
 });
+it('Invio con separatore finale non salva un valore precedente apparentemente valido', async () => {
+  const submitted = vi.fn((event: React.FormEvent) => event.preventDefault());
+  const user = userEvent.setup();
+  render(
+    <form onSubmit={submitted}>
+      <label>
+        Carico
+        <DecimalInput value={null} onValue={() => undefined} />
+      </label>
+      <button type="submit">Salva</button>
+    </form>,
+  );
+  const input = screen.getByLabelText('Carico') as HTMLInputElement;
+  await user.type(input, '12,');
+  await user.keyboard('{Enter}');
+  expect(input.value).toBe('12,');
+  expect(input.checkValidity()).toBe(false);
+  expect(submitted).not.toHaveBeenCalled();
+});

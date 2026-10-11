@@ -147,3 +147,26 @@ it('offline non permette di cambiare target approvati o modificare una seduta co
   ).rejects.toThrow('non consentita');
   expect(await d.outbox.count()).toBe(0);
 });
+it('contatore corrotto interrompe tutta la scrittura senza falso salvataggio', async () => {
+  const d = database();
+  const owner = crypto.randomUUID();
+  await setMetadata(`${owner}:epoch`, crypto.randomUUID(), d);
+  await setMetadata(`${owner}:order`, String(Number.MAX_SAFE_INTEGER), d);
+  const p = program();
+  await expect(
+    saveLocally(
+      owner,
+      'SaveProgramDraft',
+      {
+        id: p.id,
+        kind: 'program',
+        revision: '0',
+        data: p,
+      },
+      [],
+      d,
+    ),
+  ).rejects.toThrow('Contatore locale');
+  expect(await records(owner, d)).toEqual([]);
+  expect(await d.outbox.count()).toBe(0);
+});

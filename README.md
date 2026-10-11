@@ -1,5 +1,7 @@
 # TR LAB
 
+Deploy preview: [procedura e limiti](docs/operazioni/DEPLOY_VERCEL.md).
+
 PWA per schede, diario di allenamento offline, misure e target nutrizionali personali. Versione **0.1.0 alpha locale**: codice avviabile, contratti, migrazione PostgreSQL e test. Il progetto Supabase indicato è predisposto nella configurazione d'esempio, ma non ancora collegato: mancano i valori locali e il collaudo cloud.
 
 ```powershell

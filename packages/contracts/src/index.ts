@@ -77,7 +77,9 @@ export const programSchema = z
     rootId: uuid,
     name: text,
     goal: z.enum(['hypertrophy', 'strength', 'bodyweight']),
-    version: revisionSchema,
+    version: revisionSchema.refine((value) => BigInt(value) >= 1n, {
+      message: 'La versione della scheda parte da 1.',
+    }),
     status: z.enum(['draft', 'approved']),
     days: z.array(daySchema).min(1).max(14),
     weeks: z.array(cycleWeekSchema).min(1).max(52),

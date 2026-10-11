@@ -19,6 +19,7 @@
   "include": [
     "apps/**/*.ts",
     "apps/**/*.tsx",
+    "api/**/*.ts",
     "packages/**/*.ts",
     "tests/**/*.ts",
     "tests/**/*.tsx",

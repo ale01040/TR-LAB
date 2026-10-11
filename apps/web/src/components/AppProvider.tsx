@@ -44,12 +44,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [notice, notify] = useState('');
   const [syncing, setSyncing] = useState(false);
   const account = user?.id ?? localAccount;
-  const entities = useLiveQuery(() => records(account), [account], []);
-  const operations = useLiveQuery(
-    () => db.outbox.where('account').equals(account).toArray(),
+  const loadedRecords = useLiveQuery(
+    async () => ({ account, items: await records(account) }),
     [account],
-    [],
   );
+  const loadedOperations = useLiveQuery(
+    async () => ({
+      account,
+      items: await db.outbox.where('account').equals(account).toArray(),
+    }),
+    [account],
+  );
+  // Un live query può conservare il risultato precedente mentre cambia la dipendenza.
+  // Nessun dato A va mostrato o contato nel frame iniziale dell'account B.
+  const entities = loadedRecords?.account === account ? loadedRecords.items : [];
+  const operations = loadedOperations?.account === account ? loadedOperations.items : [];
   const pending = operations.length;
   const blocked = operations.filter((p) => p.status === 'blocked').length;
   async function refreshAuth(): Promise<User | null> {

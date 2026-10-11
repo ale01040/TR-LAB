@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight, Check, Clock3, Dumbbell, Layers3 } from 'luci
 import type { Program, WorkoutSession } from '@tr-lab/contracts';
 import { countRequired, resolveDay } from '@tr-lab/domain';
 import { useApp } from '../components/AppProvider';
-import { dateTime, errorMessage } from '../components/Shared';
+import { counted, dateTime, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
 
 export function TodayPage() {
@@ -192,11 +192,15 @@ export function TodayPage() {
                 <div>
                   <span>
                     <Dumbbell size={16} aria-hidden="true" />
-                    {day.exercises.length} esercizi
+                    {counted(day.exercises.length, 'esercizio', 'esercizi')}
                   </span>
                   <span>
                     <Layers3 size={16} aria-hidden="true" />
-                    {countRequired(resolveDay(program, day, weekIndex))} registrazioni
+                    {counted(
+                      countRequired(resolveDay(program, day, weekIndex)),
+                      'registrazione',
+                      'registrazioni',
+                    )}
                   </span>
                 </div>
               </div>

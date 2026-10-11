@@ -32,6 +32,7 @@ Versione 1.2 · 11 ottobre 2026. Registro delle decisioni del committente e dei 
 | DEC-24 | Risolvere autonomamente scelte tecniche con analisi dei trade-off e fonti | Documentare motivazioni e alternative; non cambiare requisiti di prodotto o consenso senza istruzione |
 | DEC-25 | Usare il progetto Supabase esistente mxaogzjquvhwurngktyz; prima preparare istruzioni | Configurazione d'esempio e procedura senza segreti; nessuna migrazione cloud eseguita in questa consegna |
 | DEC-26 | Caricare il progetto nel repository ale01040/TR-LAB | Conservare main e cronologia esistente; pubblicare codice/documenti/fixture depurate, ignorare segreti e originale Excel personale |
+| DEC-27 | Dopo le verifiche fare il deploy su Vercel | Preview richiesta e autorizzata; senza configurazione Supabase resta modalità dispositivo, nessuna beta account o migrazione automatica |
 
 La generazione usa solo contenuti e metodi pertinenti all'ambito confermato. Il diario è uno strumento di registrazione; non deve classificare condizioni mediche o formulare diagnosi dalle misure.
 

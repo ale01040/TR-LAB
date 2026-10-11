@@ -22,14 +22,13 @@ export function DecimalInput({
   useEffect(() => {
     if (!focused.current) setText(value === null ? '' : String(value / scale).replace('.', ','));
   }, [value, scale]);
-  function validate(input: HTMLInputElement, final: boolean) {
+  function validate(input: HTMLInputElement) {
     const parsed = parseDecimal(input.value);
     const empty = !input.value.trim();
-    const incomplete = /^\d+[,.]$/.test(input.value);
     const valid =
       parsed !== null && parsed >= min && parsed <= max && (!integer || Number.isInteger(parsed));
     input.setCustomValidity(
-      (empty && !required) || (!final && incomplete) || valid
+      (empty && !required) || valid
         ? ''
         : `Inserisci ${integer ? 'un intero' : 'un numero'} tra ${min} e ${max}.`,
     );
@@ -46,11 +45,12 @@ export function DecimalInput({
       }}
       onChange={(event) => {
         setText(event.target.value);
-        validate(event.currentTarget, false);
+        // Il testo intermedio resta visibile, ma Invio non deve salvare il valore precedente.
+        validate(event.currentTarget);
       }}
       onBlur={(event) => {
         focused.current = false;
-        validate(event.currentTarget, true);
+        validate(event.currentTarget);
       }}
     />
   );

@@ -1,6 +1,6 @@
 # Esperienza d'uso e specifica dell'interfaccia
 
-Versione 1.1 · Specifica del comportamento. Nome, palette definitiva, icona e immagini richiedono confronto sul prototipo; non sono già approvati.
+Versione 1.2 · Specifica del comportamento. Nome confermato TR LAB; palette definitiva, icona e immagini restano da validare sul prototipo.
 
 ## 1. Priorità di design
 

@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { loadConfig } from '../../apps/server/src/config';
+import { deploymentConfig } from '../../apps/server/src/vercel';
 const configured = {
   SUPABASE_URL: 'https://example.supabase.co',
   SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_synthetic',
@@ -18,4 +19,38 @@ it('configurazione cloud rifiuta segreti API elevati e SSL non verificato', () =
     }),
   ).toThrow('verify-full');
   expect(() => loadConfig({ SUPABASE_URL: configured.SUPABASE_URL })).toThrow('quattro');
+});
+it('preview HTTPS senza cloud è esplicita e non indebolisce il rilascio con account', () => {
+  expect(
+    deploymentConfig({ VERCEL_ENV: 'preview', VERCEL_URL: 'tr-lab-synthetic.vercel.app' })
+      .DEPLOYMENT_MODE,
+  ).toBe('device-preview');
+  expect(() =>
+    deploymentConfig({ VERCEL_ENV: 'production', VERCEL_URL: 'tr-lab-synthetic.vercel.app' }),
+  ).toThrow('Supabase');
+  expect(() =>
+    deploymentConfig({
+      ...configured,
+      VERCEL_ENV: 'preview',
+      VERCEL_URL: 'tr-lab-synthetic.vercel.app',
+    }),
+  ).toThrow('credenziali cloud');
+  expect(
+    deploymentConfig({
+      ...configured,
+      VERCEL_ENV: 'preview',
+      DEPLOYMENT_MODE: 'connected',
+      VERCEL_URL: 'tr-lab-synthetic.vercel.app',
+    }).APP_ORIGIN,
+  ).toBe('https://tr-lab-synthetic.vercel.app');
+});
+it('URL database malformata non compare nel messaggio di errore', () => {
+  const invalid = 'database-with-synthetic-password';
+  try {
+    loadConfig({ ...configured, DATABASE_URL: invalid });
+    throw new Error('Configurazione accettata');
+  } catch (error) {
+    expect((error as Error).message).toContain('non valido');
+    expect((error as Error).message).not.toContain(invalid);
+  }
 });

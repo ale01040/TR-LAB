@@ -4,6 +4,8 @@
 
 ## 1. Strumenti effettivi e alternative
 
+È ora presente anche l'adapter preview Vercel: frontend CDN + stessa API in una funzione Node, senza cloud configurato. Motivazioni, alternativa persistente, pool/rate limiter e gate connected nella [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La riga Fastify descrive il server locale; il deploy non certifica ancora refresh/sync sul provider reale.
+
 | Scelta | Motivazione nel codice | Costi / alternativa / condizione di revisione |
 | --- | --- | --- |
 | React 19, TypeScript strict, Vite 8 | Cinque sezioni responsive, editor e diario condividono contratti; pagine separate con lazy/Suspense | Routing, storage e server composti esplicitamente. Next.js utile se SSR/contenuti pubblici diventano centrali; non necessario per questi flussi locali |
