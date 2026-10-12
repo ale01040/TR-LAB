@@ -35,7 +35,7 @@ Il codice implementa sezioni della roadmap in un percorso verticale anticipato. 
 | Dipendenze | `npm audit --json`: 0 advisory sul lockfile all'11 ottobre 2026 | Fotografia degli advisory disponibili, non assenza universale di vulnerabilità |
 | Config locale | valid true / supabaseConfigured true; preflight collegato, RLS/RPC/sessioni presenti e non-superuser | Collegamento reale; login positivo locale non provato |
 | Database cloud | RPC/consenso/retry/pull/isolation superati in transazione annullata; grant runtime su connessione reale | Non equivale a E2E Auth/PostgREST |
-| Vercel cloud | Preview READY con undici controlli; Production READY, dodici controlli su stage e dominio stabile, quattro GET pubbliche senza credenziali piattaforma | Nessun nuovo login positivo automatico; email, due dispositivi, telefoni e carico da provare |
+| Vercel cloud | Preview READY con undici controlli; build Git Production corretta READY, tredici controlli sul dominio stabile e quattro GET pubbliche senza credenziali piattaforma | Nessun nuovo login positivo automatico; email, due dispositivi, telefoni e carico da provare |
 | Entry Vercel isolato | Sei prove HTTP del wrapper e bundle generati, senza sorgenti/workspace o SDK installati; incluso in check/CI | Regressione aggiunta dopo API500 della build Git; test remoto necessario per il packaging del provider |
 
 La prima fase del debug ha rilevato errori SQL, grant e bundle runtime che la sola lettura non aveva trovato; corretti e rieseguiti, con risultati registrati nel diario. Non nascondere quei fallimenti come se i test fossero stati verdi fin dall'inizio.
@@ -59,7 +59,7 @@ Verifica finale anche a 390×844: pagina senza overflow orizzontale, navigazione
 | Indici e capitoli generali di entrambe le raccolte | Priorità istruzioni/DEC, commenti mirati, fonti originali conservate | Accettazione UX finale e manutenzione dei riferimenti |
 | Appunti HTML/CSS + guide HTML/CSS/web design | HTML semantico italiano, Grid/Flex/rem, focus, dialog nativo, temi e stampa | AA, contrasto completo, tastiera/screen reader, validatori e stampa multipagina |
 | Appunti JavaScript + guide JavaScript | Moduli TS, contratti, funzioni pure, lifecycle, input che conserva virgola/null/zero | Error boundary e gestione storage/quota su tutte le schermate |
-| Appunti dati/backend + guide sicurezza/stato/sessioni/cookie | Supabase DEC-18, query parametrizzate, RLS/RPC, HttpOnly/CSRF, hash DEC-23 | Provider reale, ruolo BFF minimo, revoca globale, rotazione, HTTPS e restore |
+| Appunti dati/backend + guide sicurezza/stato/sessioni/cookie | Supabase DEC-18, query parametrizzate, RLS/RPC, ruolo BFF minimo, HTTPS, HttpOnly/CSRF, hash DEC-23 | Login positivo Production/email/rinnovi, revoca globale, rotazione e restore |
 | Guide struttura/performance/UX | Pagine separate, cache asset esplicita, stato locale/sync, nessuna cronologia fittizia | Budget performance su telefoni reali e test aggiornamento durante seduta |
 | Guide SEO | noindex/no-store dell'area privata, nessun dato personale esposto per SEO | Pagine pubbliche separate e inventario Google Search Central pertinente |
 

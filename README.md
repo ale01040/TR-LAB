@@ -1,6 +1,6 @@
 # TR LAB
 
-Alpha HTTPS sul dominio stabile: [TR LAB](https://tr-lab.vercel.app), collegata a Supabase. Production verificata con dodici controlli HTTP e quattro GET anonime senza credenziali Vercel. [Rilascio e limiti](docs/qualita/RILASCIO_DOMINIO_STABILE.md), [procedura](docs/operazioni/DEPLOY_VERCEL.md). La [Preview precedente](https://tr-9lstvuhyr-pere01040.vercel.app) resta separata e protetta dal workspace.
+Alpha HTTPS sul dominio stabile: [TR LAB](https://tr-lab.vercel.app), collegata a Supabase. Build Git Production verificata con tredici controlli HTTP e quattro GET anonime senza credenziali Vercel. [Rilascio e limiti](docs/qualita/RILASCIO_DOMINIO_STABILE.md), [procedura](docs/operazioni/DEPLOY_VERCEL.md). La [Preview precedente](https://tr-9lstvuhyr-pere01040.vercel.app) resta separata e protetta dal workspace.
 
 Per il pacchetto ZIP da estrarre e caricare manualmente su Netlify Drop: [procedura Netlify](docs/operazioni/DEPLOY_NETLIFY.md). Distribuisce l'alpha in modalità dispositivo, senza backend o credenziali cloud.
 
