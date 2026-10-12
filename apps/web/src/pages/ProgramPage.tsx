@@ -1,23 +1,7 @@
 import { useRef, useState, type ChangeEvent } from 'react';
-import {
-  ArrowDownToLine,
-  ArrowRight,
-  Check,
-  Copy,
-  FileUp,
-  Plus,
-  Printer,
-  Trash2,
-} from 'lucide-react';
-import {
-  exerciseSchema,
-  programSchema,
-  templateSchema,
-  type Program,
-  type Prescription,
-} from '@tr-lab/contracts';
-import { copyProgram, createPrescription } from '@tr-lab/domain';
-import rawCatalog from '../data/catalog.json';
+import { ArrowDownToLine, ArrowRight, Check, Copy, FileUp, Plus, Printer } from 'lucide-react';
+import { programSchema, templateSchema, type Program } from '@tr-lab/contracts';
+import { copyProgram, resolveDay } from '@tr-lab/domain';
 import rawTemplate from '../data/excel-template.json';
 import provenance from '../data/excel-provenance.json';
 import { useApp } from '../components/AppProvider';
@@ -29,10 +13,9 @@ import {
   kilos,
   loadBasisLabel,
 } from '../components/Shared';
-import { DecimalInput } from '../components/DecimalInput';
+import { ProgramEditor } from '../components/ProgramEditor';
 import styles from '../styles/App.module.css';
 
-const catalog = rawCatalog.map((e) => exerciseSchema.parse(e));
 function newProgram(): Program {
   const id = crypto.randomUUID();
   return {
@@ -64,8 +47,10 @@ export function ProgramPage() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [selected, setSelected] = useState('');
+  const [weekIndex, setWeekIndex] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const program = programs.find((p) => p.id === selected) ?? programs[0];
+  const previewWeek = program?.weeks[weekIndex] ? weekIndex : 0;
   async function saveDraft(value: Program) {
     setBusy(true);
     setError('');
@@ -74,6 +59,7 @@ export function ProgramPage() {
       await save('SaveProgramDraft', { id: valid.id, kind: 'program', revision: '0', data: valid });
       setDraft(null);
       setSelected(valid.id);
+      setWeekIndex(0);
       notify('Bozza salvata. Approvala quando i target sono pronti.');
     } catch (error) {
       setError(errorMessage(error));
@@ -166,7 +152,10 @@ export function ProgramPage() {
             {programs.map((p) => (
               <button
                 key={p.id}
-                onClick={() => setSelected(p.id)}
+                onClick={() => {
+                  setSelected(p.id);
+                  setWeekIndex(0);
+                }}
                 className={program?.id === p.id ? styles.selectedProgram : ''}
               >
                 <span className={styles.eyebrow}>
@@ -255,48 +244,68 @@ export function ProgramPage() {
                   </div>
                 ))}
               </div>
-              {program.days.map((d) => (
-                <div className={styles.daySection} key={d.id}>
-                  <h3>
-                    {d.name} <span>{d.focus}</span>
-                  </h3>
-                  {d.exercises.map((p, i) => (
-                    <div className={styles.exerciseRow} key={p.id}>
-                      <span className={styles.exerciseNumber}>
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <div>
-                        <strong>{p.exercise.name}</strong>
-                        <small>
-                          {p.exercise.muscle} · {p.exercise.unilateral ? 'SX / DX' : 'Bilaterale'}
-                          {p.superset ? ` · Superserie ${p.superset}` : ''}
-                        </small>
-                        <p>{p.notes}</p>
-                      </div>
-                      <span className={styles.targetSummary}>
-                        {counted(p.targets.length, 'serie', 'serie')} ·{' '}
-                        {loadBasisLabel[p.exercise.basis]}
-                        {p.targets.map((target, j) => (
-                          <small key={target.id}>
-                            S{j + 1} ·{' '}
-                            {target.kind === 'warmup'
-                              ? 'riscaldamento'
-                              : target.kind === 'extra'
-                                ? 'extra'
-                                : 'lavoro'}
-                            {target.side === 'left' ? ' SX' : target.side === 'right' ? ' DX' : ''}{' '}
-                            · {target.repsMin}–{target.repsMax} rip. · RIR {target.rir} ·{' '}
-                            {target.restSeconds}s ·{' '}
-                            {target.loadGrams === null
-                              ? 'carico non impostato'
-                              : `${kilos(target.loadGrams)} kg`}
-                          </small>
-                        ))}
-                      </span>
-                    </div>
+              <label className={styles.weekPreview}>
+                Anteprima settimana
+                <select value={previewWeek} onChange={(e) => setWeekIndex(Number(e.target.value))}>
+                  {program.weeks.map((w, i) => (
+                    <option key={i} value={i}>
+                      Settimana {i + 1} · {w.name}
+                    </option>
                   ))}
-                </div>
-              ))}
+                </select>
+              </label>
+              <p className={styles.hint}>
+                Target della settimana {previewWeek + 1}, compresi accumulo e scarico. Questa
+                anteprima non modifica la scheda.
+              </p>
+              {program.days
+                .map((day) => resolveDay(program, day, previewWeek))
+                .map((d) => (
+                  <div className={styles.daySection} key={d.id}>
+                    <h3>
+                      {d.name} <span>{d.focus}</span>
+                    </h3>
+                    {d.exercises.map((p, i) => (
+                      <div className={styles.exerciseRow} key={p.id}>
+                        <span className={styles.exerciseNumber}>
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                          <strong>{p.exercise.name}</strong>
+                          <small>
+                            {p.exercise.muscle} · {p.exercise.unilateral ? 'SX / DX' : 'Bilaterale'}
+                            {p.superset ? ` · Superserie ${p.superset}` : ''}
+                          </small>
+                          <p>{p.notes}</p>
+                        </div>
+                        <span className={styles.targetSummary}>
+                          {counted(p.targets.length, 'serie', 'serie')} ·{' '}
+                          {loadBasisLabel[p.exercise.basis]}
+                          {p.targets.map((target, j) => (
+                            <small key={target.id}>
+                              S{j + 1} ·{' '}
+                              {target.kind === 'warmup'
+                                ? 'riscaldamento'
+                                : target.kind === 'extra'
+                                  ? 'extra'
+                                  : 'lavoro'}
+                              {target.side === 'left'
+                                ? ' SX'
+                                : target.side === 'right'
+                                  ? ' DX'
+                                  : ''}{' '}
+                              · {target.repsMin}–{target.repsMax} rip. · RIR {target.rir} ·{' '}
+                              {target.restSeconds}s ·{' '}
+                              {target.loadGrams === null
+                                ? 'carico non impostato'
+                                : `${kilos(target.loadGrams)} kg`}
+                            </small>
+                          ))}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
               <p className={styles.hint}>{program.source}</p>
             </section>
           )}
@@ -445,428 +454,5 @@ export function ProgramPage() {
         </Dialog>
       )}
     </>
-  );
-}
-
-function ProgramEditor({
-  program,
-  setProgram,
-  submit,
-  busy,
-  error,
-}: {
-  program: Program;
-  setProgram: (p: Program) => void;
-  submit: () => void;
-  busy: boolean;
-  error: string;
-}) {
-  const [dayIndex, setDayIndex] = useState(0);
-  const [exerciseId, setExerciseId] = useState(catalog[0]?.id ?? '');
-  const day = program.days[dayIndex] ?? program.days[0];
-  if (!day) return null;
-  const updateDay = (patch: Partial<Program['days'][number]>) =>
-    setProgram({
-      ...program,
-      days: program.days.map((d) => (d.id === day.id ? { ...d, ...patch } : d)),
-    });
-  const updateExercise = (prescription: Prescription) =>
-    updateDay({
-      exercises: day.exercises.map((p) => (p.id === prescription.id ? prescription : p)),
-    });
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        submit();
-      }}
-    >
-      <div className={styles.formGrid}>
-        <label>
-          Nome della scheda
-          <input
-            required
-            maxLength={200}
-            value={program.name}
-            onChange={(e) => setProgram({ ...program, name: e.target.value })}
-          />
-        </label>
-        <label>
-          Obiettivo
-          <select
-            value={program.goal}
-            onChange={(e) => setProgram({ ...program, goal: e.target.value as Program['goal'] })}
-          >
-            <option value="hypertrophy">Ipertrofia</option>
-            <option value="strength">Forza</option>
-            <option value="bodyweight">Corpo libero</option>
-          </select>
-        </label>
-      </div>
-      <p className={styles.hint}>
-        I valori iniziali sono campi dell'editor da verificare, non una prescrizione automatica.
-      </p>
-      <div className={styles.tabs} role="group" aria-label="Giornate">
-        {program.days.map((d, i) => (
-          <button
-            type="button"
-            key={d.id}
-            className={i === dayIndex ? styles.activeTab : ''}
-            onClick={() => setDayIndex(i)}
-          >
-            {d.name}
-          </button>
-        ))}
-        <button
-          type="button"
-          disabled={program.days.length >= 14}
-          onClick={() => {
-            setProgram({
-              ...program,
-              days: [
-                ...program.days,
-                {
-                  id: crypto.randomUUID(),
-                  name: `Giorno ${program.days.length + 1}`,
-                  focus: '',
-                  exercises: [],
-                },
-              ],
-            });
-            setDayIndex(program.days.length);
-          }}
-        >
-          <Plus size={16} aria-hidden="true" />
-          Giorno
-        </button>
-      </div>
-      <div className={styles.formGrid}>
-        <label>
-          Nome giornata
-          <input
-            required
-            value={day.name}
-            maxLength={200}
-            onChange={(e) => updateDay({ name: e.target.value })}
-          />
-        </label>
-        <label>
-          Focus
-          <input
-            value={day.focus}
-            maxLength={200}
-            onChange={(e) => updateDay({ focus: e.target.value })}
-          />
-        </label>
-        {program.days.length > 1 && (
-          <button
-            type="button"
-            className={styles.danger}
-            onClick={() => {
-              setProgram({ ...program, days: program.days.filter((d) => d.id !== day.id) });
-              setDayIndex(0);
-            }}
-          >
-            Rimuovi giornata
-          </button>
-        )}
-      </div>
-      {day.exercises.map((p, index) => (
-        <fieldset className={styles.editorExercise} key={p.id}>
-          <legend>
-            {index + 1}. {p.exercise.name}
-          </legend>
-          <p className={styles.hint}>
-            I campi numerici mostrano la prima serie: modificarli applica il nuovo valore a tutte le
-            serie di questo esercizio. Le differenze tra serie importate restano conservate finché
-            non cambi il campo corrispondente. Controlla il riepilogo prima di approvare.
-          </p>
-          <div className={styles.doseGrid}>
-            <label>
-              Serie
-              <input
-                aria-label={`Serie ${index + 1}`}
-                type="number"
-                min="1"
-                max="30"
-                step="1"
-                required
-                value={p.targets.length}
-                onChange={(e) => {
-                  const count = Number(e.target.value);
-                  const first = p.targets[0];
-                  if (first && Number.isInteger(count) && count >= 1 && count <= 30)
-                    updateExercise({
-                      ...p,
-                      targets: Array.from(
-                        { length: count },
-                        (_, i) => p.targets[i] ?? { ...first, id: crypto.randomUUID() },
-                      ),
-                    });
-                }}
-              />
-            </label>
-            {(['repsMin', 'repsMax', 'rir', 'restSeconds'] as const).map((field) => (
-              <label key={field}>
-                {
-                  {
-                    repsMin: 'Rip. min',
-                    repsMax: 'Rip. max',
-                    rir: 'RIR',
-                    restSeconds: 'Recupero (s)',
-                  }[field]
-                }
-                <DecimalInput
-                  required
-                  min={field === 'rir' || field === 'restSeconds' ? 0 : 1}
-                  max={field === 'rir' ? 10 : field === 'restSeconds' ? 1800 : 100}
-                  integer={field !== 'rir'}
-                  value={p.targets[0]?.[field] ?? null}
-                  onValue={(value) => {
-                    if (value === null) return;
-                    updateExercise({
-                      ...p,
-                      targets: p.targets.map((t) => ({
-                        ...t,
-                        [field]: value,
-                      })),
-                    });
-                  }}
-                />
-              </label>
-            ))}
-          </div>
-          <div className={styles.formGrid}>
-            <label>
-              Carico (kg) · {loadBasisLabel[p.exercise.basis]}
-              <DecimalInput
-                value={p.targets[0]?.loadGrams ?? null}
-                scale={1000}
-                onValue={(value) => {
-                  updateExercise({
-                    ...p,
-                    targets: p.targets.map((t) => ({
-                      ...t,
-                      loadGrams: value === null ? null : Math.round(value),
-                    })),
-                  });
-                }}
-              />
-            </label>
-            <label>
-              Superserie (opzionale)
-              <input
-                value={p.superset ?? ''}
-                maxLength={30}
-                onChange={(e) => updateExercise({ ...p, superset: e.target.value || null })}
-              />
-            </label>
-          </div>
-          <label>
-            Note
-            <textarea
-              value={p.notes}
-              maxLength={3000}
-              onChange={(e) => updateExercise({ ...p, notes: e.target.value })}
-            />
-          </label>
-          <div className={styles.actionStrip}>
-            <label className={styles.checkbox}>
-              <input
-                type="checkbox"
-                checked={p.accumulation !== false}
-                onChange={(e) => updateExercise({ ...p, accumulation: e.target.checked })}
-              />
-              Aggiungi le serie previste nelle settimane di accumulo
-            </label>
-            <button
-              type="button"
-              className={styles.danger}
-              onClick={() =>
-                updateDay({ exercises: day.exercises.filter((item) => item.id !== p.id) })
-              }
-            >
-              <Trash2 size={16} aria-hidden="true" />
-              Rimuovi
-            </button>
-            {index > 0 && (
-              <button
-                type="button"
-                onClick={() => {
-                  const items = [...day.exercises];
-                  items.splice(index, 1);
-                  items.splice(index - 1, 0, p);
-                  updateDay({ exercises: items });
-                }}
-              >
-                Sposta sopra
-              </button>
-            )}
-          </div>
-        </fieldset>
-      ))}
-      <div className={styles.addExercise}>
-        <label>
-          Aggiungi esercizio
-          <select value={exerciseId} onChange={(e) => setExerciseId(e.target.value)}>
-            {catalog.map((e) => (
-              <option value={e.id} key={e.id}>
-                {e.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button
-          type="button"
-          className={styles.secondary}
-          disabled={day.exercises.length >= 50}
-          onClick={() => {
-            const exercise = catalog.find((e) => e.id === exerciseId);
-            if (exercise)
-              updateDay({
-                exercises: [
-                  ...day.exercises,
-                  createPrescription(
-                    exercise,
-                    Array.from({ length: 4 }, () => crypto.randomUUID()),
-                  ),
-                ],
-              });
-          }}
-        >
-          <Plus size={18} aria-hidden="true" />
-          Aggiungi
-        </button>
-      </div>
-      <h3>Ciclo e progressione delle settimane</h3>
-      <p className={styles.hint}>
-        Le modifiche del ciclo fanno parte dei target che approvi. “RIR invariato” conserva il
-        valore di ogni esercizio. Scarico dimezza le serie di lavoro, arrotondando in alto.
-      </p>
-      {program.weeks.map((w, i) => (
-        <div className={styles.weekEditor} key={i}>
-          <label>
-            Settimana {i + 1}
-            <input
-              required
-              maxLength={200}
-              value={w.name}
-              onChange={(e) =>
-                setProgram({
-                  ...program,
-                  weeks: program.weeks.map((item, j) =>
-                    j === i ? { ...item, name: e.target.value } : item,
-                  ),
-                })
-              }
-            />
-          </label>
-          <label>
-            Fase
-            <select
-              value={w.phase}
-              onChange={(e) =>
-                setProgram({
-                  ...program,
-                  weeks: program.weeks.map((item, j) =>
-                    j === i ? { ...item, phase: e.target.value as typeof w.phase } : item,
-                  ),
-                })
-              }
-            >
-              {[
-                ['test', 'Test'],
-                ['base', 'Base'],
-                ['accumulation', 'Accumulo'],
-                ['peak', 'Picco'],
-                ['deload', 'Scarico'],
-              ].map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Serie aggiuntive
-            <input
-              type="number"
-              min="0"
-              max="3"
-              required
-              value={w.extraSets}
-              onChange={(e) =>
-                setProgram({
-                  ...program,
-                  weeks: program.weeks.map((item, j) =>
-                    j === i ? { ...item, extraSets: Number(e.target.value) } : item,
-                  ),
-                })
-              }
-            />
-          </label>
-          <label>
-            RIR della settimana
-            <select
-              value={w.rir ?? ''}
-              onChange={(e) =>
-                setProgram({
-                  ...program,
-                  weeks: program.weeks.map((item, j) =>
-                    j === i
-                      ? { ...item, rir: e.target.value === '' ? null : Number(e.target.value) }
-                      : item,
-                  ),
-                })
-              }
-            >
-              <option value="">Invariato</option>
-              {Array.from({ length: 11 }, (_, n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-            </select>
-          </label>
-          {program.weeks.length > 1 && (
-            <button
-              type="button"
-              className={styles.iconButton}
-              aria-label={`Rimuovi settimana ${i + 1}`}
-              onClick={() =>
-                setProgram({ ...program, weeks: program.weeks.filter((_, j) => i !== j) })
-              }
-            >
-              <Trash2 size={16} />
-            </button>
-          )}
-        </div>
-      ))}
-      <button
-        type="button"
-        className={styles.secondary}
-        disabled={program.weeks.length >= 52}
-        onClick={() =>
-          setProgram({
-            ...program,
-            weeks: [...program.weeks, { name: 'Base', phase: 'base', extraSets: 0, rir: null }],
-          })
-        }
-      >
-        <Plus size={16} aria-hidden="true" />
-        Settimana
-      </button>
-      {error && (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-      )}
-      <div className={styles.dialogActions}>
-        <button className={styles.primary} disabled={busy} type="submit">
-          {busy ? 'Salvataggio…' : 'Salva la bozza'}
-          <Check size={18} aria-hidden="true" />
-        </button>
-      </div>
-    </form>
   );
 }

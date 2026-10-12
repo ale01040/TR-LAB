@@ -63,3 +63,9 @@ Tutte le pagine devono poter essere stampate in modo sensato; scheda e riepilogh
 Prima tre task: registrare un allenamento, gestire una proposta, copiare una scheda. Misurare completamento senza assistenza, errori di convenzione carico, tempo perso per trovare un comando e comprensione del salvataggio offline. Target iniziale: almeno 90% di completamento nel gruppo concordato, riportando dimensione campione e limiti.
 
 Output F1: mappa navigazione, flussi, componenti, frame mobile/desktop, temi e stampa, risultati delle prove e decisioni visuali. Nome/palette/icona vanno approvati su alternative concrete; non bloccare la prova di persistenza su una scelta estetica ancora aperta.
+
+## 8. Editor manuale implementato
+
+L'editor delle bozze ha target individuali in «Serie e target»: carico, ripetizioni min/max, RIR, recupero, tipo e lato. Modificare un valore riguarda solo quella serie. Copia/riordino di giornate e serie conservano gli originali; le nuove copie hanno ID distinti. L'ordine della seduta raggruppa riscaldamento, lavoro ed extra. La selezione della giornata segue l'ID, non la posizione.
+
+Il riepilogo consente «Anteprima settimana» con gli stessi target risolti per la seduta, senza mutare il programma. I campi sono bloccati durante il salvataggio. Specifica, limiti e prove: [editor delle schede](EDITOR_SCHEDE.md). Gli esercizi a tempo, calendario/rinvii e catalogo privato restano fuori da questa consegna; nessuna modifica automatica o approvazione implicita.

@@ -58,6 +58,9 @@ Il dataset AI comprende richieste italiane normali, vincoli impossibili, eserciz
 | QA-APP-04 | AI prova applicazione diretta / conferma ambigua | Nessuno strumento autorizzato a farlo | F9 |
 | QA-APP-05 | AcceptProposal applicato, risposta persa, retry dopo scadenza challenge | Ricevuta originale e nessuna seconda applicazione; challenge scaduta respinta se comando mai applicato | F6 |
 | QA-IMP-01 | XLSX noto, formato standard, malformed/ZIP enorme | Mappatura/report corretti e limiti applicati | F4/F8 |
+| QA-EDT-01 | Serie importate diverse, valori null/zero, lavoro/extra/lati e limite ciclo | Modifica solo il target scelto, nessun ultimo lavoro eliminato o limite aggirato | F4 |
+| QA-EDT-02 | Copia e riordino giornate/esercizi/serie | ID della copia nuovi, selezione stabile e originali invariati | F4 |
+| QA-EDT-03 | Anteprima settimana base, accumulo e scarico | Stessi target della seduta, approvato/storico invariati | F4/F5 |
 | QA-SHR-01 | Link revocato e copia già acquisita | Niente nuove importazioni; copia autonoma conservata | F8 |
 | QA-DATA-01 | Correzione misura, peso condiviso, macro incoerenti | Storico coerente, nessun dato mancante trattato come zero | F7 |
 | QA-AI-01 | Fonte ostile, ID inventato, timeout, altro account | Nessuna fuga/applicazione; fallback utilizzabile | F9 |

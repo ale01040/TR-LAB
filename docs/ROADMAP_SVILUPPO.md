@@ -139,6 +139,8 @@ L'importatore iniziale supporta il file e un formato documentato. Non promettere
 
 Consegne: editor, catalogo iniziale, template dimostrativo, ciclo e import guidato. Criterio: aggiungere/rimuovere serie aggiorna correttamente il futuro; le sessioni già concluse non vengono riscritte.
 
+Consegna implementata F4-EDITOR-02: [target individuali e organizzazione delle giornate](specifiche/EDITOR_SCHEDE.md), con anteprima del ciclo. Non chiude F4: catalogo privato, calendario/rinvii, modalità a tempo e parser XLSX restano nel pacchetto WP-07. Gli esiti di collaudo sono nello stato implementazione e nel diario, separati dai criteri di uscita.
+
 ## 9. F5 — Diario e sincronizzazione
 
 Costruire prima una porzione completa: una sessione, un esercizio e una serie dal telefono al database e ritorno. Estendere poi a lati, superserie, warm-up, sostituzioni e sessioni parziali.

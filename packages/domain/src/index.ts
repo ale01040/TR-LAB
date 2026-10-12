@@ -1,5 +1,6 @@
 import type { Program, Day, Prescription, SetLog, Exercise } from '@tr-lab/contracts';
 export { assertLocalChange } from './local-change';
+export { copyDay, moveItem } from './program-editing';
 
 export function parseDecimal(text: string): number | null {
   const clean = text.trim().replace(',', '.');

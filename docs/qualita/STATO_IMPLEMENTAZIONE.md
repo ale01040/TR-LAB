@@ -8,7 +8,7 @@ Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [integrazione reale](
 
 | Ambito / requisiti | Codice presente | Limite attuale |
 | --- | --- | --- |
-| Oggi e programma | Editor giorni/esercizi/serie/carichi/RIR/recupero/note/superserie/ciclo, bozza/approvazione/nuove versioni | Calendario e rinvio assistito da completare; alcuni target per serie/lati importati non hanno ancora editor avanzato |
+| Oggi e programma | Target individuali per serie, tipi/lati, copia/riordino delle giornate/esercizi/serie, anteprima settimana, bozza/approvazione/nuove versioni | Calendario/rinvii ed esercizi a tempo da completare; anteprima conserva la regola attuale del ciclo |
 | Struttura Excel | Fixture A/B/C, 25 posizioni, 7 settimane; 24 nomi originali diventano 23 movimenti catalogo dopo normalizzazione dichiarata | Non parser XLSX; dati personali e protocolli extra individuali esclusi |
 | Diario offline | Avvio da approvato, snapshot ciclo, risultati per lato, RIR 0, salvataggio, saltate, timer e chiusura anche parziale | Non audio/background garantiti; quota/eviction ed errori storage da ampliare sui telefoni |
 | Peso e misure | Registrazioni in g/mm, date/lati, grafico e tabella | Analisi avanzate e finestre confrontabili da completare |
@@ -26,10 +26,11 @@ Il codice implementa sezioni della roadmap in un percorso verticale anticipato. 
 | --- | --- | --- |
 | TypeScript strict | Superato con `npm run check` | Sorgenti inclusi nel progetto TS; non equivalenza a correctness runtime |
 | ESLint | Superato | Regole JS/TS e hooks, non revisione completa della sicurezza |
-| Unit | 24 test superati, 7 file | Dominio/ciclo/progressione candidata, contratti, crypto, input, account/isolamento UI, TLS portabile, pool serverless e precedenza dell'origine stabile Production |
+| Unit | 32 test superati, 10 file | Suite finale completa: copia/riordino immutabili, editor per serie/null/zero/lati/limite 27+3, giornata attiva stabile, campi bloccati e anteprima ciclo senza scritture, oltre alle regressioni precedenti |
 | Integration API | 6 test superati | Fastify reale in-process, payload/Origin, anonimo, readiness503 e Google disabilitato senza flusso |
 | Integration IndexedDB | 5 test superati | Persistenza/isolamento, base-overlay/ricevute, conflitti conservati, immutabilità anche offline, overflow contatore con rollback |
 | Integration SQL | 8 test superati | Migrazioni come non-superuser, runtime minimo, claim JSON/null, RPC/RLS/grant, consenso/snapshot/retry, revisioni oltre 2^53 e input ostili |
+| Integration editor offline | 1 test superato | Target/lati/copia dopo riapertura IndexedDB, approvazione e nuova versione con snapshot precedente invariato; nessuna prova cloud implicita |
 | Build e avvio | Web/PWA/server compilati; bundle server avviato realmente su loopback; CJS Vercel verificato su HTTP reale con 5 controlli | Esito del deploy HTTPS registrato separatamente; nessuna beta account implicita |
 | Formattazione | Prettier check finale superato, compresi schema/esempio e configurazioni TS root | Sorgenti/configurazioni; Markdown verificato separatamente |
 | Dipendenze | `npm audit --json`: 0 advisory sul lockfile all'11 ottobre 2026 | Fotografia degli advisory disponibili, non assenza universale di vulnerabilità |
@@ -54,6 +55,8 @@ Verifica finale anche a 390×844: pagina senza overflow orizzontale, navigazione
 
 ## 4. Raccolte applicate e controlli aperti
 
+Nuovo editor verificato su origine isolata 127.0.0.1:3003, senza provider o dati personali: creazione manuale, target unilaterale 12,5 kg/RIR 0, riscaldamento, copia/riordino, salvataggio e riapertura; anteprima +1 lavoro coerente con il ciclo. Controlli geometrici senza overflow orizzontale a 1280×720 e 390×844. Evidenze sintetiche: [desktop](evidenze/TR-LAB-editor-desktop.jpg) e [mobile](evidenze/TR-LAB-editor-mobile.jpg). Viewport ripristinata; nessuna nuova prova Auth o sync cloud implicita.
+
 | Fonte letta / WEB | Applicazione nel codice | Ancora aperto |
 | --- | --- | --- |
 | Indici e capitoli generali di entrambe le raccolte | Priorità istruzioni/DEC, commenti mirati, fonti originali conservate | Accettazione UX finale e manutenzione dei riferimenti |
@@ -69,7 +72,7 @@ Il refuso `use strinct` non è copiato nel codice; i moduli ESM applicano strict
 
 1. **Completamento Supabase F2–F3 / OPEN-05–OPEN-07:** schema/ruolo/connessione e callback già configurati; completare [Auth](../operazioni/COMPLETARE_AUTH.md), SMTP, login positivo Production, due account, Google/recupero, cookie/CSRF/refresh concorrente e lease. Riconciliare baseline migrazioni prima di db push, predisporre staging separato. Evidenza: E2E provider reale e controlli account fuori UI.
 2. **Completamento sync F5:** scenari offline su due device, dipendenze/operation-result, paginazione watermark, ricevute rifiutate stabili, cambi account e logout offline; confronto/risoluzione esplicita dei conflitti, restore con nuovo epoch, import sicuro del recupero e gestione quota. Evidenza: nessun log perso/duplicato, nessun rebase silenzioso.
-3. **Editor/catalogo/import F4 / WP-07:** CRUD privato, editor target per serie/lato/tempo, convenzioni macchina e assistenza, calendario/rinvii, parser XLSX con limiti ZIP/celle/formule e report; fixture reali/anomale. Schema normalizzato additivo quando necessario, nessuna riscrittura dello storico approvato.
+3. **Editor/catalogo/import F4 / WP-07:** target per serie/lato, copia/riordino giornate e anteprima ciclo implementati in [F4-EDITOR-02](../specifiche/EDITOR_SCHEDE.md). Restano CRUD privato, modalità a tempo, convenzioni avanzate macchina/assistenza, calendario/rinvii e parser XLSX con limiti ZIP/celle/formule e report; fixture reali/anomale. Schema normalizzato additivo quando necessario, nessuna riscrittura dello storico approvato.
 4. **Motore F6:** corpus selezionato con diritti e regole forza/corpo libero/nutrizione revisionate; generatore a vincoli, proposta versionata con prima/dopo/motivo/dati mancanti; validazione server, consenso dell'utente e scadenza su revisione cambiata. ALG/QA e simulazioni devono passare prima dell'attivazione.
 5. **Progressi/dati F7–F8:** finestre e confrontabilità, trend, volume, obiettivi proposti e manuali distinti, link per copia indipendente, export account/CSV/PDF, retention/cancellazione e recupero esercitato.
 6. **Assistente F9:** adapter provider, corpus consentito, citazioni, valutazione italiana, prompt injection/dati A-B; output può soltanto creare una proposta validata e nessun modello può premere l'approvazione.

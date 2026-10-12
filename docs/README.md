@@ -8,6 +8,8 @@ Versione 1.3 · 12 ottobre 2026 · Stato: specifiche della versione completa e a
 
 Per usare il codice iniziare da [avvio e Supabase](operazioni/AVVIO_LOCALE.md); per conoscere ciò che funziona e ciò che manca usare il [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md). Il [diario](DIARIO_SVILUPPO.md) registra file, motivazioni, prove ed errori corretti. Le [scelte implementative](architettura/SCELTE_IMPLEMENTAZIONE.md) esplicitano adattamenti e compromessi del codice rispetto alla progettazione.
 
+Nuova consegna F4-EDITOR-02: [serie individuali, copia/riordino delle giornate e anteprima del ciclo](specifiche/EDITOR_SCHEDE.md), con prove di componente e persistenza sul contratto v1.
+
 Questo pacchetto permette a uno sviluppatore di capire il prodotto, scegliere un'attività, implementarla e dimostrare che rispetta i requisiti. L'Excel fornisce la struttura funzionale; le raccolte web forniscono indicazioni di sviluppo; il vault fitness fornisce materiale da selezionare e validare. Nessuno di questi input va copiato indiscriminatamente nell'app.
 
 ## 1. Percorso di lettura

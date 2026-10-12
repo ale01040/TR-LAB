@@ -21,4 +21,6 @@ Disponibili: editor manuale e ciclo, approvazione esplicita e versioni, struttur
 
 Per attivare Gmail SMTP e Google seguire la [guida dettagliata](docs/operazioni/CONFIGURAZIONE_GMAIL_GOOGLE.md). `npm run auth:preflight` controlla i servizi pubblici senza inviare email; `-- --require-google` richiede anche il provider abilitato. Non sostituisce un login reale o una prova di consegna.
 
+Nell'editor puoi impostare target diversi per ogni serie, gestire riscaldamento/extra e lati, duplicare e riordinare giornate e vedere l'anteprima di accumulo/scarico. [Funzioni, limiti e prove](docs/specifiche/EDITOR_SCHEDE.md). Salvataggio bozza e approvazione restano azioni distinte.
+
 Per chi sviluppa: leggere [AGENTS.md](AGENTS.md), [manuale di progetto](docs/README.md), [decisioni](docs/DECISIONI_E_DOMANDE.md) e [scelte implementative](docs/architettura/SCELTE_IMPLEMENTAZIONE.md). Le due raccolte web originali sono incluse. L'Excel originale con dati personali resta nella consegna locale e viene ignorato da Git; la fixture depurata è nel codice. Il vault personale e i suoi contenuti integrali non sono pubblicati.

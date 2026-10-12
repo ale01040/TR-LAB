@@ -21,8 +21,8 @@ declare const styles: {
   readonly dialog: string;
   readonly dialogActions: string;
   readonly dialogHeader: string;
-  readonly doseGrid: string;
   readonly editorExercise: string;
+  readonly editorFields: string;
   readonly empty: string;
   readonly emptyGrid: string;
   readonly error: string;
@@ -88,6 +88,9 @@ declare const styles: {
   readonly stats: string;
   readonly tableScroll: string;
   readonly tabs: string;
+  readonly targetDetails: string;
+  readonly targetEditor: string;
+  readonly targetGrid: string;
   readonly targetSummary: string;
   readonly textLink: string;
   readonly timer: string;
@@ -95,6 +98,7 @@ declare const styles: {
   readonly topbar: string;
   readonly twoColumns: string;
   readonly weekEditor: string;
+  readonly weekPreview: string;
   readonly workoutExercise: string;
   readonly workoutSummary: string;
 };
