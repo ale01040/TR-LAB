@@ -1,6 +1,6 @@
 # Roadmap di sviluppo e consegna
 
-Versione 1.2 — 11 ottobre 2026. Piano di esecuzione e consegna della versione completa. Per requisiti usare [piano operativo](PIANO_OPERATIVO.md); per contratti e scelte seguire l'[indice delle specifiche](README.md). Alpha locale e Preview Vercel collegata a Supabase attuano parti di F1–F5/F7–F8: non chiudono automaticamente quelle fasi. Stato e prossimo ordine esecutivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md#5-prossime-consegne-in-ordine); prove reali e gate cloud nel [rapporto integrazione](qualita/INTEGRAZIONE_SUPABASE.md).
+Versione 1.3 — 12 ottobre 2026. Piano di esecuzione e consegna della versione completa. Per requisiti usare [piano operativo](PIANO_OPERATIVO.md); per contratti e scelte seguire l'[indice delle specifiche](README.md). Alpha locale, Preview e dominio stabile Production collegati a Supabase attuano parti di F1–F5/F7–F8: DEC-30 autorizza l'alpha e non chiude automaticamente quelle fasi. Stato e prossimo ordine esecutivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md#5-prossime-consegne-in-ordine); prove del link corto e limiti nel [rapporto rilascio](qualita/RILASCIO_DOMINIO_STABILE.md).
 
 Percorso: §§1–3 metodo, ruoli e dipendenze; §§4–15 fasi; §§16–18 backlog, collaudo e rischi; §§19–20 consegna e brief; §§21–24 pacchetti esecutivi, gate e avvio. Le specifiche indicano **come** implementare; qui si stabilisce **quando**, con quali prerequisiti e quali prove.
 

@@ -1,6 +1,6 @@
 # TR LAB — deploy Vercel
 
-11 ottobre 2026 · Alpha 0.1.0. Preview HTTPS collegata a Supabase; conserva anche la procedura della precedente preview dispositivo. Il collegamento verificato non chiude i gate per la registrazione pubblica.
+12 ottobre 2026 · Alpha 0.1.0. [Dominio stabile Production verificato](../qualita/RILASCIO_DOMINIO_STABILE.md), Preview HTTPS collegata a Supabase e cronologia della precedente preview dispositivo. Il collegamento verificato non chiude i gate della beta pubblica.
 
 ## 1. Contenuto e limiti
 
@@ -65,7 +65,7 @@ La PWA propone aggiornamento con clic esplicito dopo aver salvato i campi. Conse
 ## 6. Prima della beta pubblica
 
 1. Supabase staging isolato secondo [AVVIO_LOCALE](AVVIO_LOCALE.md). Nessuna migrazione automatica dal deploy.
-2. `DEPLOYMENT_MODE=connected`, valori Supabase/sessione e CA configurati, APP_ORIGIN HTTPS esatta e callback email/Google per dominio stabile. Nessun segreto frontend. La preview corrente è collegata al progetto fornito, senza staging separato: documentare e risolvere questa differenza prima della produzione.
+2. `DEPLOYMENT_MODE=connected`, valori Supabase/sessione e CA configurati, APP_ORIGIN HTTPS esatta e callback email/Google per dominio stabile. Nessun segreto frontend. Preview e alpha Production sono collegate allo stesso progetto per DEC-30: documentare e risolvere questa differenza prima della beta completa.
 3. Pooler/ruolo runtime limitato, connessioni per istanza, regione vicina al DB, limiti globali/WAF, cleanup sessioni, log depurati, backup/restore provato. Non copiare alla cieca il pool persistente locale in serverless.
 4. Auth/rinnovi/CSRF/recovery, due account/dispositivi, RLS/RPC reale, perdita risposta, conflitti ed epoch: PGlite e bundle non sostituiscono questi gate.
 5. Privacy/cancellazione/export, accessibilità e dispositivi secondo roadmap; poi produzione separata e reversibile.
@@ -89,7 +89,7 @@ Registrare URL, ambiente, commit codice, hash artefatti, stato e prove effettive
 - Undici controlli reali via CLI protetta superati: health/ready/sessione, sync anonima401, API404, SPA200, asset mancante404, worker200/no-cache, CSRF403, login errato401, Google disabilitato503. Non costituiscono conferma di registrazione/login riusciti.
 - Email con conferma richiesta; Google disabilitato esplicitamente. Completare [callback/account/SMTP](COMPLETARE_AUTH.md) e registrare le prove positive prima della beta.
 
-Variabili presenti **soltanto in Preview**, progetto `pere01040/tr-lab` già verificato:
+Variabili configurate in Preview l'11 ottobre, progetto `pere01040/tr-lab` già verificato; per Production autorizzata il 12 ottobre vedere §9:
 
 | Nome | Tipo | Contenuto / confine |
 | --- | --- | --- |
@@ -100,7 +100,7 @@ Variabili presenti **soltanto in Preview**, progetto `pere01040/tr-lab` già ver
 | SESSION_ENCRYPTION_KEY | Secret | 32 byte base64, distinta dalla chiave locale |
 | DEPLOYMENT_MODE | Config | connected |
 
-Non eseguire `env pull` in una directory pubblicata. Conservare i segreti nel gestore di segreti e nelle variabili della piattaforma, usando stdin protetto per la CLI; non passarli in argomenti, log o file versionati. Le impostazioni Production non sono state configurate implicitamente.
+Non eseguire `env pull` in una directory pubblicata. Conservare i segreti nel gestore di segreti e nelle variabili della piattaforma, usando stdin protetto per la CLI; non passarli in argomenti, log o file versionati. Production è stata configurata soltanto dopo il consenso esplicito DEC-30.
 
 Per aggiornamenti, costruire un nuovo pacchetto, verificarlo e **avviare la CLI dalla sua directory effettiva**, con il percorso assoluto del suo vercel.json. L'11 ottobre un primo tentativo connected ha selezionato il config root `api/index.ts` pur usando --cwd ed è fallito prima del deploy; l'indicazione esplicita evita questa ambiguità. Il pacchetto compilato contiene `api/index.js`.
 
@@ -125,3 +125,17 @@ try {
 Sostituire i placeholder; verificare prima owner/progetto con `project inspect`. Fermarsi se un comando fallisce e controllare sempre target/READY del risultato; non pubblicare l'output JSON completo se contiene ambienti. `--skip-domain` è riservato a production. Nessun `--prod` in questo flusso.
 
 Per controlli autorizzati di una preview protetta, usare `vercel curl` dalla directory collegata al progetto: non disattivare la protezione. Con CLI63.1.2 non aggiungere --cwd/--non-interactive a curl: risultano inoltrati al programma curl sottostante. Leggere help corrente e registrare solo esiti/codici, mai cookie o token. Rilascio completo: [manuale](RILASCIO_E_MANUTENZIONE.md).
+
+## 9. Dominio stabile pubblicato, 12 ottobre 2026
+
+Il committente ha autorizzato esplicitamente con DEC-30 il funzionamento di `https://tr-lab.vercel.app`, il trasferimento dei valori indicati e la pubblicazione dell'alpha. Il dominio punta a Production; Preview e Production hanno variabili separate e le modifiche valgono per nuovi deployment. DEC-29 resta l'autorizzazione storica del solo Preview.
+
+Preparazione locale: pacchetto minimo connected con lo stesso codice verificato; `APP_ORIGIN=https://tr-lab.vercel.app`, mai il dominio immutabile del build. SESSION_ENCRYPTION_KEY nuova e distinta; stesso ruolo DB limitato e progetto Supabase indicato dal committente. È ancora un'alpha con database condiviso tra ambienti, non una separazione staging/produzione completata. Configurazione privata in `.local/vercel-production.env`, esclusa da Git e dal deploy.
+
+Configurati soltanto Production del progetto `pere01040/tr-lab` (ID `prj_IpG5DKSPZX4Tn1yw90eAfILehujH`) e i valori autorizzati: cinque valori cloud più i Config APP_ORIGIN, DEPLOYMENT_MODE=connected, GOOGLE_AUTH_ENABLED=false. DATABASE_URL e SESSION_ENCRYPTION_KEY come Secret, mai in argomenti o sorgenti. Variabili Preview preservate. La procedura seguente vale per aggiornamenti autorizzati, non richiede di ricreare i segreti a ogni deploy.
+
+Usare la procedura del §8 dalla directory effettiva del nuovo pacchetto, sostituendo il comando di deploy con `deploy --prod --skip-domain`: controllare prima la nuova Production senza assegnare il dominio. Verificare READY/target/artefatto, DB/readiness, sessione anonima, CSRF dall'origine stabile, routing/cache e indisponibilità Google esplicita. Poi `promote` di quella stessa Production, senza ricostruire una Preview con altri valori. Conservare l'ID precedente per rollback; nessuna cancellazione di deployment o dati.
+
+In Supabase sono stati salvati il callback `https://tr-lab.vercel.app/api/auth/callback\?state=*`, quelli specifici Preview/Vite e Site URL `https://tr-lab.vercel.app`. Conferma e recupero vanno collaudati nello stesso browser; SMTP ancora da configurare secondo l'ultima risposta del committente. Il semplice login email/password non dimostra consegna email o configurazione Google. Stage, promozione, ID/artefatti ed esiti effettivi nel [rapporto del rilascio](../qualita/RILASCIO_DOMINIO_STABILE.md).
+
+Il dominio stabile ha un archivio IndexedDB distinto dalla Preview. I dati già sincronizzati si recuperano dopo l'accesso allo stesso account; quelli rimasti soltanto nel dispositivo della Preview richiedono export/import esplicito. Nessuna cancellazione della cache o del diario per aggiornare il dominio.

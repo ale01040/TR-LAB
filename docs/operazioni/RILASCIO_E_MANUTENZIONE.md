@@ -2,7 +2,7 @@
 
 Versione 1.1 · Procedure da rendere eseguibili in F2–F11. Account e servizi appartengono al committente o alla sua organizzazione.
 
-Stato all'11 ottobre 2026: alpha locale e Preview Vercel collegata al progetto Supabase fornito, con ruolo limitato e TLS verificato. La preview corrente non ha un database staging separato; Auth positivo, SMTP, restore e altri gate restano aperti. Evidenze nel [rapporto integrazione](../qualita/INTEGRAZIONE_SUPABASE.md); questo manuale descrive anche procedure future e non le dichiara già eseguite.
+Stato al 12 ottobre 2026: alpha locale, Preview e Production Vercel collegate al progetto Supabase fornito, con ruolo limitato e TLS verificato. DEC-30 autorizza l'alpha sul dominio stabile con database condiviso dichiarato; non è la separazione degli ambienti richiesta per la beta completa. Login Preview riferito dal committente, callback configurati; login positivo Production, SMTP, restore e altri gate restano aperti. Evidenze nel [rapporto dominio stabile](../qualita/RILASCIO_DOMINIO_STABILE.md); questo manuale descrive anche procedure future e non le dichiara già eseguite.
 
 ## 1. Ambienti
 

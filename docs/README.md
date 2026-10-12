@@ -1,10 +1,10 @@
 # Manuale di progetto — indice e ordine di lettura
 
-Per il deploy preview richiesto: [guida Vercel](operazioni/DEPLOY_VERCEL.md).
+Per il dominio stabile [TR LAB](https://tr-lab.vercel.app): [rilascio verificato](qualita/RILASCIO_DOMINIO_STABILE.md) e [guida Vercel](operazioni/DEPLOY_VERCEL.md).
 Per lo ZIP della modalità dispositivo: [caricamento manuale Netlify](operazioni/DEPLOY_NETLIFY.md).
 Per le verifiche: [revisione dell'app](qualita/REVISIONE_APP.md) e [integrazione Supabase/Vercel](qualita/INTEGRAZIONE_SUPABASE.md). Configurazioni residue: [completare Auth](operazioni/COMPLETARE_AUTH.md).
 
-Versione 1.2 · 11 ottobre 2026 · Stato: specifiche della versione completa e alpha implementata, Supabase collegato a locale/Preview Vercel, prove database e HTTP remoto superate. Auth positivo e gate della roadmap restano aperti. Le specifiche non dichiarano chiuse tutte le fasi.
+Versione 1.3 · 12 ottobre 2026 · Stato: specifiche della versione completa e alpha implementata, Supabase collegato a locale/Preview/Production Vercel, prove database e HTTP remoto superate. Login Preview riuscito riferito dal committente; prove positive Production, email, due dispositivi e gate della roadmap restano aperti. Le specifiche non dichiarano chiuse tutte le fasi.
 
 Per usare il codice iniziare da [avvio e Supabase](operazioni/AVVIO_LOCALE.md); per conoscere ciò che funziona e ciò che manca usare il [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md). Il [diario](DIARIO_SVILUPPO.md) registra file, motivazioni, prove ed errori corretti. Le [scelte implementative](architettura/SCELTE_IMPLEMENTAZIONE.md) esplicitano adattamenti e compromessi del codice rispetto alla progettazione.
 

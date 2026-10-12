@@ -125,7 +125,7 @@ Il codice non applica migrazioni al primo avvio. **Sul progetto mxaogzjquvhwurng
 
 ## 8. Configurare Auth: email, callback e Google
 
-Per l'ambiente Vite aggiungere il callback applicativo `http://localhost:5173/api/auth/callback\?state=*`. Per provare la build aggiungere separatamente `http://localhost:3001/api/auth/callback\?state=*`. Il backslash rende `?` letterale nel pattern Supabase. La Site URL deve corrispondere all'ambiente principale: non sostituire quella della preview se si stanno solo aggiungendo callback locali. URL esatti e collaudo nella [guida Auth](COMPLETARE_AUTH.md).
+Per l'ambiente Vite è già configurato il callback applicativo `http://localhost:5173/api/auth/callback\?state=*`. Per provare la build aggiungere separatamente `http://localhost:3001/api/auth/callback\?state=*`, non ancora incluso nel salvataggio del 12 ottobre. Il backslash rende `?` letterale nel pattern Supabase. La Site URL principale è ora `https://tr-lab.vercel.app`: non sostituirla quando si aggiungono callback locali. URL esatti e collaudo nella [guida Auth](COMPLETARE_AUTH.md).
 
 Abilitare email/password, conferma email e policy minima di 12 caratteri coerente con l'app. Verificare SMTP e limiti effettivi prima di invitare gli amici: l'alpha non configura un mittente, non promette consegna email e non aggira i limiti del provider. Conferma email e recupero PKCE vanno aperti nello **stesso browser** da cui sono stati richiesti. [Flusso PKCE](https://supabase.com/docs/guides/auth/sessions/pkce-flow).
 

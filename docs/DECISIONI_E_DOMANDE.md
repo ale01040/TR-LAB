@@ -1,6 +1,6 @@
 # Decisioni confermate e domande residue
 
-Versione 1.2 · 11 ottobre 2026. Registro delle decisioni del committente e dei punti da chiudere. Sviluppo, collegamento Supabase e preview Vercel autorizzati dopo la pianificazione; esiti nel rapporto di integrazione. Progetto Supabase e repository appartengono al committente. Indice in [README](README.md).
+Versione 1.3 · 12 ottobre 2026. Registro delle decisioni del committente e dei punti da chiudere. Sviluppo, collegamento Supabase, Preview e alpha Production Vercel autorizzati dopo la pianificazione; esiti nel rapporto di integrazione e nel [rilascio del dominio stabile](qualita/RILASCIO_DOMINIO_STABILE.md). Progetto Supabase e repository appartengono al committente. Indice in [README](README.md).
 
 ## 1. Registro delle decisioni confermate
 
@@ -35,6 +35,7 @@ Versione 1.2 · 11 ottobre 2026. Registro delle decisioni del committente e dei 
 | DEC-27 | Dopo le verifiche fare il deploy su Vercel | Preview richiesta e autorizzata; senza configurazione Supabase resta modalità dispositivo, nessuna beta account o migrazione automatica |
 | DEC-28 | Collegare Supabase e far funzionare il backend su Vercel | Schema/ruolo minimo, pooler/TLS e prove reali; non elimina i gate Auth, SMTP, sincronizzazione e pubblico |
 | DEC-29 | Trasferire i cinque valori indicati al solo Preview pere01040/tr-lab | Consenso esplicito a URL/provider/CA e a DATABASE_URL/SESSION_ENCRYPTION_KEY come Secret; nessuna credenziale amministrativa o produzione implicita |
+| DEC-30 | Configurare Production pere01040/tr-lab e pubblicare l'alpha su tr-lab.vercel.app | Consenso esplicito ai cinque valori cloud, DATABASE_URL runtime e nuova chiave sessioni come Secret, origine/modalità collegate; stesso DB Supabase condiviso dichiarato, nessuna password amministrativa o chiusura implicita dei gate beta |
 
 La generazione usa solo contenuti e metodi pertinenti all'ambito confermato. Il diario è uno strumento di registrazione; non deve classificare condizioni mediche o formulare diagnosi dalle misure.
 

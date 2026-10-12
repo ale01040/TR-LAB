@@ -1,18 +1,19 @@
 # TR LAB — completare accesso email e Google
 
-11 ottobre 2026 · Backend Preview già collegato. Questa procedura chiude le configurazioni ancora necessarie; non richiede di condividere password o token in chat.
+12 ottobre 2026 · Backend Preview e alpha Production collegati; Site URL/callback salvati nella Dashboard. Questa procedura descrive i controlli e le configurazioni residue; non richiede di condividere password o token in chat. [Rilascio verificato](../qualita/RILASCIO_DOMINIO_STABILE.md).
 
-## 1. URL da usare in questa preview
+## 1. URL attualmente configurati
 
 Aprire il progetto `mxaogzjquvhwurngktyz` in Supabase, **Authentication → URL Configuration**. Verificare prima le impostazioni esistenti; conservare callback di altri ambienti necessari, senza sostituirli indiscriminatamente.
 
-- Site URL della preview: `https://tr-9lstvuhyr-pere01040.vercel.app`.
-- Redirect URL: `https://tr-9lstvuhyr-pere01040.vercel.app/api/auth/callback\?state=*`.
+- Site URL principale: `https://tr-lab.vercel.app`.
+- Redirect URL Production: `https://tr-lab.vercel.app/api/auth/callback\?state=*`.
+- Redirect URL Preview: `https://tr-9lstvuhyr-pere01040.vercel.app/api/auth/callback\?state=*`.
 - Per sviluppo Vite: `http://localhost:5173/api/auth/callback\?state=*`.
 
 Nel pattern il backslash prima del punto interrogativo lo rende letterale per il matcher glob. L'asterisco copre il valore casuale state; dominio e percorso restano specifici. Non usare wildcard su tutti i domini Vercel. Ogni nuova origine necessita della propria autorizzazione; per produzione scegliere un dominio stabile e allineare APP_ORIGIN. [Pattern e Site URL ufficiali](https://supabase.com/docs/guides/auth/redirect-urls).
 
-Nella preview APP_ORIGIN deriva dal VERCEL_URL affidabile della piattaforma, non dall'Host inviato dal client. Usare esattamente il dominio sopra: un alias diverso può essere rifiutato dal controllo Origin. La protezione Vercel richiede anche accesso al workspace; non equivale al login personale TR LAB e non è stata disabilitata.
+In Production APP_ORIGIN è esplicitamente `https://tr-lab.vercel.app`; nella Preview deriva dal VERCEL_URL affidabile della piattaforma, non dall'Host inviato dal client. Usare l'origine prevista: un alias diverso può essere rifiutato dal controllo Origin. La Preview conserva la protezione Vercel del workspace; il dominio corto risponde anche senza credenziali piattaforma, come verificato con GET anonime. Il login personale TR LAB resta separato.
 
 ## 2. Email/password e invio email
 
@@ -47,9 +48,9 @@ Configurazione proposta in Supabase, dopo la verifica del dominio:
 
 Completare DNS/verifica con i valori forniti dal servizio, senza inventarli o sostituire record esistenti alla cieca. Salvare SMTP nel progetto Supabase corretto; verificare i limiti Auth e del servizio. Eseguire conferma e recupero con indirizzi di prova controllati, verificando email ricevuta, link e ritorno con sessione. Ripetere poi con un destinatario di prova esterno al team. Il cambio SMTP non modifica il codice o i segreti già autorizzati su Vercel.
 
-## 3. Primo collaudo con account reale di prova
+## 3. Collaudo con account reale sul dominio stabile
 
-1. Aprire [Profilo TR LAB](https://tr-9lstvuhyr-pere01040.vercel.app/profilo) con accesso Vercel del proprietario.
+1. Aprire [Profilo TR LAB](https://tr-lab.vercel.app/profilo). Il committente ha già riferito un login riuscito nella Preview; ripetere la prova nel dominio stabile. Non trasferire manualmente cookie o token fra domini.
 2. Registrare un indirizzo di prova controllato dal proprietario, passphrase di almeno 12 caratteri entro 72 byte UTF-8 e conferma dell'ambito adulti. Non comunicare la passphrase all'agente.
 3. Aprire il link email **nello stesso browser** della registrazione; verifier PKCE e cookie del tentativo devono essere presenti. Verificare ritorno al Profilo e identità riconosciuta.
 4. Verificare nei DevTools la cookie `__Host-tr-lab`: HttpOnly, Secure, SameSite Lax, Path=/, nessun Domain. Le risposte API non devono contenere access/refresh token.

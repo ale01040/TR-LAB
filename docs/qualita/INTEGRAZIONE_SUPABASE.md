@@ -1,6 +1,6 @@
 # TR LAB — integrazione Supabase e Vercel verificata
 
-11 ottobre 2026 · Alpha 0.1.0. Evidenze effettive del collegamento; non chiude il collaudo completo Auth, offline multi-device o il rilascio pubblico.
+12 ottobre 2026 · Alpha 0.1.0. Evidenze del collegamento iniziale dell'11 ottobre e aggiornamento Production nel [rapporto dominio stabile](RILASCIO_DOMINIO_STABILE.md); non chiude il collaudo completo Auth, offline multi-device o la beta pubblica.
 
 ## 1. Ambiente e risultato
 
@@ -8,7 +8,7 @@ Progetto Supabase esistente `mxaogzjquvhwurngktyz`, regione eu-west-1, PostgreSQ
 
 Preview collegata: [TR LAB su Vercel](https://tr-9lstvuhyr-pere01040.vercel.app). Deployment `dpl_5aAmQLu4M6jrN4tDFuYUJr7aEVva`, READY/preview verificati anche con inspect; protezione Vercel mantenuta. API Node24, funzione configurata in dub1 vicino al database. Il luogo della build mostrato nei log, iad1, non indica la regione della funzione.
 
-La preview usa il progetto Supabase indicato dal committente, ancora senza dati personali: non è un database staging separato. Prima della produzione predisporre la separazione descritta nel manuale operativo. Origine locale, Netlify e domini Vercel hanno IndexedDB distinti; nessun trasferimento automatico dei diari già esistenti.
+Preview e alpha Production usano il progetto Supabase indicato dal committente: non sono database separati. L'inventario iniziale e le fixture annullate non attestano che il database resti vuoto dopo l'uso dell'utente. Il committente ha riferito il successo del login nella Preview. DEC-30 autorizza il dominio stabile sullo stesso DB; prima della beta completa predisporre la separazione descritta nel manuale operativo. Origine locale, Netlify e domini Vercel hanno IndexedDB distinti; nessun trasferimento automatico dei diari già esistenti.
 
 ## 2. Permessi e identità
 
@@ -70,7 +70,7 @@ Il primo tentativo della suite finale nel sandbox Windows si è fermato su spawn
 
 [Run GitHub verificata](https://github.com/ale01040/TR-LAB/actions/runs/38177747128). Aggiornamenti successivi delle sole guide non cambiano gli artefatti già pubblicati; verificare la CI associata a ogni nuovo SHA e non usare una run precedente per attestare modifiche di codice successive.
 
-Provider settings reali: email abilitata, registrazione consentita, conferma email richiesta, Google disabilitato. Callback/Site URL/SMTP non modificati in questa consegna; login positivo, conferma, recupero, refresh concorrente, due dispositivi, cancellazione/restore restano aperti. Procedura concreta: [completare Auth](../operazioni/COMPLETARE_AUTH.md).
+Provider settings verificati nel collegamento iniziale: email abilitata, registrazione consentita, conferma richiesta, Google disabilitato. Il 12 ottobre Site URL e callback stabile/Preview/Vite sono stati salvati nella Dashboard; SMTP ancora da configurare secondo l'ultima risposta del committente. Login positivo Production, conferma, recupero, refresh concorrente, due dispositivi e cancellazione/restore restano da provare. Le 42 prove locali della tabella sono storiche dell'11 ottobre; suite aggiornata a 43 nel rapporto dominio stabile. Procedura concreta: [completare Auth](../operazioni/COMPLETARE_AUTH.md).
 
 ## 6. Advisor e rischi residui
 

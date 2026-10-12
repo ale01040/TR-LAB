@@ -43,6 +43,17 @@ it('runtime Vercel usa un pool riutilizzabile limitato e non invia opzioni di st
   expect(pool.options).toBeUndefined();
   expect(pool.query_timeout).toBe(25000);
 });
+it('il rilascio sul dominio stabile mantiene quella origine per CSRF e callback', () => {
+  const config = deploymentConfig({
+    ...configured,
+    VERCEL_ENV: 'production',
+    VERCEL_URL: 'tr-lab-build-synthetic.vercel.app',
+    APP_ORIGIN: 'https://tr-lab.vercel.app',
+  });
+  expect(config.APP_ORIGIN).toBe('https://tr-lab.vercel.app');
+  expect(config.DEPLOYMENT_MODE).toBe('connected');
+  expect(config.SERVER_RUNTIME).toBe('serverless');
+});
 it('configurazione cloud rifiuta segreti API elevati e SSL non verificato', () => {
   expect(loadConfig(configured).SUPABASE_URL).toBe(configured.SUPABASE_URL);
   expect(() =>

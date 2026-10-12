@@ -1,6 +1,6 @@
 # Piano operativo — applicazione allenamenti
 
-Versione 1.2 dell'11 ottobre 2026. Specifica della versione completa per lo sviluppo. Le scelte confermate sono distinte dalle raccomandazioni tecniche e dai parametri da validare. Esistono una prima alpha locale e una Preview Vercel collegata a Supabase: requisiti e funzioni qui descritti sono completati soltanto con le prove di fase. Stato effettivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md), evidenze cloud nel [rapporto integrazione](qualita/INTEGRAZIONE_SUPABASE.md).
+Versione 1.3 del 12 ottobre 2026. Specifica della versione completa per lo sviluppo. Le scelte confermate sono distinte dalle raccomandazioni tecniche e dai parametri da validare. Alpha locale, Preview e dominio stabile Production sono collegati a Supabase: DEC-30 autorizza la pubblicazione dell'alpha, con database condiviso dichiarato. Requisiti e funzioni qui descritti sono completati soltanto con le prove di fase. Stato effettivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md), evidenze del link corto nel [rapporto rilascio](qualita/RILASCIO_DOMINIO_STABILE.md).
 
 ## Come leggere questo piano
 
