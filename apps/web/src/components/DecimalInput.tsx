@@ -1,5 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { parseDecimal } from '@tr-lab/domain';
+function decimalState(text: string, min: number, max: number, integer: boolean, required: boolean) {
+  const parsed = parseDecimal(text);
+  const empty = !text.trim();
+  const valid =
+    parsed !== null && parsed >= min && parsed <= max && (!integer || Number.isInteger(parsed));
+  return {
+    parsed,
+    empty,
+    valid,
+    message:
+      (empty && !required) || valid
+        ? ''
+        : `Inserisci ${integer ? 'un intero' : 'un numero'} tra ${min} e ${max}.`,
+  };
+}
 export function DecimalInput({
   value,
   scale = 1,
@@ -19,24 +34,32 @@ export function DecimalInput({
 }) {
   const [text, setText] = useState(value === null ? '' : String(value / scale).replace('.', ','));
   const focused = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    if (!focused.current) setText(value === null ? '' : String(value / scale).replace('.', ','));
-  }, [value, scale]);
-  function validate(input: HTMLInputElement) {
-    const parsed = parseDecimal(input.value);
-    const empty = !input.value.trim();
-    const valid =
-      parsed !== null && parsed >= min && parsed <= max && (!integer || Number.isInteger(parsed));
-    input.setCustomValidity(
-      (empty && !required) || valid
+    const visible = focused.current
+      ? (inputRef.current?.value ?? '')
+      : value === null
         ? ''
-        : `Inserisci ${integer ? 'un intero' : 'un numero'} tra ${min} e ${max}.`,
+        : String(value / scale).replace('.', ',');
+    if (!focused.current) setText(visible);
+    // Un reset esterno aggiorna anche il vincolo nativo, senza inviare un nuovo valore al padre.
+    inputRef.current?.setCustomValidity(decimalState(visible, min, max, integer, required).message);
+  }, [value, scale, min, max, integer, required]);
+  function validate(input: HTMLInputElement) {
+    const { parsed, empty, valid, message } = decimalState(
+      input.value,
+      min,
+      max,
+      integer,
+      required,
     );
-    if (valid) onValue(Math.round(parsed * scale * 1000) / 1000);
+    input.setCustomValidity(message);
+    if (valid && parsed !== null) onValue(Math.round(parsed * scale * 1000) / 1000);
     else if (empty && !required) onValue(null);
   }
   return (
     <input
+      ref={inputRef}
       inputMode={integer ? 'numeric' : 'decimal'}
       required={required}
       value={text}

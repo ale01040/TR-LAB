@@ -22,10 +22,25 @@ export function WorkoutPage() {
   const [deadline, setDeadline] = useState<number | null>(null);
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    void metadata(`${account}:timer:${id}`).then((value) => {
-      if (value) setDeadline(Number(value));
-    });
-  }, [account, id]);
+    let cancelled = false;
+    setDeadline(null);
+    void metadata(`${account}:timer:${id}`)
+      .then((value) => {
+        if (cancelled) return;
+        const end = Number(value);
+        if (Number.isFinite(end) && end > 0) {
+          setNow(Date.now());
+          setDeadline(end);
+        }
+      })
+      .catch(() => {
+        if (!cancelled)
+          notify('Ripristino del timer non disponibile; gestisci il recupero manualmente.');
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [account, id, notify]);
   useEffect(() => {
     if (deadline === null) return;
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
@@ -48,9 +63,18 @@ export function WorkoutPage() {
     ]);
     if (log.status === 'completed' && rest > 0) {
       const end = Date.now() + rest * 1000;
-      await setMetadata(`${account}:timer:${id}`, String(end));
-      setNow(Date.now());
-      setDeadline(end);
+      try {
+        await setMetadata(`${account}:timer:${id}`, String(end));
+        setNow(Date.now());
+        setDeadline(end);
+      } catch {
+        // La serie è già confermata: un accessorio non deve dichiarare fallito il commit.
+        setDeadline(null);
+        notify(
+          'Serie salvata sul dispositivo. Timer non disponibile; gestisci il recupero manualmente.',
+        );
+        return;
+      }
     }
     notify('Serie salvata sul dispositivo.');
   }
@@ -140,7 +164,11 @@ export function WorkoutPage() {
           <button
             onClick={() => {
               setDeadline(null);
-              void setMetadata(`${account}:timer:${id}`, '0');
+              void setMetadata(`${account}:timer:${id}`, '0').catch(() => {
+                notify(
+                  'Timer chiuso. Lo stato non è stato salvato: potrebbe ricomparire alla riapertura.',
+                );
+              });
             }}
           >
             Chiudi timer

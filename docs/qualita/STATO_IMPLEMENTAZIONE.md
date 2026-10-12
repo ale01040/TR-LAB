@@ -1,8 +1,10 @@
 # TR LAB — stato dell'implementazione e collaudo
 
-12 ottobre 2026 · Versione 0.1.0 alpha, con Supabase collegato a locale/Preview/Production HTTPS Vercel. [Dominio stabile verificato](RILASCIO_DOMINIO_STABILE.md). Questo rapporto distingue codice presente, prove eseguite e requisiti aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
+13 ottobre 2026 · Versione 0.1.0 alpha, con Supabase collegato a locale/Preview/Production HTTPS Vercel. [Dominio stabile verificato](RILASCIO_DOMINIO_STABILE.md). Questo rapporto distingue codice presente, prove eseguite e requisiti aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
 
 Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [integrazione reale](INTEGRAZIONE_SUPABASE.md), [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La preview non chiude tutti i gate cloud della versione completa.
+
+Verifica corrente: [input, timer, flussi offline e limiti del 13 ottobre](VERIFICA_2026_10_13.md).
 
 ## 1. Cosa è disponibile
 
@@ -26,14 +28,14 @@ Il codice implementa sezioni della roadmap in un percorso verticale anticipato. 
 | --- | --- | --- |
 | TypeScript strict | Superato con `npm run check` | Sorgenti inclusi nel progetto TS; non equivalenza a correctness runtime |
 | ESLint | Superato | Regole JS/TS e hooks, non revisione completa della sicurezza |
-| Unit | 32 test superati, 10 file | Suite finale completa: copia/riordino immutabili, editor per serie/null/zero/lati/limite 27+3, giornata attiva stabile, campi bloccati e anteprima ciclo senza scritture, oltre alle regressioni precedenti |
+| Unit | 41 test superati, 11 file | Suite completa, incluse regressioni di testo invalido al cambio giornata, reset/limiti numerici ed errori del timer distinti dal commit, oltre ai casi editor/dominio precedenti |
 | Integration API | 6 test superati | Fastify reale in-process, payload/Origin, anonimo, readiness503 e Google disabilitato senza flusso |
 | Integration IndexedDB | 5 test superati | Persistenza/isolamento, base-overlay/ricevute, conflitti conservati, immutabilità anche offline, overflow contatore con rollback |
 | Integration SQL | 8 test superati | Migrazioni come non-superuser, runtime minimo, claim JSON/null, RPC/RLS/grant, consenso/snapshot/retry, revisioni oltre 2^53 e input ostili |
 | Integration editor offline | 1 test superato | Target/lati/copia dopo riapertura IndexedDB, approvazione e nuova versione con snapshot precedente invariato; nessuna prova cloud implicita |
-| Build e avvio | Web/PWA/server compilati; bundle server avviato realmente su loopback; CJS Vercel verificato su HTTP reale con 5 controlli | Esito del deploy HTTPS registrato separatamente; nessuna beta account implicita |
+| Build e avvio | Web/PWA/server compilati; server avviato realmente su loopback; wrapper/bundle CJS Vercel verificati su HTTP reale con 6 controlli isolati | Esito del deploy HTTPS registrato separatamente; nessuna beta account implicita |
 | Formattazione | Prettier check finale superato, compresi schema/esempio e configurazioni TS root | Sorgenti/configurazioni; Markdown verificato separatamente |
-| Dipendenze | `npm audit --json`: 0 advisory sul lockfile all'11 ottobre 2026 | Fotografia degli advisory disponibili, non assenza universale di vulnerabilità |
+| Dipendenze | `npm audit --json`: 0 advisory sul lockfile al 13 ottobre 2026 | Fotografia degli advisory disponibili, non assenza universale di vulnerabilità |
 | Config locale | valid true / supabaseConfigured true; preflight collegato, RLS/RPC/sessioni presenti e non-superuser | Collegamento reale; login positivo locale non provato |
 | Database cloud | RPC/consenso/retry/pull/isolation superati in transazione annullata; grant runtime su connessione reale | Non equivale a E2E Auth/PostgREST |
 | Vercel cloud | Preview READY con undici controlli; build Git Production corretta READY, tredici controlli sul dominio stabile e quattro GET pubbliche senza credenziali piattaforma | Nessun nuovo login positivo automatico; email, due dispositivi, telefoni e carico da provare |

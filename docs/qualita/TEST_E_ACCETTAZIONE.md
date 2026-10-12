@@ -37,7 +37,7 @@ Il dataset AI comprende richieste italiane normali, vincoli impossibili, eserciz
 | QA-SEC-03 | CSRF, XSS in note/chat e injection import | Nessuna azione non autorizzata o codice eseguito | F3/F8/F9 |
 | QA-SEC-04 | Cache calda, account A poi B, callback e Set-Cookie | Nessuna risposta personale servita all'altro account | F2/F3 |
 | QA-OFF-01 | Download, modalità aereo, seduta completa, chiusura e riapertura | Tutti i dati confermati presenti localmente | F1/F5 |
-| QA-OFF-02 | Fallisce commit IndexedDB o quota esaurita | Non mostra “salvato”; recupero/esportazione ove possibile | F5 |
+| QA-OFF-02 | Fallisce commit IndexedDB, quota o metadato timer dopo commit | Commit fallito: niente “salvato”, input conservato; solo timer fallito: serie salvata e avviso separato; recupero/esportazione ove possibile | F5 |
 | QA-OFF-03 | Nuova release durante seduta e migrazione locale | Nessun reload distruttivo o outbox persa | F5/F10 |
 | QA-OFF-04 | Logout/cambio account con outbox e senza rete | Scelta esplicita, isolamento, stato revoca dichiarato | F3/F5 |
 | QA-OFF-05 | Logout offline, riapertura, due tab, ritorno rete e nuovo login | Marcatore persistente, nessun rientro automatico; logout concluso prima del nuovo accesso, nessuna revoca tardiva della nuova sessione | F3/F5 |
@@ -58,7 +58,7 @@ Il dataset AI comprende richieste italiane normali, vincoli impossibili, eserciz
 | QA-APP-04 | AI prova applicazione diretta / conferma ambigua | Nessuno strumento autorizzato a farlo | F9 |
 | QA-APP-05 | AcceptProposal applicato, risposta persa, retry dopo scadenza challenge | Ricevuta originale e nessuna seconda applicazione; challenge scaduta respinta se comando mai applicato | F6 |
 | QA-IMP-01 | XLSX noto, formato standard, malformed/ZIP enorme | Mappatura/report corretti e limiti applicati | F4/F8 |
-| QA-EDT-01 | Serie importate diverse, valori null/zero, lavoro/extra/lati e limite ciclo | Modifica solo il target scelto, nessun ultimo lavoro eliminato o limite aggirato | F4 |
+| QA-EDT-01 | Serie diverse, null/zero, lavoro/extra/lati, limite ciclo, numero invalido e cambio giornata | Solo il target scelto, nessun ultimo lavoro eliminato o limite aggirato, testo invalido conservato allo smontaggio | F4 |
 | QA-EDT-02 | Copia e riordino giornate/esercizi/serie | ID della copia nuovi, selezione stabile e originali invariati | F4 |
 | QA-EDT-03 | Anteprima settimana base, accumulo e scarico | Stessi target della seduta, approvato/storico invariati | F4/F5 |
 | QA-SHR-01 | Link revocato e copia già acquisita | Niente nuove importazioni; copia autonoma conservata | F8 |
@@ -101,4 +101,4 @@ Rilascio pubblico vietato con difetti di perdita dati, accesso tra utenti, appli
 
 Ogni rapporto indica commit, migrazioni, versioni browser/tool, dataset, comandi, risultato, log con dati sensibili oscurati e difetti. Conservare artefatti in `docs/reports/<fase>/` o nel sistema CI con riferimenti stabili. Un'altra persona deve poter ripetere i casi principali.
 
-La validazione di questa documentazione controlla coerenza, link e tracciabilità. È distinta dal collaudo dell'app, che deve ancora essere sviluppata.
+La validazione documentale controlla coerenza, link e tracciabilità. È distinta dal collaudo dell’app: codice presente, prove eseguite e gate aperti sono nello [stato implementazione](STATO_IMPLEMENTAZIONE.md) e nei rapporti collegati.

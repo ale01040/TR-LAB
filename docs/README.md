@@ -1,5 +1,7 @@
 # Manuale di progetto — indice e ordine di lettura
 
+Ultima verifica funzionale: [rapporto del 13 ottobre 2026](qualita/VERIFICA_2026_10_13.md), con difetti corretti, test e limiti effettivi.
+
 Per il dominio stabile [TR LAB](https://tr-lab.vercel.app): [rilascio verificato](qualita/RILASCIO_DOMINIO_STABILE.md) e [guida Vercel](operazioni/DEPLOY_VERCEL.md).
 Per lo ZIP della modalità dispositivo: [caricamento manuale Netlify](operazioni/DEPLOY_NETLIFY.md).
 Per le verifiche: [revisione dell'app](qualita/REVISIONE_APP.md) e [integrazione Supabase/Vercel](qualita/INTEGRAZIONE_SUPABASE.md). Configurazioni residue: [completare Auth](operazioni/COMPLETARE_AUTH.md) e [passaggi Gmail/Google](operazioni/CONFIGURAZIONE_GMAIL_GOOGLE.md), con preflight pubblico e collaudo reale separati.

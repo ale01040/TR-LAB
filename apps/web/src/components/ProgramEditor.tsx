@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Check, Plus, Trash2 } from 'lucide-react';
 import { exerciseSchema, type Program, type Prescription } from '@tr-lab/contracts';
 import { copyDay, createPrescription, moveItem } from '@tr-lab/domain';
@@ -23,6 +23,7 @@ export function ProgramEditor({
 }) {
   const [dayId, setDayId] = useState(program.days[0]?.id ?? '');
   const [exerciseId, setExerciseId] = useState(catalog[0]?.id ?? '');
+  const formRef = useRef<HTMLFormElement>(null);
   const day = program.days.find((d) => d.id === dayId) ?? program.days[0];
   const dayIndex = program.days.findIndex((d) => d.id === day?.id);
   if (!day) return null;
@@ -39,6 +40,14 @@ export function ProgramEditor({
     });
   return (
     <form
+      ref={formRef}
+      onInvalidCapture={(event) => {
+        // I target in dettagli chiusi devono diventare visibili prima del focus nativo.
+        if (event.target instanceof HTMLElement) {
+          const details = event.target.closest('details');
+          if (details) details.open = true;
+        }
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         submit();
@@ -77,7 +86,10 @@ export function ProgramEditor({
               type="button"
               key={d.id}
               className={i === dayIndex ? styles.activeTab : ''}
-              onClick={() => setDayId(d.id)}
+              onClick={() => {
+                // Non smontare i campi: il testo invalido non è ancora nel modello approvabile.
+                if (d.id === day.id || formRef.current?.reportValidity()) setDayId(d.id);
+              }}
             >
               {d.name}
             </button>
@@ -86,6 +98,7 @@ export function ProgramEditor({
             type="button"
             disabled={program.days.length >= 14}
             onClick={() => {
+              if (!formRef.current?.reportValidity()) return;
               const id = crypto.randomUUID();
               setDayId(id);
               setProgram({
@@ -142,6 +155,7 @@ export function ProgramEditor({
             type="button"
             disabled={program.days.length >= 14}
             onClick={() => {
+              if (!formRef.current?.reportValidity()) return;
               const copied = copyDay(day, () => crypto.randomUUID());
               setProgram({
                 ...program,

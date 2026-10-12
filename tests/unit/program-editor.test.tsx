@@ -171,3 +171,42 @@ it('blocca campi durante salvataggio e non rende editabile una versione approvat
   expect(screen.queryByLabelText('Nome della scheda')).toBeNull();
   expect(screen.getByText(/Crea una nuova versione/)).toBeTruthy();
 });
+
+it.each(['cambio', 'copia', 'aggiunta'])(
+  'non perde numeri non validi durante %s della giornata',
+  async (action) => {
+    const p = program();
+    const commit = vi.fn();
+    const user = userEvent.setup();
+    render(<Editor value={p} commit={commit} />);
+    const exercise = within(
+      screen.getByRole('group', { name: `1. ${p.days[0]!.exercises[0]!.exercise.name}` }),
+    );
+    await user.click(exercise.getByText(/Serie e target/));
+    const input = within(exercise.getByRole('group', { name: 'Serie 1' })).getByLabelText(
+      'RIR',
+    ) as HTMLInputElement;
+    await user.clear(input);
+    await user.type(input, 'abc');
+    await user.click(exercise.getByText(/Serie e target/));
+    commit.mockClear();
+    await user.click(
+      screen.getByRole('button', {
+        name:
+          action === 'cambio'
+            ? p.days[1]!.name
+            : action === 'copia'
+              ? 'Duplica giornata'
+              : 'Giorno',
+      }),
+    );
+    expect((screen.getByLabelText('Nome giornata') as HTMLInputElement).value).toBe(
+      p.days[0]!.name,
+    );
+    expect(input.isConnected).toBe(true);
+    expect(input.value).toBe('abc');
+    expect(input.checkValidity()).toBe(false);
+    expect(input.closest('details')?.open).toBe(true);
+    expect(commit).not.toHaveBeenCalled();
+  },
+);

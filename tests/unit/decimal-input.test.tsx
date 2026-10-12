@@ -57,3 +57,40 @@ it('Invio con separatore finale non salva un valore precedente apparentemente va
   expect(input.checkValidity()).toBe(false);
   expect(submitted).not.toHaveBeenCalled();
 });
+it('un valore aggiornato dall’esterno elimina la validità obsoleta senza nuovi commit', async () => {
+  const commit = vi.fn();
+  const user = userEvent.setup();
+  const inputFor = (value: number) => (
+    <label>
+      RIR
+      <DecimalInput value={value} max={10} required onValue={commit} />
+    </label>
+  );
+  const { rerender } = render(inputFor(0));
+  const input = screen.getByLabelText('RIR') as HTMLInputElement;
+  await user.clear(input);
+  await user.type(input, 'abc');
+  await user.tab();
+  expect(input.checkValidity()).toBe(false);
+  commit.mockClear();
+  rerender(inputFor(5));
+  expect(input.value).toBe('5');
+  expect(input.checkValidity()).toBe(true);
+  expect(commit).not.toHaveBeenCalled();
+});
+it('rivalida un valore visibile quando cambiano i limiti', () => {
+  const commit = vi.fn();
+  const inputFor = (max: number) => (
+    <label>
+      RIR
+      <DecimalInput value={5} max={max} onValue={commit} />
+    </label>
+  );
+  const { rerender } = render(inputFor(10));
+  const input = screen.getByLabelText('RIR') as HTMLInputElement;
+  expect(input.checkValidity()).toBe(true);
+  rerender(inputFor(2));
+  expect(input.value).toBe('5');
+  expect(input.checkValidity()).toBe(false);
+  expect(commit).not.toHaveBeenCalled();
+});

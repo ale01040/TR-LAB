@@ -32,6 +32,8 @@ Un valore suggerito non significa serie eseguita. “Completa” registra il ris
 
 Timer basato su scadenza; pulsanti pausa/aggiungi tempo/salta secondo il protocollo. Alla ripresa dal background ricostruire il tempo; audio, vibrazione e notifiche non sono l'unico segnale. Non promettere allarmi a schermo bloccato prima delle prove reali.
 
+Un errore nei metadati del timer dopo il commit non può far apparire fallita una serie già salvata: confermare il risultato e avvisare separatamente del recupero manuale. Se fallisce il commit del diario, conservare l’input, mostrare l’errore e non dichiarare successo. Gestire anche errori di lettura/chiusura timer senza promettere persistenza quando quella scrittura fallisce.
+
 ## 4. Proposte e controllo finale
 
 Ogni proposta mostra cosa cambia, da quando, perché, quali dati usa e quali mancano. Esempio di testo: “Dalla prossima seduta: 20 → 22 kg per manubrio; 10 → 8 ripetizioni iniziali”. Esporre dettagli e fonte senza sommergere la vista principale.
