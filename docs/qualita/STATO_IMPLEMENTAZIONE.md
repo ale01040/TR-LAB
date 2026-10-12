@@ -36,6 +36,7 @@ Il codice implementa sezioni della roadmap in un percorso verticale anticipato. 
 | Config locale | valid true / supabaseConfigured true; preflight collegato, RLS/RPC/sessioni presenti e non-superuser | Collegamento reale; login positivo locale non provato |
 | Database cloud | RPC/consenso/retry/pull/isolation superati in transazione annullata; grant runtime su connessione reale | Non equivale a E2E Auth/PostgREST |
 | Vercel cloud | Preview READY con undici controlli; Production READY, dodici controlli su stage e dominio stabile, quattro GET pubbliche senza credenziali piattaforma | Nessun nuovo login positivo automatico; email, due dispositivi, telefoni e carico da provare |
+| Entry Vercel isolato | Sei prove HTTP del wrapper e bundle generati, senza sorgenti/workspace o SDK installati; incluso in check/CI | Regressione aggiunta dopo API500 della build Git; test remoto necessario per il packaging del provider |
 
 La prima fase del debug ha rilevato errori SQL, grant e bundle runtime che la sola lettura non aveva trovato; corretti e rieseguiti, con risultati registrati nel diario. Non nascondere quei fallimenti come se i test fossero stati verdi fin dall'inizio.
 

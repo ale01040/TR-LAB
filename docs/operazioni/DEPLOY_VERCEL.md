@@ -15,7 +15,7 @@ La prima preview usa `DEPLOYMENT_MODE=device-preview`: nessuna credenziale cloud
 | CDN asset e singola funzione API | Asset rapidi, stesso Origin e BFF | Cold start e limiti piattaforma; server persistente valido per futuri worker |
 | Fastify già implementato | Riusa sessioni HttpOnly, contratti e test; pool serverless max2 con attachDatabasePool | Rate limiter globale, lease refresh e capacità da collaudare prima della beta |
 | Modalità dispositivo / collegata | Prima prova senza provider; seconda con ruolo limitato e readiness reale | La connessione non dimostra Auth positivo, SMTP o offline su due device |
-| Bundle CJS + asset verificati | Niente moduli Windows/documenti; prova HTTP del file distribuito | Nuovo pacchetto/deploy dopo ogni build, CI deploy ancora da attivare |
+| Bundle CJS + asset verificati | Niente moduli Windows/documenti; prova HTTP del file distribuito | Pacchetto manuale distinto dalla build Git; verificare anche l'eventuale deploy automatico dopo il push |
 
 L'adapter usa `ready()` e `server.emit('request', ...)`, separando factory e server locale. Origine CSRF da `APP_ORIGIN` o `VERCEL_URL` della piattaforma, mai da Host. Nessuna riscrittura Next.js né JWT browser. [Fastify serverless](https://fastify.dev/docs/latest/Guides/Serverless/), [Fastify Vercel](https://vercel.com/docs/frameworks/backend/fastify), [Node supportato](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions).
 
@@ -139,3 +139,11 @@ Usare la procedura del §8 dalla directory effettiva del nuovo pacchetto, sostit
 In Supabase sono stati salvati il callback `https://tr-lab.vercel.app/api/auth/callback\?state=*`, quelli specifici Preview/Vite e Site URL `https://tr-lab.vercel.app`. Conferma e recupero vanno collaudati nello stesso browser; SMTP ancora da configurare secondo l'ultima risposta del committente. Il semplice login email/password non dimostra consegna email o configurazione Google. Stage, promozione, ID/artefatti ed esiti effettivi nel [rapporto del rilascio](../qualita/RILASCIO_DOMINIO_STABILE.md).
 
 Il dominio stabile ha un archivio IndexedDB distinto dalla Preview. I dati già sincronizzati si recuperano dopo l'accesso allo stesso account; quelli rimasti soltanto nel dispositivo della Preview richiedono export/import esplicito. Nessuna cancellazione della cache o del diario per aggiornare il dominio.
+
+## 10. Integrazione Git già presente
+
+Il push della consegna cd9c90c ha avviato un nuovo deployment Production da main tramite l'integrazione Git del progetto, già presente e non creata da questa attività. La build usa vercel.json della radice (`npm run build`, apps/web/dist e api/index.ts) e i valori Production appena configurati. Non usa il pacchetto CJS preparato localmente.
+
+Quel primo deploy Git era READY ma restituiva API500 per un export TypeScript del workspace non incluso. Ripristinato il pacchetto manuale verificato. La build del repository ora genera apps/server/dist/vercel.cjs con la stessa funzione di compilazione del pacchetto manuale; api/index.ts carica il bundle e includeFiles lo conserva nella funzione. Non caricare dist manualmente nel repository, non incorporare ambienti e non aggiungere dipendenze SDK ai pacchetti puri. `npm run check` esegue anche sei prove HTTP dell'entrypoint compilato e isolato tramite check:vercel. Gli esiti remoti della correzione devono essere verificati separatamente, non dedotti da queste prove locali.
+
+Controllare la build automatica e il dominio anche dopo il push: può sostituire la Production promossa manualmente. La CI di qualità GitHub è separata; l'avvio del deploy Git non prova che la CI sia già passata. Prima della beta adottare un gate di rilascio e una promozione controllata coerenti con il [manuale](RILASCIO_E_MANUTENZIONE.md), senza trasferire segreti a un altro servizio implicitamente. Non disabilitare un'integrazione del committente o il deploy durante questa verifica.

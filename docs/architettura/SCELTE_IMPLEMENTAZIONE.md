@@ -1,6 +1,6 @@
 # TR LAB — decisioni dell'implementazione alpha
 
-11 ottobre 2026 · Complemento al [registro tecnico](SCELTE_TECNICHE.md). Gli ADR di pianificazione restano i criteri della versione completa. Qui si descrive il codice effettivo, senza presentare funzionalità future come disponibili.
+12 ottobre 2026 · Complemento al [registro tecnico](SCELTE_TECNICHE.md). Gli ADR di pianificazione restano i criteri della versione completa. Qui si descrive il codice effettivo, senza presentare funzionalità future come disponibili.
 
 ## 1. Strumenti effettivi e alternative
 
@@ -18,8 +18,13 @@ Adapter Vercel collegato: frontend CDN + stessa API Node24, pooler Supabase real
 | Workbox injectManifest | Cache soltanto asset/navigation, niente risposte `/api`; aggiornamento su scelta esplicita | PWA installabile da collaudare su telefoni reali; precache comprende anche chunk lazy. Non promettere sync o timer affidabili in background |
 | pg per session store | Transazioni e lock per coordinare refresh; query parametrizzate, ruolo runtime minimo verificato | Pool serverless max2/idle5s, attachDatabasePool; lease e carico ancora da collaudare. ORM non elimina RLS, consenso o controllo delle ricevute |
 | Vitest / Testing Library / PGlite | Prove di dominio, input, IndexedDB, HTTP e PostgreSQL reale incorporato | PGlite non contiene GoTrue/PostgREST. Browser verificato manualmente; Playwright/axe presenti come strumenti, suite E2E automatica non ancora implementata |
+| Bundle serverless CJS comune con esbuild | Build Git e pacchetto manuale includono contratti e SDK senza dipendere dagli export TS dei workspace a runtime | Circa 3,8 MB, compilazione aggiuntiva e collaudo dell'artefatto; alternativa: pacchetti con dist/exports compilati separatamente, da introdurre solo se necessari ad altri consumatori |
 
 Versioni esatte in manifest e `package-lock.json`, toolchain in `engines`/`packageManager`. Esbuild 0.28.2 è un override motivato da un advisory Windows del vecchio dev server; build e test ne verificano la compatibilità con tsup. Audit corrente senza advisory rilevati, non garanzia assoluta. Non eseguire aggiornamenti major o `audit fix --force` alla cieca.
+
+Per Vercel, `npm run build` genera anche apps/server/dist/vercel.cjs tramite scripts/build-vercel-function.mjs. api/index.ts carica quel bundle con createRequire; vercel.json include esplicitamente il solo artefatto. Il normale server locale conserva la build ESM di tsup. Non cambiare gli export dei pacchetti puri o aggiungervi SDK per aggirare il packaging.
+
+Il tracer Git aveva prodotto una funzione READY che cercava @tr-lab/contracts/src/index.ts, assente dal runtime. La soluzione evita una dipendenza fra packaging TS del provider e layout dei workspace, riusa la configurazione del pacchetto manuale già funzionante e mantiene Node24 e il BFF. `npm run check:vercel`, incluso in check/CI dopo la build, transpila l'entrypoint e lo esegue con soli artefatti in una directory temporanea esterna al repository; sei prove HTTP non usano provider o segreti. Fonte per includeFiles: [configurazione ufficiale](https://vercel.com/docs/project-configuration/vercel-json#functions). Prova remota e rollback nel [rapporto dominio stabile](../qualita/RILASCIO_DOMINIO_STABILE.md).
 
 ## 2. Struttura effettiva e regole di codice
 

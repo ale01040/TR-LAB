@@ -1,9 +1,8 @@
-import { build } from 'esbuild';
+import { buildVercelFunction } from './build-vercel-function.mjs';
 import { mkdir, readdir, readFile, copyFile, writeFile } from 'node:fs/promises';
 import { resolve, join, extname } from 'node:path';
 import { createHash } from 'node:crypto';
 
-const root = resolve('.');
 const mode = process.argv[2] ?? 'device-preview';
 if (!['device-preview', 'connected'].includes(mode)) throw new Error('Modalità deploy non valida.');
 const staging = resolve('.analysis', `vercel-preview-${Date.now()}`);
@@ -32,17 +31,7 @@ await writeFile(
   '*\n!public\n!public/**\n!api\n!api/**\n!package.json\n!vercel.json\n',
 );
 // Bundle CJS standalone: nessun node_modules Windows, documento privato o ambiente entra nel pacchetto.
-await build({
-  entryPoints: [join(root, 'apps/server/src/vercel.ts')],
-  outfile: join(staging, 'api/index.js'),
-  bundle: true,
-  platform: 'node',
-  target: 'node24',
-  format: 'cjs',
-  sourcemap: false,
-  external: ['pg-native'],
-  define: { 'import.meta.url': 'undefined' },
-});
+await buildVercelFunction(join(staging, 'api/index.js'));
 const settings = JSON.parse(await readFile('vercel.json', 'utf8'));
 await writeFile(
   join(staging, 'vercel.json'),
