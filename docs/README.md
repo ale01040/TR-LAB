@@ -2,7 +2,7 @@
 
 Per il dominio stabile [TR LAB](https://tr-lab.vercel.app): [rilascio verificato](qualita/RILASCIO_DOMINIO_STABILE.md) e [guida Vercel](operazioni/DEPLOY_VERCEL.md).
 Per lo ZIP della modalità dispositivo: [caricamento manuale Netlify](operazioni/DEPLOY_NETLIFY.md).
-Per le verifiche: [revisione dell'app](qualita/REVISIONE_APP.md) e [integrazione Supabase/Vercel](qualita/INTEGRAZIONE_SUPABASE.md). Configurazioni residue: [completare Auth](operazioni/COMPLETARE_AUTH.md).
+Per le verifiche: [revisione dell'app](qualita/REVISIONE_APP.md) e [integrazione Supabase/Vercel](qualita/INTEGRAZIONE_SUPABASE.md). Configurazioni residue: [completare Auth](operazioni/COMPLETARE_AUTH.md) e [passaggi Gmail/Google](operazioni/CONFIGURAZIONE_GMAIL_GOOGLE.md), con preflight pubblico e collaudo reale separati.
 
 Versione 1.3 · 12 ottobre 2026 · Stato: specifiche della versione completa e alpha implementata, Supabase collegato a locale/Preview/Production Vercel, prove database e HTTP remoto superate. Login Preview riuscito riferito dal committente; prove positive Production, email, due dispositivi e gate della roadmap restano aperti. Le specifiche non dichiarano chiuse tutte le fasi.
 

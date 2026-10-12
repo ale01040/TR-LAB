@@ -23,9 +23,11 @@ In **Authentication → Email / SMTP Settings** inserire host, porta, account/pa
 
 Controllare i template di conferma e recupero: per il flusso attuale usare il link di verifica del provider (`ConfirmationURL`) e preservare redirectTo/state/PKCE. Non copiare template che puntano a una rotta `/auth/confirm` non presente in questa app. Il browser apre il provider e ritorna a `/api/auth/callback` con code/state. Non aggiungere token Auth al frontend o ai log.
 
-### 2.1 Scelta SMTP proposta e istruzioni
+### 2.1 Scelta SMTP confermata e alternativa futura
 
-Per il primo collegamento consiglio **Resend via SMTP**: si configura nel provider Auth senza aggiungere SDK, chiavi o chiamate email al BFF. È una scelta tecnica di semplicità, non una prova di consegna superiore. Richiede un account del committente, un dominio verificato e la chiave del servizio; nessuno è stato creato o acquistato in questa consegna. [Prerequisiti e SMTP Resend](https://resend.com/docs/send-with-smtp).
+Il committente non ha un dominio e ha scelto **Gmail dedicato per la prima fase** (DEC-31). Seguire [configurazione Gmail e Google](CONFIGURAZIONE_GMAIL_GOOGLE.md): host smtp.gmail.com, porta 465 con TLS implicito, utente/mittente coincidenti e password per app dopo verifica in due passaggi. Nessuna credenziale è stata fornita; configurazione e consegna email restano da collaudare. La richiesta di SPF/DKIM/DMARC del §2 riguarda il futuro dominio proprio, non il dominio Gmail gestito da Google.
+
+**Resend via SMTP** resta un'alternativa per la futura apertura pubblica con dominio verificato; il mittente sandbox non risolve l'invio agli amici. Non acquistare o attivare servizi implicitamente. [Prerequisiti e SMTP Resend](https://resend.com/docs/send-with-smtp).
 
 | Opzione | Perché usarla | Compromesso |
 | --- | --- | --- |
@@ -35,7 +37,7 @@ Per il primo collegamento consiglio **Resend via SMTP**: si configura nel provid
 
 La valutazione di semplicità è un'inferenza dalle procedure ufficiali; non è un benchmark. Fonti: [Resend SMTP](https://resend.com/docs/send-with-smtp), [SES SMTP](https://docs.aws.amazon.com/ses/latest/dg/send-email-smtp.html), [Supabase SMTP](https://supabase.com/docs/guides/auth/auth-smtp). Verificare quote/prezzi prima dell'attivazione; non fissare quantità nel codice.
 
-Configurazione proposta in Supabase, dopo la verifica del dominio:
+Configurazione dell'alternativa futura Resend, da usare soltanto dopo la scelta e la verifica del dominio:
 
 | Campo | Valore |
 | --- | --- |
@@ -61,7 +63,9 @@ Registrare soltanto esiti/codici HTTP e ambiente; niente email personali, export
 
 ## 4. Attivare Google quando pronto
 
-Serve un client OAuth web nella propria Google Cloud, consenso configurato e account di test autorizzati quando l'app Google è in Testing. Client ID/secret non sono stati forniti. Copiare da Supabase il redirect del **provider**, normalmente `https://mxaogzjquvhwurngktyz.supabase.co/auth/v1/callback`, e verificarlo nella Dashboard prima di inserirlo tra i redirect URI Google.
+Serve un client OAuth web nella propria Google Cloud e il consenso configurato. Per i soli scope openid, userinfo.email e userinfo.profile, Google documenta un'eccezione in Testing: nessuna lista tester obbligatoria o scadenza del consenso a sette giorni. Aggiungere altri permessi cambia i requisiti. [Audience ufficiale](https://support.google.com/cloud/answer/15549945?hl=en).
+
+Client ID/secret non sono stati forniti. Copiare da Supabase il redirect del **provider**, normalmente `https://mxaogzjquvhwurngktyz.supabase.co/auth/v1/callback`, e verificarlo nella Dashboard prima di inserirlo tra i redirect URI Google. Procedura completa, valori esatti e prove in [configurazione Gmail e Google](CONFIGURAZIONE_GMAIL_GOOGLE.md).
 
 Inserire ID/secret esclusivamente nel provider Google di Supabase, abilitarlo e poi configurare `GOOGLE_AUTH_ENABLED=true` nel BFF dell'ambiente scelto e ripubblicare. Il codice attuale restituisce GOOGLE_NOT_CONFIGURED prima di scrivere un tentativo PKCE quando il flag è false; la UI mostra una spiegazione. Non attivare il flag per aggirare la configurazione del provider. [Guida Google Auth](https://supabase.com/docs/guides/auth/social-login/auth-google).
 

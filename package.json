@@ -30,6 +30,7 @@
     "db:verify": "vitest run tests/integration/database.test.ts",
     "contracts:check": "vitest run tests/unit/contracts.test.ts",
     "config:check": "node --env-file-if-exists=.env --import tsx scripts/check-config.ts",
+    "auth:preflight": "node --env-file-if-exists=.env scripts/check-auth-providers.mjs",
     "db:preflight": "node --env-file-if-exists=.env --import tsx scripts/database-preflight.ts",
     "schema:generate": "node --import tsx scripts/create-standard-schema.ts"
   },

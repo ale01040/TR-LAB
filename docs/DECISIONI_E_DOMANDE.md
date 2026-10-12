@@ -36,6 +36,7 @@ Versione 1.3 · 12 ottobre 2026. Registro delle decisioni del committente e dei 
 | DEC-28 | Collegare Supabase e far funzionare il backend su Vercel | Schema/ruolo minimo, pooler/TLS e prove reali; non elimina i gate Auth, SMTP, sincronizzazione e pubblico |
 | DEC-29 | Trasferire i cinque valori indicati al solo Preview pere01040/tr-lab | Consenso esplicito a URL/provider/CA e a DATABASE_URL/SESSION_ENCRYPTION_KEY come Secret; nessuna credenziale amministrativa o produzione implicita |
 | DEC-30 | Configurare Production pere01040/tr-lab e pubblicare l'alpha su tr-lab.vercel.app | Consenso esplicito ai cinque valori cloud, DATABASE_URL runtime e nuova chiave sessioni come Secret, origine/modalità collegate; stesso DB Supabase condiviso dichiarato, nessuna password amministrativa o chiusura implicita dei gate beta |
+| DEC-31 | Usare Gmail dedicato come prima soluzione SMTP senza dominio proprio | Verifica in due passaggi e password per app inserita direttamente in Supabase; collaudo consegna/recupero, limiti del piccolo gruppo, rivalutazione prima della beta pubblica. Nessun account Google Cloud/OAuth già disponibile; guida e attivazione progressiva |
 
 La generazione usa solo contenuti e metodi pertinenti all'ambito confermato. Il diario è uno strumento di registrazione; non deve classificare condizioni mediche o formulare diagnosi dalle misure.
 
