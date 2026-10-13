@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Check, ChevronLeft, Clock3, Flag, Save } from 'lucide-react';
 import { setSchema, type Prescription, type SetLog, type Target } from '@tr-lab/contracts';
-import { countRequired, parseDecimal, targetSides } from '@tr-lab/domain';
+import { countRequired, parseDecimal, targetSides, journalData } from '@tr-lab/domain';
 import { useApp } from '../components/AppProvider';
 import { metadata, setMetadata } from '../data/database';
 import { counted, Dialog, errorMessage, kilos } from '../components/Shared';
@@ -11,11 +11,12 @@ import styles from '../styles/App.module.css';
 export function WorkoutPage() {
   const { id } = useParams();
   const { entities, save, notify, account } = useApp();
-  const record = entities.find((r) => r.kind === 'session' && r.id === id);
-  const session = record?.kind === 'session' ? record.data : null;
-  const logs = entities.flatMap((r) =>
-    r.kind === 'set' && r.data.sessionId === id ? [r.data] : [],
+  const record = entities.find(
+    (r) => ['session', 'recovered_workout'].includes(r.kind) && r.id === id,
   );
+  const journal = journalData(entities);
+  const session = journal.sessions.find((s) => s.id === id) ?? null;
+  const logs = journal.sets.filter((l) => l.sessionId === id);
   const [finish, setFinish] = useState(false);
   const [busy, setBusy] = useState(false);
   const [notes, setNotes] = useState(session?.notes ?? '');
@@ -141,6 +142,12 @@ export function WorkoutPage() {
           </button>
         )}
       </div>
+      {record.kind === 'recovered_workout' && (
+        <p className={styles.hint}>
+          Storico recuperato da dati locali, di sola lettura. Conserva snapshot ed esecuzioni; non
+          approva sul server il piano da cui proviene.
+        </p>
+      )}
       {session.status === 'completed' && session.notes && (
         <section className={styles.panel}>
           <h2>Note della seduta</h2>

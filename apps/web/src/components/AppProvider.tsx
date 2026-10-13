@@ -1,4 +1,13 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { z } from 'zod';
 import { useLiveQuery } from 'dexie-react-hooks';
 import type { Command, Entity } from '@tr-lab/contracts';
 import { db, localAccount, metadata, records, saveLocally, setMetadata } from '../data/database';
@@ -12,6 +21,15 @@ export type User = {
   recovery: boolean;
 };
 type SessionResponse = { user: User | null; configured: boolean };
+const userSchema = z
+  .object({
+    id: z.uuid(),
+    email: z.email(),
+    sessionId: z.uuid(),
+    csrf: z.string(),
+    recovery: z.boolean(),
+  })
+  .strict();
 type AppState = {
   account: string;
   user: User | null;
@@ -28,6 +46,7 @@ type AppState = {
   sync: () => Promise<void>;
   logout: () => Promise<void>;
   notify: (message: string) => void;
+  isCurrentSession: (sessionId: string) => boolean;
 };
 const Context = createContext<AppState | null>(null);
 export function useApp(): AppState {
@@ -43,6 +62,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [online, setOnline] = useState(navigator.onLine);
   const [notice, notify] = useState('');
   const [syncing, setSyncing] = useState(false);
+  const activeUser = useRef<User | null>(null);
+  const authGeneration = useRef(0);
+  const syncController = useRef<AbortController | null>(null);
+  const invalidateAuth = useCallback(() => {
+    authGeneration.current++;
+    syncController.current?.abort();
+  }, []);
+  const adoptUser = useCallback((next: User | null) => {
+    if (activeUser.current?.sessionId !== next?.sessionId) syncController.current?.abort();
+    activeUser.current = next;
+    setUser(next);
+    setCsrf(next?.csrf || null);
+  }, []);
   const account = user?.id ?? localAccount;
   const loadedRecords = useLiveQuery(
     async () => ({ account, items: await records(account) }),
@@ -61,85 +93,112 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const operations = loadedOperations?.account === account ? loadedOperations.items : [];
   const pending = operations.length;
   const blocked = operations.filter((p) => p.status === 'blocked').length;
-  async function refreshAuth(): Promise<User | null> {
-    const response = await api<SessionResponse>('/auth/session');
+  const refreshAuth = useCallback(async (): Promise<User | null> => {
+    const generation = ++authGeneration.current;
+    const response = z
+      .object({ configured: z.boolean(), user: userSchema.nullable() })
+      .parse(await api<SessionResponse>('/auth/session'));
+    if (generation !== authGeneration.current) return null;
     setConfigured(response.configured);
     const pendingLogout = await metadata('logout-pending');
+    if (generation !== authGeneration.current) return null;
     if (pendingLogout) {
       if (response.user?.sessionId === pendingLogout) {
         setCsrf(response.user.csrf);
         await api('/auth/logout', 'POST', { sessionId: pendingLogout });
       }
       await db.meta.delete('logout-pending');
-      setUser(null);
-      setCsrf(null);
+      if (generation === authGeneration.current) adoptUser(null);
       return null;
     }
-    setUser(response.user);
-    setCsrf(response.user?.csrf ?? null);
+    adoptUser(response.user);
     if (response.user)
       await setMetadata('last-user', JSON.stringify({ ...response.user, csrf: '' }));
     else await db.meta.delete('last-user');
     return response.user;
-  }
-  async function sync(): Promise<void> {
-    if (!user || user.recovery || syncing || !navigator.onLine) return;
+  }, [adoptUser]);
+  const sync = useCallback(async (): Promise<void> => {
+    const before = activeUser.current;
+    if (!before || before.recovery || syncController.current || !navigator.onLine) return;
+    const controller = new AbortController();
+    syncController.current = controller;
     setSyncing(true);
     try {
       const fresh = await refreshAuth();
-      if (!fresh || fresh.id !== user.id || fresh.sessionId !== user.sessionId || fresh.recovery)
+      if (
+        !fresh ||
+        fresh.id !== before.id ||
+        fresh.sessionId !== before.sessionId ||
+        fresh.recovery
+      )
         throw new Error('Sessione cambiata. Accedi di nuovo prima di sincronizzare.');
-      await synchronize(fresh.id);
+      await synchronize(fresh.id, {
+        signal: controller.signal,
+        isCurrent: () =>
+          activeUser.current?.id === fresh.id && activeUser.current.sessionId === fresh.sessionId,
+      });
     } catch (error) {
-      notify(
-        error instanceof Error
-          ? error.message
-          : 'Sincronizzazione non riuscita. I dati restano sul dispositivo.',
-      );
+      if (!controller.signal.aborted)
+        notify(
+          error instanceof Error
+            ? error.message
+            : 'Sincronizzazione non riuscita. I dati restano sul dispositivo.',
+        );
     } finally {
+      if (syncController.current === controller) syncController.current = null;
       setSyncing(false);
     }
-  }
+  }, [refreshAuth]);
   useEffect(() => {
-    const changed = () => setOnline(navigator.onLine);
+    let cancelled = false;
+    const changed = () => {
+      setOnline(navigator.onLine);
+      if (navigator.onLine)
+        void metadata('logout-pending')
+          .then((pending) => {
+            if (pending) return refreshAuth();
+          })
+          .catch(() => notify('L’uscita remota è ancora in attesa.'));
+    };
     window.addEventListener('online', changed);
     window.addEventListener('offline', changed);
     void (async () => {
       try {
         const theme = await metadata('theme');
         document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
-        await refreshAuth();
+        if (!cancelled) await refreshAuth();
       } catch {
+        if (cancelled) return;
         if (!(await metadata('logout-pending'))) {
           const remembered = await metadata('last-user');
           if (remembered) {
-            const saved = JSON.parse(remembered) as User;
-            setUser(saved);
+            const saved = userSchema.safeParse(JSON.parse(remembered));
+            if (saved.success && !cancelled && !activeUser.current) adoptUser(saved.data);
           }
         }
         notify('Connessione al server assente. Il diario locale è disponibile.');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
     return () => {
+      cancelled = true;
+      invalidateAuth();
       window.removeEventListener('online', changed);
       window.removeEventListener('offline', changed);
     };
-  }, []);
+  }, [adoptUser, refreshAuth, invalidateAuth]);
   useEffect(() => {
-    if (user && online && !loading && !blocked) void sync();
+    if (user?.id && !user.recovery && online && !loading) void sync();
     // Cambia solo quando arriva una nuova intenzione o torna la rete, non a ogni rendering.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, online, pending, loading, blocked]);
+  }, [user?.id, user?.recovery, online, pending, loading, blocked, sync]);
   useEffect(() => {
-    if (!user || user.recovery || !online) return;
+    if (!user?.id || user.recovery || !online) return;
     const timer = window.setInterval(() => {
       if (document.visibilityState === 'visible') void sync();
     }, 30000);
     return () => window.clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, user?.recovery, online]);
+  }, [user?.id, user?.recovery, online, sync]);
   async function save(
     command: Command['command'],
     entity: Entity,
@@ -148,11 +207,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await saveLocally(account, command, entity, related);
   }
   async function logout(): Promise<void> {
-    if (!user) return;
-    await setMetadata('logout-pending', user.sessionId);
+    const current = activeUser.current;
+    if (!current) return;
+    authGeneration.current++;
+    syncController.current?.abort();
+    await setMetadata('logout-pending', current.sessionId);
+    activeUser.current = null;
+    setUser(null);
     try {
       if (navigator.onLine) {
-        await api('/auth/logout', 'POST', { sessionId: user.sessionId });
+        await api('/auth/logout', 'POST', { sessionId: current.sessionId });
         await db.meta.delete('logout-pending');
       }
     } catch {
@@ -182,6 +246,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         sync,
         logout,
         notify,
+        isCurrentSession: (sessionId) => activeUser.current?.sessionId === sessionId,
       }}
     >
       {children}

@@ -2,6 +2,8 @@
 
 Versione 1.1 · Test da implementare, non risultati già ottenuti. Una schermata completa o una percentuale di coverage non dimostrano da sole il requisito.
 
+Procedure esecutive per il prossimo incremento: [due account, telefono/PC e guasti di sincronizzazione](../piani/COLLAUDO_SINCRONIZZAZIONE.md), [import/catalogo/calendario](../piani/SCHEDE_EXCEL_CATALOGO_CALENDARIO.md), [consenso e motore](../piani/GENERATORE_E_PROGRESSIONI.md). I casi operativi S01–S18 dettagliano gli ID QA già presenti; non sono nuovi esiti di collaudo.
+
 ## 1. Livelli e strumenti
 
 | Livello | Strumento raccomandato | Responsabilità |

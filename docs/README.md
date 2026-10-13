@@ -1,6 +1,10 @@
 # Manuale di progetto — indice e ordine di lettura
 
-Ultima verifica funzionale: [rapporto del 13 ottobre 2026](qualita/VERIFICA_2026_10_13.md), con difetti corretti, test e limiti effettivi.
+Ultimo incremento: [schede, sync e motore](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), con codice, test e gate aperti, sul [ramo di consegna GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013). [Formato Excel effettivo](specifiche/FORMATO_EXCEL_IMPLEMENTATO.md), [collaudo/migrazioni/rollback](operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [registro dei metodi](fonti/REGISTRO_REGOLE.md). Le nuove funzioni non sono ancora sul sito Vercel: prima del merge in main occorrono staging, migrazioni e collaudo.
+
+Baseline precedente: [rapporto del 13 ottobre 2026](qualita/VERIFICA_2026_10_13.md), con difetti corretti, test e limiti allora rilevati.
+
+Piano da completare: [piano esecutivo del 13 ottobre](piani/PIANO_PROSSIME_FUNZIONI.md), con [collaudo sync](piani/COLLAUDO_SINCRONIZZAZIONE.md), [Excel, catalogo e calendario](piani/SCHEDE_EXCEL_CATALOGO_CALENDARIO.md), [generatore e progressioni](piani/GENERATORE_E_PROGRESSIONI.md) e [fonti ufficiali consultate](piani/FONTI_TECNICHE.md). Il rapporto corrente distingue le parti implementate dai gate non chiusi.
 
 Per il dominio stabile [TR LAB](https://tr-lab.vercel.app): [rilascio verificato](qualita/RILASCIO_DOMINIO_STABILE.md) e [guida Vercel](operazioni/DEPLOY_VERCEL.md).
 Per lo ZIP della modalità dispositivo: [caricamento manuale Netlify](operazioni/DEPLOY_NETLIFY.md).

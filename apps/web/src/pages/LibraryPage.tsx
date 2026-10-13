@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { ArrowUpRight, Search } from 'lucide-react';
-import { exerciseSchema } from '@tr-lab/contracts';
-import rawCatalog from '../data/catalog.json';
-import { Dialog } from '../components/Shared';
+import { type Exercise, type PrivateExercise } from '@tr-lab/contracts';
+import { useCatalog } from '../data/use-catalog';
+import { useApp } from '../components/AppProvider';
+import { PrivateExerciseForm } from '../components/PrivateExerciseForm';
+import { EquipmentPanel } from '../components/EquipmentPanel';
+import { Dialog, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
-const catalog = rawCatalog.map((e) => exerciseSchema.parse(e));
 const equipmentLabels = {
   barbell: 'Bilanciere',
   dumbbell: 'Manubri',
@@ -13,12 +15,42 @@ const equipmentLabels = {
   bodyweight: 'Corpo libero',
 };
 export function LibraryPage() {
+  const catalog = useCatalog(true);
+  const { entities, save, notify } = useApp();
+  const [scope, setScope] = useState('all');
+  const [form, setForm] = useState<{ initial?: Exercise; editing?: PrivateExercise } | null>(null);
   const [search, setSearch] = useState('');
   const [equipment, setEquipment] = useState('all');
   const [selected, setSelected] = useState('');
   const exercise = catalog.find((e) => e.id === selected);
+  const privateRecord = entities.find(
+    (r) => r.kind === 'private_exercise' && r.data.exercise.id === selected,
+  );
   const visible = catalog.filter(
     (e) =>
+      (scope === 'catalog'
+        ? !e.id.startsWith('private:')
+        : scope === 'mine'
+          ? e.id.startsWith('private:') &&
+            entities.some(
+              (r) =>
+                r.kind === 'private_exercise' &&
+                r.data.exercise.id === e.id &&
+                r.data.status === 'active',
+            )
+          : scope === 'archived'
+            ? entities.some(
+                (r) =>
+                  r.kind === 'private_exercise' &&
+                  r.data.exercise.id === e.id &&
+                  r.data.status === 'archived',
+              )
+            : !entities.some(
+                (r) =>
+                  r.kind === 'private_exercise' &&
+                  r.data.exercise.id === e.id &&
+                  r.data.status === 'archived',
+              )) &&
       (equipment === 'all' || e.equipment === equipment) &&
       `${e.name} ${e.muscle}`
         .toLocaleLowerCase('it-IT')
@@ -32,9 +64,20 @@ export function LibraryPage() {
           <h1>La tua libreria.</h1>
           <p>Trova il movimento. Comprendi la convenzione. Inseriscilo nella scheda.</p>
         </div>
-        <span className={styles.badge}>{catalog.length} esercizi</span>
+        <button className={styles.primary} onClick={() => setForm({})}>
+          Crea il mio esercizio
+        </button>
       </div>
       <div className={styles.libraryFilters}>
+        <label>
+          Mostra
+          <select aria-label="Mostra" value={scope} onChange={(e) => setScope(e.target.value)}>
+            <option value="all">Tutti gli attivi</option>
+            <option value="catalog">Catalogo</option>
+            <option value="mine">I miei</option>
+            <option value="archived">I miei archiviati</option>
+          </select>
+        </label>
         <label>
           <Search size={18} aria-hidden="true" />
           <span className={styles.srOnly}>Cerca esercizio o muscolo</span>
@@ -57,6 +100,7 @@ export function LibraryPage() {
           </select>
         </label>
       </div>
+      <EquipmentPanel />
       <div className={styles.libraryGrid}>
         {visible.map((e, i) => (
           <button className={styles.libraryCard} key={e.id} onClick={() => setSelected(e.id)}>
@@ -110,9 +154,68 @@ export function LibraryPage() {
           </p>
           <p>{exercise.instructions}</p>
           <p className={styles.hint}>
-            Catalogo iniziale derivato dai nomi dell'Excel e tre movimenti a corpo libero. Tutorial
-            e varianti private verranno aggiunti con revisione dei contenuti.
+            Gli esercizi personali appartengono al tuo spazio. Archiviare o modificare le istruzioni
+            non riscrive le sedute e le schede precedenti.
           </p>
+          <div className={styles.actionStrip}>
+            <button
+              onClick={() => {
+                setForm({ initial: exercise });
+                setSelected('');
+              }}
+            >
+              Crea una mia variante
+            </button>
+            {privateRecord?.kind === 'private_exercise' && (
+              <>
+                <button
+                  onClick={() => {
+                    setForm({ initial: exercise, editing: privateRecord.data });
+                    setSelected('');
+                  }}
+                >
+                  Modifica nome e istruzioni
+                </button>
+                {privateRecord.data.status === 'active' && (
+                  <button
+                    onClick={() => {
+                      if (
+                        !window.confirm(
+                          'Archiviare questo esercizio? Gli snapshot precedenti restano disponibili.',
+                        )
+                      )
+                        return;
+                      void save('ArchivePrivateExercise', {
+                        ...privateRecord,
+                        data: { ...privateRecord.data, status: 'archived' },
+                      })
+                        .then(() => {
+                          setSelected('');
+                          notify('Esercizio archiviato sul dispositivo.');
+                        })
+                        .catch((e) => notify(errorMessage(e)));
+                    }}
+                  >
+                    Archivia
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </Dialog>
+      )}
+      {form && (
+        <Dialog
+          title={form.editing ? 'Modifica il mio esercizio' : 'Crea il mio esercizio'}
+          close={() => setForm(null)}
+        >
+          <PrivateExerciseForm
+            {...form}
+            done={() => {
+              setForm(null);
+              notify('Esercizio personale salvato sul dispositivo.');
+            }}
+          />
         </Dialog>
       )}
     </>

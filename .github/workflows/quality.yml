@@ -20,7 +20,11 @@ jobs:
       - run: npm install --global npm@11.19.0
       - run: npm ci
       - run: npm run check
+      - if: matrix.os == 'ubuntu-latest'
+        run: npx playwright install --with-deps chromium
+      - if: matrix.os == 'ubuntu-latest'
+        run: npm run test:e2e
       - run: npm run format:check
       - run: npm audit --audit-level=low
-# Eseguita su GitHub: verifica il commit corrente su Ubuntu e Windows, senza deploy o segreti.
+# Verifica ogni push su Ubuntu e Windows; l'esito del commit corrente va controllato nelle Actions.
 # SHA verificati su repository ufficiali l'11 ottobre 2026; nessun deploy.

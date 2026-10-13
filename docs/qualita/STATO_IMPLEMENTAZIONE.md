@@ -1,5 +1,7 @@
 # TR LAB — stato dell'implementazione e collaudo
 
+**Baseline dell'alpha precedente all'incremento schede/sync/motore.** Le tabelle e i conteggi sotto descrivono quella consegna, non il codice locale nuovo. Per lo stato corrente leggere [incremento del 13 ottobre](INCREMENTO_SCHEDE_SYNC_MOTORE.md), con parser Excel, catalogo personale, calendario, recupero e consenso. Le nuove migrazioni restano locali e non cambiano la situazione del dominio pubblicato.
+
 13 ottobre 2026 · Versione 0.1.0 alpha, con Supabase collegato a locale/Preview/Production HTTPS Vercel. [Dominio stabile verificato](RILASCIO_DOMINIO_STABILE.md). Questo rapporto distingue codice presente, prove eseguite e requisiti aperti. Non è una certificazione di sicurezza, accessibilità o validazione scientifica.
 
 Aggiornamento: [revisione app e layout](REVISIONE_APP.md), [integrazione reale](INTEGRAZIONE_SUPABASE.md), [procedura Vercel](../operazioni/DEPLOY_VERCEL.md). La preview non chiude tutti i gate cloud della versione completa.

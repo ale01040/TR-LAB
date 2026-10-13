@@ -2,6 +2,8 @@
 
 Versione 1.2 · 11 ottobre 2026. La prima alpha importa il formato JSON qui definito e una fixture già adattata dall'Excel. Il parser di file XLSX resta da implementare in WP-07; non promettere import universale di qualsiasi foglio.
 
+Integrazione di pianificazione del 13 ottobre: [pipeline XLSX, mapping, librerie, limiti e ticket SCH](../piani/SCHEDE_EXCEL_CATALOGO_CALENDARIO.md). NEXT-D2 raccomanda il primo import nel browser/worker; non richiede conversione JSON manuale. Formato JSON v1 e limiti attuali restano effettivi finché non vengono implementati e collaudati i contratti successivi.
+
 ## 1. Formato standard raccomandato
 
 JSON UTF-8 con `format: 'workout-program'`, `schema_version: 1`, `kind: 'program_template'` e `program`. Fonte eseguibile: `packages/contracts/src/index.ts`, `templateSchema` e schemi collegati; [JSON Schema generato](../../schemas/workout-program.v1.schema.json) e [esempio valido sintetico](../../examples/programma.v1.json). Gli ID sono locali al file e vengono rimappati: non concedono accesso al database.
@@ -75,9 +77,11 @@ Riconoscere fogli, intestazioni e struttura, oltre alle celle del file noto. Con
 
 ## 3. Pipeline e sicurezza
 
-Upload autenticato → limiti formato/dimensione → archivio temporaneo privato → parsing isolato → modello intermedio → validazione → anteprima → conferma import → nuova bozza e report. La conferma import non attiva automaticamente il programma.
+Primo percorso XLSX raccomandato (NEXT-D2): selezione locale → limiti del contenitore → worker → modello intermedio → validazione → anteprima/mapping → conferma import → nuova bozza/report/outbox → validazione remota dei comandi. Il file completo rimane sul dispositivo. La conferma import non attiva automaticamente il programma.
 
-Definire limiti compressi, decompressi, fogli, righe, stringhe e timeout. Valori iniziali proposti: file 10 MiB, contenuto decompresso 100 MiB, 50.000 righe complessive; da tarare sulle fixture e sul runtime. Se il file viene rifiutato o il parser genera un errore, il job resta consultabile senza stack o dati di altri utenti. I file incompleti vengono eliminati secondo retention.
+La precedente pipeline con upload autenticato, archivio temporaneo privato e job server resta l'evoluzione per casi non coperti dal percorso locale: richiede limiti, quote, retention e autorizzazioni proprie. Non usarla come fallback invisibile. Il worker browser non è una sandbox: applicare i limiti effettivi durante decompressione e parsing come specificato nel piano SCH.
+
+Definire limiti compressi, decompressi, fogli, righe, stringhe e timeout. Valori iniziali proposti: file 10 MiB, contenuto decompresso 100 MiB, 50.000 righe complessive; da tarare sulle fixture e sui telefoni. Il piano SCH aggiunge budget per celle, stringhe e tempo. Errori/annullamento locali non producono entità parziali; gli eventuali job server restano consultabili senza stack o dati di altri utenti, con pulizia dei file secondo retention.
 
 Il parser XLSX viene scelto in F4 dopo verifica di manutenzione, licenza e vulnerabilità; provare almeno due opzioni mantenute se nessuna è già standard del team. Non selezionare una libreria perché “legge Excel” senza test su formule, celle unite e limiti ZIP. L'import deve funzionare senza Excel installato sul server.
 

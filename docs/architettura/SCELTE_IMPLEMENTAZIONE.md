@@ -1,5 +1,7 @@
 # TR LAB — decisioni dell'implementazione alpha
 
+Questo documento conserva le scelte della baseline alpha; per le estensioni locali del 13 ottobre leggere [decisioni e compromessi dell'incremento](../qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md#5-scelte-alternative-e-compromessi), [formato Excel](../specifiche/FORMATO_EXCEL_IMPLEMENTATO.md) e [compatibilità/migrazioni](../operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md). Le limitazioni qui elencate vanno interpretate nel contesto della baseline; il rapporto nuovo indica quali restano aperte.
+
 12 ottobre 2026 · Complemento al [registro tecnico](SCELTE_TECNICHE.md). Gli ADR di pianificazione restano i criteri della versione completa. Qui si descrive il codice effettivo, senza presentare funzionalità future come disponibili.
 
 ## 1. Strumenti effettivi e alternative

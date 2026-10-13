@@ -4,6 +4,8 @@ Versione 1.1 — 10 ottobre 2026. Specifica per sviluppo e validazione. Le regol
 
 Organizzazione: §§1–3 fonti e contratti; §§4–10 famiglie di metodi; §§11–12 consenso e AI; §13 esempi di test; §§14–18 implementazione, parametri, rilascio e verifiche ulteriori. La validazione software è distinta dalla revisione dei metodi di allenamento e nutrizione.
 
+Attuazione dell'incremento del 13 ottobre 2026: [generatore e progressioni](piani/GENERATORE_E_PROGRESSIONI.md), con ticket MOT-01–07, consenso online/offline, recupero delle sedute provvisorie, persistenza autorizzata delle valutazioni e gate prima delle regole attive. Questo approfondimento non promuove a revisionate le fonti o le soglie candidate qui descritte.
+
 ## 1. Fonti effettivamente consultate
 
 Per l'implementazione web seguire anche le raccolte obbligatorie `Appunti sviluppo web/` e `Linee guida sviluppo web/`, secondo [convenzioni e compatibilità](CONVENZIONI_SVILUPPO.md). Le raccolte tecniche non sono fonti di validazione delle regole di allenamento. La scelta del database è Supabase/PostgreSQL, confermata in DEC-18.

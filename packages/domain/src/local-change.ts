@@ -1,5 +1,6 @@
 import type { Command, Entity } from '@tr-lab/contracts';
 import { resolveDay, targetSides } from './index';
+import { assertFeatureChange } from './feature-change';
 
 function same(a: unknown, b: unknown): boolean {
   if (Object.is(a, b)) return true;
@@ -23,7 +24,8 @@ export function assertLocalChange(
   known: readonly Entity[],
   related: readonly Entity[],
 ): void {
-  const kinds: Record<Command['command'], Entity['kind']> = {
+  if (assertFeatureChange(command, entity, known, related)) return;
+  const kinds: Partial<Record<Command['command'], Entity['kind']>> = {
     SaveProgramDraft: 'program',
     ApproveProgram: 'program',
     StartWorkout: 'session',
@@ -40,6 +42,22 @@ export function assertLocalChange(
   if (old && old.kind !== entity.kind) reject();
   if (entity.kind === 'program') {
     if (command === 'SaveProgramDraft') {
+      for (const day of entity.data.days)
+        for (const slot of day.exercises)
+          if (slot.exercise.id.startsWith('private:')) {
+            const privateRecord = known.find(
+              (r) => r.kind === 'private_exercise' && r.data.exercise.id === slot.exercise.id,
+            );
+            if (
+              privateRecord?.kind !== 'private_exercise' ||
+              privateRecord.data.status !== 'active' ||
+              !same(
+                { ...privateRecord.data.exercise, name: '', instructions: '' },
+                { ...slot.exercise, name: '', instructions: '' },
+              )
+            )
+              reject();
+          }
       if (
         entity.data.status !== 'draft' ||
         (old?.kind === 'program' &&
@@ -54,6 +72,15 @@ export function assertLocalChange(
       )
         reject();
     } else {
+      const highest = known
+        .filter(
+          (r): r is Extract<Entity, { kind: 'program' }> =>
+            r.kind === 'program' &&
+            r.data.rootId === entity.data.rootId &&
+            r.data.status === 'approved',
+        )
+        .reduce((n, r) => (BigInt(r.data.version) > n ? BigInt(r.data.version) : n), 0n);
+      if (BigInt(entity.data.version) !== highest + 1n) reject();
       if (
         old?.kind !== 'program' ||
         old.data.status !== 'draft' ||

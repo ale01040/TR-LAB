@@ -331,6 +331,12 @@
   gap: 1.4rem;
   margin-bottom: 1.4rem;
 }
+.panel pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  font-size: 0.8rem;
+}
 .panel {
   min-width: 0;
   background: var(--surface);
@@ -344,6 +350,7 @@
 }
 .sectionHeading {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
@@ -1005,19 +1012,48 @@
 }
 .libraryFilters {
   display: flex;
+  flex-wrap: wrap;
   align-items: end;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
-.libraryFilters > label:first-child {
+.libraryFilters > label {
   flex: 1;
+  min-width: min(12rem, 100%);
   position: relative;
 }
-.libraryFilters > label:first-child > svg {
+.libraryFilters > label > svg {
   position: absolute;
   top: 0.95rem;
   left: 0.85rem;
   color: var(--muted);
+}
+.agendaItem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.agendaItem > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.agendaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.proposalColumns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1rem;
+}
+.proposalColumns > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .libraryFilters input {
   padding-left: 2.7rem;

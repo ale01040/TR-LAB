@@ -1,6 +1,8 @@
 import type { Program, Day, Prescription, SetLog, Exercise } from '@tr-lab/contracts';
 export { assertLocalChange } from './local-change';
 export { copyDay, moveItem } from './program-editing';
+export { projectCommand } from './command-projection';
+export { mapWorkoutWorkbook, type WorkbookPreview, type ImportChoices } from './workbook-import';
 
 export function parseDecimal(text: string): number | null {
   const clean = text.trim().replace(',', '.');
@@ -102,7 +104,7 @@ export type ProgressionResult =
 export function evaluateProgression(
   p: Prescription,
   logs: readonly SetLog[],
-  increments: readonly number[],
+  availableLoadsGrams: readonly number[],
   phase: string,
   comparable: boolean,
 ): ProgressionResult {
@@ -147,7 +149,7 @@ export function evaluateProgression(
       kind: 'keep_current',
       reason: 'Non tutte le serie hanno raggiunto ripetizioni e RIR richiesti.',
     };
-  const next = [...new Set(increments)]
+  const next = [...new Set(availableLoadsGrams)]
     .filter((g) => Number.isSafeInteger(g) && g > load && g <= 1000000)
     .sort((a, b) => a - b)[0];
   if (next === undefined)
@@ -199,3 +201,10 @@ export function copyProgram(program: Program, nextId: () => string, now: string)
     })),
   };
 }
+export { planCalendar, addCalendarDays, calendarWeekday } from './calendar';
+export { canonicalJson } from './canonical-json';
+export { generateProgram, type GenerationResult } from './generation';
+export { proposeProgression, type AdaptationResult } from './progression-engine';
+export { uuidSequence } from './uuid-sequence';
+export { normalizeGenerationInput } from './generation';
+export { journalData } from './journal';

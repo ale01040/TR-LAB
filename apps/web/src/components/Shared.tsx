@@ -75,10 +75,24 @@ export function downloadJson(text: string, name: string): void {
   anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+const errorTextByCode: Record<string, string> = {
+  RULES_AWAITING_REVIEW: 'Questo metodo richiede ancora revisione e attivazione.',
+  ENGINE_UNAVAILABLE: 'Il servizio delle proposte non è disponibile. Riprova più tardi.',
+  DATA_WINDOW_REQUIRED:
+    'Queste esposizioni superano il limite della valutazione. Seleziona meno sedute da confrontare.',
+  PROPOSAL_STALE:
+    'I dati della proposta sono cambiati. Sincronizza e richiedi una nuova valutazione.',
+  PROPOSAL_NOT_PENDING:
+    'Questa proposta ha già un esito oppure è stata ritirata. Sincronizza il riepilogo.',
+  PROPOSAL_DECISION_FAILED:
+    'Esito non verificato. Sincronizza o controlla la ricevuta prima di confermare di nuovo.',
+  CONFIRMATION_REQUIRED:
+    'Riapri la proposta online e verifica il contenuto prima di una nuova conferma.',
+};
 export function errorMessage(error: unknown): string {
   return error instanceof ZodError
     ? [...new Set(error.issues.map((issue) => issue.message))].join(' ')
     : error instanceof Error
-      ? error.message
+      ? (errorTextByCode[error.message] ?? error.message)
       : 'Operazione non riuscita.';
 }

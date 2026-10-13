@@ -1,6 +1,6 @@
 # Modello dati, vincoli e autorizzazioni
 
-Versione 1.2 · Specifica logica della versione completa. La prima migrazione SQL è presente e testata su PGlite; nessuno schema cloud è ancora installato da questo lavoro. L'alpha usa aggregati JSONB validati, riferimenti relazionali e RLS: [adattamento motivato e percorso di normalizzazione](../architettura/SCELTE_IMPLEMENTAZIONE.md). Le tabelle dei moduli successivi qui descritte restano da implementare.
+Versione 1.2 · Specifica logica della versione completa. Lo schema dell'alpha è installato anche nel progetto Supabase, con prove e limiti registrati nell'[integrazione](../qualita/INTEGRAZIONE_SUPABASE.md) e nel [rilascio Production](../qualita/RILASCIO_DOMINIO_STABILE.md). L'alpha usa aggregati JSONB validati, riferimenti relazionali e RLS: [adattamento motivato e percorso di normalizzazione](../architettura/SCELTE_IMPLEMENTAZIONE.md). Le tabelle dei moduli successivi qui descritte restano da implementare; [NEXT-D4 e SCH-01](../piani/PIANO_PROSSIME_FUNZIONI.md) definiscono l'incremento additivo e la compatibilità, senza dichiarare eseguite nuove migrazioni.
 
 ## 1. Convenzioni comuni
 

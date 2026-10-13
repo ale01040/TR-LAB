@@ -1,6 +1,13 @@
-import { useRef, useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { ArrowDownToLine, ArrowRight, Check, Copy, FileUp, Plus, Printer } from 'lucide-react';
-import { programSchema, templateSchema, type Program } from '@tr-lab/contracts';
+import {
+  programSchema,
+  templateSchema,
+  type Program,
+  type WorkbookData,
+  type ImportReport,
+  type PrivateExercise,
+} from '@tr-lab/contracts';
 import { copyProgram, resolveDay } from '@tr-lab/domain';
 import rawTemplate from '../data/excel-template.json';
 import provenance from '../data/excel-provenance.json';
@@ -14,6 +21,11 @@ import {
   loadBasisLabel,
 } from '../components/Shared';
 import { ProgramEditor } from '../components/ProgramEditor';
+import { ExcelImportReview } from '../components/ExcelImportReview';
+import { CalendarPanel } from '../components/CalendarPanel';
+import { ProposalCenter } from '../components/ProposalCenter';
+import { useCatalog } from '../data/use-catalog';
+import { importXlsx } from '../import/client';
 import styles from '../styles/App.module.css';
 
 function newProgram(): Program {
@@ -34,11 +46,21 @@ function newProgram(): Program {
 
 export function ProgramPage() {
   const { entities, save, notify } = useApp();
+  const catalog = useCatalog();
   const programs = entities
     .filter((r) => r.kind === 'program')
     .map((r) => r.data)
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const [draft, setDraft] = useState<Program | null>(null);
+  const [importOrigin, setImportOrigin] = useState<{
+    report: ImportReport;
+    variants: PrivateExercise[];
+    candidate: Program;
+  } | null>(null);
+  function openDraft(value: Program | null) {
+    setImportOrigin(null);
+    setDraft(value);
+  }
   const [preview, setPreview] = useState<Program | null>(null);
   const [previewFromExcel, setPreviewFromExcel] = useState(false);
   const [approval, setApproval] = useState<Program | null>(null);
@@ -49,6 +71,14 @@ export function ProgramPage() {
   const [selected, setSelected] = useState('');
   const [weekIndex, setWeekIndex] = useState(0);
   const input = useRef<HTMLInputElement>(null);
+  const importController = useRef<AbortController | null>(null);
+  const [excel, setExcel] = useState<{
+    workbook: WorkbookData;
+    fileName: string;
+    fileDigest: string;
+  } | null>(null);
+  const [importing, setImporting] = useState(false);
+  useEffect(() => () => importController.current?.abort(), []);
   const program = programs.find((p) => p.id === selected) ?? programs[0];
   const previewWeek = program?.weeks[weekIndex] ? weekIndex : 0;
   async function saveDraft(value: Program) {
@@ -56,8 +86,35 @@ export function ProgramPage() {
     setError('');
     try {
       const valid = programSchema.parse(value);
-      await save('SaveProgramDraft', { id: valid.id, kind: 'program', revision: '0', data: valid });
-      setDraft(null);
+      if (importOrigin) {
+        const variants = importOrigin.variants.filter((v) =>
+          valid.days.some((d) => d.exercises.some((e) => e.exercise.id === v.exercise.id)),
+        );
+        const report = {
+          ...importOrigin.report,
+          editedInEditor: JSON.stringify(valid) !== JSON.stringify(importOrigin.candidate),
+        };
+        await save(
+          'ImportProgramDraft',
+          { id: valid.id, kind: 'program', revision: '0', data: valid },
+          [
+            { id: report.id, kind: 'import_report', revision: '0', data: report },
+            ...variants.map((data) => ({
+              id: data.id,
+              kind: 'private_exercise' as const,
+              revision: '0',
+              data,
+            })),
+          ],
+        );
+      } else
+        await save('SaveProgramDraft', {
+          id: valid.id,
+          kind: 'program',
+          revision: '0',
+          data: valid,
+        });
+      openDraft(null);
       setSelected(valid.id);
       setWeekIndex(0);
       notify('Bozza salvata. Approvala quando i target sono pronti.');
@@ -84,20 +141,32 @@ export function ProgramPage() {
   async function importFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
+    event.target.value = '';
+    importController.current?.abort();
+    const controller = new AbortController();
+    importController.current = controller;
+    setImporting(true);
     try {
+      if (file.name.toLowerCase().endsWith('.xlsx')) {
+        const result = await importXlsx(file, controller.signal);
+        if (!controller.signal.aborted) setExcel({ ...result, fileName: file.name });
+        return;
+      }
       if (file.size > 1024 * 1024)
         throw new Error('Il modello JSON deve essere inferiore a 1 MiB.');
       if (!file.name.toLowerCase().endsWith('.json'))
-        throw new Error(
-          'In questa alpha è supportato il modello JSON TR LAB. Il parser XLSX completo è previsto nel pacchetto WP-07.',
-        );
+        throw new Error('Scegli una scheda .xlsx supportata o un modello JSON TR LAB.');
       const model = templateSchema.parse(JSON.parse(await file.text()));
       setPreviewFromExcel(false);
       setPreview(copyProgram(model.program, () => crypto.randomUUID(), new Date().toISOString()));
     } catch (error) {
-      notify(errorMessage(error));
+      if (!controller.signal.aborted) notify(errorMessage(error));
+    } finally {
+      if (importController.current === controller) {
+        setImporting(false);
+        importController.current = null;
+      }
     }
-    event.target.value = '';
   }
   return (
     <>
@@ -110,7 +179,7 @@ export function ProgramPage() {
         <button
           className={styles.primary}
           onClick={() => {
-            setDraft(newProgram());
+            openDraft(newProgram());
             setError('');
           }}
         >
@@ -134,15 +203,25 @@ export function ProgramPage() {
           <Copy size={18} aria-hidden="true" />
           Parti dalla struttura Excel
         </button>
-        <button onClick={() => input.current?.click()}>
+        <button disabled={importing} onClick={() => input.current?.click()}>
           <FileUp size={18} aria-hidden="true" />
-          Importa modello JSON
+          {importing ? 'Lettura Excel…' : 'Importa Excel o JSON'}
         </button>
+        {importing && (
+          <button
+            onClick={() => {
+              importController.current?.abort();
+              setImporting(false);
+            }}
+          >
+            Annulla lettura
+          </button>
+        )}
         <input
           ref={input}
           className={styles.hidden}
           type="file"
-          accept=".json,application/json"
+          accept=".xlsx,.json,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           onChange={(e) => void importFile(e)}
         />
       </div>
@@ -190,14 +269,23 @@ export function ProgramPage() {
                 <button
                   onClick={() => {
                     setError('');
-                    setDraft(
+                    openDraft(
                       program.status === 'draft'
                         ? structuredClone(program)
                         : {
                             ...structuredClone(program),
                             id: crypto.randomUUID(),
                             status: 'draft',
-                            version: String(BigInt(program.version) + 1n),
+                            version: String(
+                              programs
+                                .filter(
+                                  (p) => p.rootId === program.rootId && p.status === 'approved',
+                                )
+                                .reduce(
+                                  (max, p) => (BigInt(p.version) > max ? BigInt(p.version) : max),
+                                  0n,
+                                ) + 1n,
+                            ),
                             createdAt: new Date().toISOString(),
                           },
                     );
@@ -318,19 +406,35 @@ export function ProgramPage() {
             Crea una scheda libera o usa la struttura A / B / C come bozza. Puoi cambiare esercizi,
             serie e ciclo prima di approvare.
           </p>
-          <button className={styles.secondary} onClick={() => setDraft(newProgram())}>
+          <button className={styles.secondary} onClick={() => openDraft(newProgram())}>
             Costruisci il programma <ArrowRight size={18} aria-hidden="true" />
           </button>
         </div>
       )}
       {draft && (
-        <Dialog title="Editor della scheda" close={() => setDraft(null)}>
+        <Dialog title="Editor della scheda" close={() => openDraft(null)}>
           <ProgramEditor
+            catalog={[...catalog, ...(importOrigin?.variants.map((v) => v.exercise) ?? [])]}
             program={draft}
             setProgram={setDraft}
             submit={() => void saveDraft(draft)}
             busy={busy}
             error={error}
+          />
+        </Dialog>
+      )}
+      {excel && (
+        <Dialog title="Anteprima del file Excel" close={() => setExcel(null)}>
+          <ExcelImportReview
+            workbook={excel.workbook}
+            fileName={excel.fileName}
+            fileDigest={excel.fileDigest}
+            confirm={(program, report, variants) => {
+              setImportOrigin({ report, variants, candidate: program });
+              setDraft(program);
+              setExcel(null);
+              setError('');
+            }}
           />
         </Dialog>
       )}
@@ -364,7 +468,7 @@ export function ProgramPage() {
           <button
             className={styles.primary}
             onClick={() => {
-              setDraft(preview);
+              openDraft(preview);
               setPreview(null);
             }}
           >
@@ -397,6 +501,8 @@ export function ProgramPage() {
           </button>
         </Dialog>
       )}
+      <CalendarPanel />
+      <ProposalCenter />
       {sharing && (
         <Dialog title="Prepara una copia da condividere" close={() => setSharing(null)}>
           <p>
@@ -430,7 +536,17 @@ export function ProgramPage() {
                 source: '',
                 days: copied.days.map((d) => ({
                   ...d,
-                  exercises: d.exercises.map((p) => ({ ...p, notes: shareNotes ? p.notes : '' })),
+                  exercises: d.exercises.map((p) => ({
+                    ...p,
+                    exercise: {
+                      ...p.exercise,
+                      id: p.exercise.id.startsWith('private:')
+                        ? `embedded:${crypto.randomUUID()}`
+                        : p.exercise.id,
+                      instructions: shareNotes ? p.exercise.instructions : '',
+                    },
+                    notes: shareNotes ? p.notes : '',
+                  })),
                 })),
               };
               downloadJson(

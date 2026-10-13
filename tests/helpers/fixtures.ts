@@ -46,7 +46,7 @@ export function setLog(s: WorkoutSession): SetLog {
   };
 }
 export function command<T extends { id: string }>(
-  action: Command['command'],
+  action: Extract<Command, { protocol_version: 1 }>['command'],
   aggregate: T,
   epoch: string,
   revision = '0',

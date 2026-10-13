@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Check, Plus, Ruler, Scale } from 'lucide-react';
 import { measurementSchema, nutritionSchema, type Measurement } from '@tr-lab/contracts';
-import { parseDecimal, workoutVolume } from '@tr-lab/domain';
+import { parseDecimal, workoutVolume, journalData } from '@tr-lab/domain';
 import { useApp } from '../components/AppProvider';
 import { counted, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
@@ -21,14 +21,11 @@ export function ProgressPage() {
     .flatMap((r) => (r.kind === 'nutrition' ? [r.data] : []))
     .sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom));
   const activeNutrition = nutrition.find((n) => n.effectiveFrom <= today());
-  const completedSessions = entities.flatMap((r) =>
-    r.kind === 'session' && r.data.status === 'completed' ? [r.data] : [],
-  );
+  const journal = journalData(entities);
+  const completedSessions = journal.sessions.filter((s) => s.status === 'completed');
   const totals: Record<string, { left: number; right: number }> = {};
   for (const session of completedSessions) {
-    const logs = entities.flatMap((r) =>
-      r.kind === 'set' && r.data.sessionId === session.id ? [r.data] : [],
-    );
+    const logs = journal.sets.filter((l) => l.sessionId === session.id);
     for (const [muscle, volume] of Object.entries(workoutVolume(logs, session.snapshot))) {
       const old = totals[muscle] ?? { left: 0, right: 0 };
       totals[muscle] = { left: old.left + volume.left, right: old.right + volume.right };

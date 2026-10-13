@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "date": "2026-10-13",
+  "scope": "Selected metadata; source text is not distributed",
+  "notes": [
+    {
+      "id": "KB-01",
+      "relativePath": "03 Note atomiche/Salute e Fitness/IPERTROFIA.md",
+      "sha256": "083e907d6b223ccbbd0d3643d6f1be15411b4709e2d1326d4d36ca53ed1b6a70",
+      "status": "draft",
+      "consultedInThisIncrement": false,
+      "distribution": "metadata_only",
+      "license": "not_verified",
+      "methodReview": "required"
+    },
+    {
+      "id": "KB-02",
+      "relativePath": "01 Fonti/YouTube/Salute e Fitness/V Athlete/Come CREARE una PROGRESSIONE di CARICO nei tuoi allenamenti.md",
+      "sha256": "6c1c7775b29ae2e1ab524a4077ed8513b630dfeabeba25a39832bdbd2c2f8637",
+      "status": "draft",
+      "consultedInThisIncrement": true,
+      "distribution": "metadata_only",
+      "license": "not_verified",
+      "methodReview": "required"
+    },
+    {
+      "id": "KB-03",
+      "relativePath": "01 Fonti/YouTube/Salute e Fitness/Filippo d'Albero/Come fare una SCHEDA DI ALLENAMENTO Alta Formazione (Ep. 3).md",
+      "sha256": "dd7015f4465ec7a11f95d6b587622c0d3876053dd20a95f64d279b48d216762a",
+      "status": "draft",
+      "consultedInThisIncrement": false,
+      "distribution": "metadata_only",
+      "license": "not_verified",
+      "methodReview": "required"
+    },
+    {
+      "id": "KB-04",
+      "relativePath": "01 Fonti/YouTube/Salute e Fitness/Project inVictus/IL NOSTRO METODO PER L'IPERTROFIA MUSCOLARE.md",
+      "sha256": "2164c56196aabd886001b9a73b4c7af67a5c0654c11ae65979d07732787e8e66",
+      "status": "draft",
+      "consultedInThisIncrement": false,
+      "distribution": "metadata_only",
+      "license": "not_verified",
+      "methodReview": "required"
+    },
+    {
+      "id": "KB-05",
+      "relativePath": "01 Fonti/YouTube/Salute e Fitness/Project inVictus/NON SBAGLIARE LA DIETA PER LA MASSA.md",
+      "sha256": "236b9d239a8434d4dcf3feb8580a285f44d84db67bac6b2782c256ffdafd8fe8",
+      "status": "draft",
+      "consultedInThisIncrement": false,
+      "distribution": "metadata_only",
+      "license": "not_verified",
+      "methodReview": "required"
+    },
+    {
+      "id": "KB-06",
+      "relativePath": "01 Fonti/YouTube/Salute e Fitness/The Movement System/COME CREARE UN PROGRAMMA DI ALLENAMENTO PER QUALSIASI SPORT.md",
+      "sha256": "817ad230ac3d9a373772c80004a1d974253802ec3109f998b9e1c531eb456481",
+      "status": "draft",
+      "consultedInThisIncrement": false,
+      "distribution": "metadata_only",
+      "license": "not_verified",
+      "methodReview": "required"
+    },
+    {
+      "id": "KB-07",
+      "relativePath": "01 Fonti/YouTube/Salute e Fitness/Project inVictus/COME IMPOSTARE UN ALLENAMENTO DI SCHIENA E BICIPITI.md",
+      "sha256": "d341aa55a55f59c8b5844df6c41e2ebc2a94b92e65d723c81c7539183c186792",
+      "status": "draft",
+      "consultedInThisIncrement": false,
+      "distribution": "metadata_only",
+      "license": "not_verified",
+      "methodReview": "required"
+    }
+  ],
+  "primaryReferences": [
+    {
+      "id": "ACSM-2026",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41843416/",
+      "revision": "2026 position stand",
+      "verification": "metadata_and_abstract",
+      "fullTextReview": "not_completed",
+      "status": "draft"
+    },
+    {
+      "id": "ACSM-ANNOUNCEMENT-2026",
+      "url": "https://acsm.org/science-spotlight-acsm-releases-new-position-stand-on-resistance-training/",
+      "revision": "2026-03-18",
+      "verification": "announcement_read",
+      "status": "draft"
+    }
+  ],
+  "activeRules": []
+}

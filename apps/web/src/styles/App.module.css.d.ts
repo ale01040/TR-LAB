@@ -3,6 +3,8 @@ declare const styles: {
   readonly actionStrip: string;
   readonly activeTab: string;
   readonly addExercise: string;
+  readonly agendaActions: string;
+  readonly agendaItem: string;
   readonly alpha: string;
   readonly artOrbit: string;
   readonly artOrbit2: string;
@@ -61,6 +63,7 @@ declare const styles: {
   readonly programLayout: string;
   readonly programList: string;
   readonly progressTrack: string;
+  readonly proposalColumns: string;
   readonly rowIcon: string;
   readonly saveButton: string;
   readonly savedButton: string;

@@ -18,6 +18,9 @@ type StoredSession = {
   csrf: string;
   expires_at: Date;
   recovery: boolean;
+  token_version: string;
+  refresh_lease_id: string | null;
+  refresh_lease_until: Date | null;
 };
 export type Authenticated = { row: StoredSession; client: SupabaseClient; tokens: TokenPair };
 export class HttpError extends Error {
@@ -104,48 +107,71 @@ export class AuthService {
   async resolve(request: FastifyRequest): Promise<Authenticated | null> {
     const token = request.cookies[this.cookie];
     if (!token || !this.pool) return null;
-    const connection = await this.pool.connect();
-    try {
-      await connection.query('begin');
-      const result = await connection.query<StoredSession>(
-        'select * from tr_lab_private.sessions where token_hash=$1 and expires_at>now() for update',
-        [hash(token)],
+    const tokenHash = hash(token);
+    const deadline = Date.now() + 12000;
+    while (Date.now() < deadline) {
+      const result = await this.pool.query<StoredSession>(
+        'select * from tr_lab_private.sessions where token_hash=$1 and expires_at>now()',
+        [tokenHash],
       );
-      const row = result.rows[0];
-      if (!row) {
-        await connection.query('commit');
-        return null;
-      }
+      let row = result.rows[0];
+      if (!row) return null;
       let pair = JSON.parse(decrypt(row.encrypted_tokens, this.key)) as TokenPair;
       if (pair.expires_at < Date.now() / 1000 + 30) {
-        const refreshed = await this.client().auth.refreshSession({
-          refresh_token: pair.refresh_token,
-        });
-        if (
-          refreshed.error &&
-          (!refreshed.error.status ||
-            refreshed.error.status >= 500 ||
-            refreshed.error.status === 429)
-        )
-          throw new HttpError(503, 'AUTH_UNAVAILABLE');
-        if (refreshed.error || !refreshed.data.session?.expires_at) {
-          await connection.query('delete from tr_lab_private.sessions where token_hash=$1', [
-            row.token_hash,
-          ]);
-          await connection.query('commit');
-          return null;
-        }
-        pair = {
-          access_token: refreshed.data.session.access_token,
-          refresh_token: refreshed.data.session.refresh_token,
-          expires_at: refreshed.data.session.expires_at,
-        };
-        await connection.query(
-          'update tr_lab_private.sessions set encrypted_tokens=$2 where token_hash=$1',
-          [row.token_hash, encrypt(JSON.stringify(pair), this.key)],
+        const lease = randomUUID();
+        const tokenVersion = row.token_version;
+        const claimed = await this.pool.query<StoredSession>(
+          `update tr_lab_private.sessions set refresh_lease_id=$2,
+           refresh_lease_until=now()+interval '30 seconds'
+           where token_hash=$1 and token_version=$3 and expires_at>now()
+           and (refresh_lease_until is null or refresh_lease_until<=now()) returning *`,
+          [tokenHash, lease, tokenVersion],
         );
+        if (!claimed.rows[0]) {
+          await new Promise((resolve) => setTimeout(resolve, 150));
+          continue;
+        }
+        try {
+          const refreshed = await this.client().auth.refreshSession({
+            refresh_token: pair.refresh_token,
+          });
+          if (
+            refreshed.error &&
+            (!refreshed.error.status ||
+              refreshed.error.status >= 500 ||
+              refreshed.error.status === 429)
+          )
+            throw new HttpError(503, 'AUTH_UNAVAILABLE');
+          const session = refreshed.data.session;
+          if (refreshed.error || !session?.expires_at || session.user.id !== row.user_id) {
+            await this.pool.query(
+              'delete from tr_lab_private.sessions where token_hash=$1 and token_version=$2 and refresh_lease_id=$3',
+              [tokenHash, tokenVersion, lease],
+            );
+            return null;
+          }
+          pair = {
+            access_token: session.access_token,
+            refresh_token: session.refresh_token,
+            expires_at: session.expires_at,
+          };
+          // CAS: un logout, una nuova versione o un'altra lease non possono essere annullati.
+          const updated = await this.pool.query<StoredSession>(
+            `update tr_lab_private.sessions set encrypted_tokens=$4, token_version=token_version+1,
+             refresh_lease_id=null, refresh_lease_until=null
+             where token_hash=$1 and token_version=$2 and refresh_lease_id=$3 and expires_at>now() returning *`,
+            [tokenHash, tokenVersion, lease, encrypt(JSON.stringify(pair), this.key)],
+          );
+          row = updated.rows[0];
+          if (!row) return null;
+        } catch (error) {
+          await this.pool.query(
+            'update tr_lab_private.sessions set refresh_lease_id=null, refresh_lease_until=null where token_hash=$1 and token_version=$2 and refresh_lease_id=$3',
+            [tokenHash, tokenVersion, lease],
+          );
+          throw error;
+        }
       }
-      await connection.query('commit');
       const client = this.client(pair.access_token);
       const verified = await client.auth.getUser(pair.access_token);
       if (
@@ -154,13 +180,14 @@ export class AuthService {
       )
         throw new HttpError(503, 'AUTH_UNAVAILABLE');
       if (verified.error || verified.data.user?.id !== row.user_id) return null;
+      const stillValid = await this.pool.query(
+        'select 1 from tr_lab_private.sessions where token_hash=$1 and token_version=$2 and expires_at>now()',
+        [tokenHash, row.token_version],
+      );
+      if (!stillValid.rows.length) return null;
       return { row, client, tokens: pair };
-    } catch (error) {
-      await connection.query('rollback');
-      throw error;
-    } finally {
-      connection.release();
     }
+    throw new HttpError(503, 'AUTH_REFRESH_BUSY');
   }
   async require(request: FastifyRequest): Promise<Authenticated> {
     const auth = await this.resolve(request);

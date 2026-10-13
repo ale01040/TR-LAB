@@ -1,10 +1,14 @@
 # Roadmap di sviluppo e consegna
 
+Aggiornamento del codice locale del 13 ottobre: [ticket, prove e lavoro rimasto](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [collaudo/migrazioni/rollback](operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md). Le implementazioni parziali non chiudono le fasi: conservare i criteri S/C/A/D/R del piano esecutivo e le prove provider/telefoni richieste.
+
 Versione 1.3 — 12 ottobre 2026. Piano di esecuzione e consegna della versione completa. Per requisiti usare [piano operativo](PIANO_OPERATIVO.md); per contratti e scelte seguire l'[indice delle specifiche](README.md). Alpha locale, Preview e dominio stabile Production collegati a Supabase attuano parti di F1–F5/F7–F8: DEC-30 autorizza l'alpha e non chiude automaticamente quelle fasi. Stato e prossimo ordine esecutivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md#5-prossime-consegne-in-ordine); prove del link corto e limiti nel [rapporto rilascio](qualita/RILASCIO_DOMINIO_STABILE.md).
 
 Percorso: §§1–3 metodo, ruoli e dipendenze; §§4–15 fasi; §§16–18 backlog, collaudo e rischi; §§19–20 consegna e brief; §§21–24 pacchetti esecutivi, gate e avvio. Le specifiche indicano **come** implementare; qui si stabilisce **quando**, con quali prerequisiti e quali prove.
 
 ## 1. Modalità di esecuzione
+
+Per le prossime consegne usare la [roadmap dell'incremento del 13 ottobre 2026](piani/PIANO_PROSSIME_FUNZIONI.md): M0–M5, 19 ticket operativi e gate S/C/A/D/R per sincronizzazione, schede e motore. Dettaglia F3–F6 senza dichiarare concluse le altre fasi. Prima ambiente isolato e recupero del diario; poi nuove entità/import/calendario; consenso collaudato prima di regole attive. Ricerca delle fonti e prototipi indipendenti possono avanzare in parallelo.
 
 Il prodotto finale comprende tutte le funzioni confermate. Si procede attraverso versioni utilizzabili per scoprire presto errori nei dati, nell'uso in palestra e negli algoritmi. Ogni fase termina con una dimostrazione, prove riproducibili e un criterio di accettazione. Una schermata completata non basta se salvataggio, permessi o modalità offline non funzionano.
 
@@ -139,7 +143,7 @@ L'importatore iniziale supporta il file e un formato documentato. Non promettere
 
 Consegne: editor, catalogo iniziale, template dimostrativo, ciclo e import guidato. Criterio: aggiungere/rimuovere serie aggiorna correttamente il futuro; le sessioni già concluse non vengono riscritte.
 
-Consegna implementata F4-EDITOR-02: [target individuali e organizzazione delle giornate](specifiche/EDITOR_SCHEDE.md), con anteprima del ciclo. Non chiude F4: catalogo privato, calendario/rinvii, modalità a tempo e parser XLSX restano nel pacchetto WP-07. Gli esiti di collaudo sono nello stato implementazione e nel diario, separati dai criteri di uscita.
+Consegna implementata F4-EDITOR-02: [target individuali e organizzazione delle giornate](specifiche/EDITOR_SCHEDE.md), con anteprima del ciclo. Non chiude F4: catalogo privato e calendario/rinvii restano in WP-06, parser XLSX in WP-07; modalità a tempo coinvolge contratti/editor WP-06 e diario WP-09. I [ticket SCH-01–06](piani/SCHEDE_EXCEL_CATALOGO_CALENDARIO.md) dettagliano il lavoro residuo. Gli esiti di collaudo sono nello stato implementazione e nel diario, separati dai criteri di uscita.
 
 ## 9. F5 — Diario e sincronizzazione
 
@@ -321,7 +325,7 @@ Ogni riga è un pacchetto da scomporre in ticket dimostrabili. L'ordine interno 
 | WP-03 | Workspace → script → CI → migrazioni → staging | ADR e inventario dipendenze | Checkout pulito e pipeline riproducibile |
 | WP-04 | Auth server → session store → Google → refresh → revoke | Sicurezza e prova Supabase | QA-AUTH, nessun token nel JS |
 | WP-05 | Modello owner → FK → grant/RLS → RPC → test ostili | Modello dati | QA-SEC diretta anche fuori UI |
-| WP-06 | Catalogo → varianti private → editor → versioni/cicli | WP-05, regole minime | Programma diverso dall'Excel senza perdita storico |
+| WP-06 | Catalogo → varianti private → editor → versioni/cicli → calendario/rinvii | WP-05, regole minime | Programma diverso dall'Excel, pianificazione e storico conservato |
 | WP-07 | Parser → modello intermedio → errori → anteprima → bozza | Standard import e fixture | Round-trip e file ostili testati |
 | WP-08 | Una serie locale → outbox → ricevuta → pull → conflitti | WP-02/05/06 | QA-SYNC e dato salvato dopo crash |
 | WP-09 | Estensione diario → lati/superserie → timer → sessione parziale | WP-08 | RF-06 completo sui dispositivi |

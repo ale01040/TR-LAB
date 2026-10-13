@@ -21,6 +21,9 @@
     "format:check": "prettier --check apps packages tests scripts schemas examples api *.json *.mjs *.ts .github",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "test:sync-faults": "vitest run tests/integration/sync-faults.test.ts tests/integration/auth-refresh.test.ts tests/integration/recovery.test.ts",
+    "test:db-real": "node --import tsx scripts/database-real-smoke.ts",
     "test": "npm run test:unit && npm run test:integration",
     "build": "npm run typecheck && npm run build -w @tr-lab/web && npm run build -w @tr-lab/server && node scripts/build-vercel-function.mjs",
     "check:vercel": "node scripts/check-vercel-build.mjs",
@@ -44,11 +47,13 @@
     "dexie": "4.4.6",
     "dexie-react-hooks": "4.4.0",
     "fastify": "5.12.5",
+    "fflate": "0.8.3",
     "lucide-react": "1.55.0",
     "pg": "8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-router-dom": "7.18.4",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "4.6.5"
   },
   "overrides": {

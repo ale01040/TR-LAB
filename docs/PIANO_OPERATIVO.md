@@ -1,8 +1,12 @@
 # Piano operativo — applicazione allenamenti
 
+Stato del codice locale del 13 ottobre: [incremento schede/sync/motore](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md). Import Excel, catalogo personale, calendario e recupero hanno implementazioni/prove locali; metodi attivi, automazione completa e gate provider/dispositivi restano aperti. Il rapporto della baseline pubblicata sotto non sostituisce questo aggiornamento e nessuna fase è chiusa implicitamente.
+
 Versione 1.3 del 12 ottobre 2026. Specifica della versione completa per lo sviluppo. Le scelte confermate sono distinte dalle raccomandazioni tecniche e dai parametri da validare. Alpha locale, Preview e dominio stabile Production sono collegati a Supabase: DEC-30 autorizza la pubblicazione dell'alpha, con database condiviso dichiarato. Requisiti e funzioni qui descritti sono completati soltanto con le prove di fase. Stato effettivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md), evidenze del link corto nel [rapporto rilascio](qualita/RILASCIO_DOMINIO_STABILE.md).
 
 ## Come leggere questo piano
+
+Incremento prioritario richiesto il 13 ottobre 2026: [sincronizzazione, gestione schede e motore](piani/PIANO_PROSSIME_FUNZIONI.md). Il piano dedicato specifica ticket, scelte tecniche, dipendenze, migrazioni e prove delle prossime consegne, mantenendo il perimetro completo definito qui.
 
 Questo file definisce obiettivi, struttura derivata dall'Excel, funzioni e invarianti. La [roadmap](ROADMAP_SVILUPPO.md) definisce ordine, attività e consegne. Le [scelte tecniche](architettura/SCELTE_TECNICHE.md) confrontano strumenti e alternative; le specifiche specialistiche descrivono dati, API, sicurezza, UX e import. L'[indice generale](README.md) permette di assegnare le letture per ruolo.
 

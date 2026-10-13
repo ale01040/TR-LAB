@@ -42,6 +42,8 @@ La generazione usa solo contenuti e metodi pertinenti all'ambito confermato. Il 
 
 ## 2. Raccomandazioni tecniche e assegnazione delle decisioni
 
+Incremento del 13 ottobre 2026: [NEXT-D1–D6 e registro delle divergenze](piani/PIANO_PROSSIME_FUNZIONI.md). Scelte tecniche autonome secondo DEC-24: import iniziale locale in worker, partizioni Dexie per account con prove, tabelle additive per i nuovi moduli, calendario a occorrenze e motore deterministico. Non sono nuove DEC del committente. OPEN-02 riceve una semantica operativa da implementare/collaudare; OPEN-08 una candidata parser con benchmark obbligatorio; OPEN-03/04/06/10 restano aperti fino alle prove/revisioni descritte.
+
 Le [scelte ADR-01–ADR-17](architettura/SCELTE_TECNICHE.md) definiscono una base concreta con motivazioni e alternative. Il team può risolvere scelte interne senza chiedere ogni dettaglio al committente; deve documentare il cambiamento e rispettare tutte le DEC. Supabase e il criterio dei commenti sono già confermati e non tornano tra le domande aperte.
 
 | Tema | Proposta di partenza | Chi decide e quando |

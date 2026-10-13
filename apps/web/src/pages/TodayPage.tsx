@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check, Clock3, Dumbbell, Layers3 } from 'lucide-react';
 import type { Program, WorkoutSession } from '@tr-lab/contracts';
-import { countRequired, resolveDay } from '@tr-lab/domain';
+import { countRequired, resolveDay, journalData } from '@tr-lab/domain';
 import { useApp } from '../components/AppProvider';
 import { counted, dateTime, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
@@ -13,9 +13,8 @@ export function TodayPage() {
   const programs = entities.flatMap((r) =>
     r.kind === 'program' && r.data.status === 'approved' ? [r.data] : [],
   );
-  const sessions = entities
-    .flatMap((r) => (r.kind === 'session' ? [r.data] : []))
-    .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+  const journal = journalData(entities);
+  const sessions = journal.sessions.sort((a, b) => b.startedAt.localeCompare(a.startedAt));
   const active = sessions.find((s) => s.status === 'active');
   const [selection, setSelection] = useState('');
   const program: Program | undefined = programs.find((p) => p.id === selection) ?? programs[0];
@@ -49,7 +48,7 @@ export function TodayPage() {
   }
   const recent = sessions.filter((s) => s.status === 'completed').slice(0, 3);
   const completed = sessions.filter((s) => s.status === 'completed');
-  const setCount = entities.filter((r) => r.kind === 'set' && r.data.status === 'completed').length;
+  const setCount = journal.sets.filter((r) => r.status === 'completed').length;
   const greeting = new Intl.DateTimeFormat('it-IT', {
     weekday: 'long',
     day: 'numeric',
@@ -64,7 +63,7 @@ export function TodayPage() {
           <p>Il prossimo passo è quello che conta.</p>
         </div>
         <Link to="/programma" className={styles.textLink}>
-          Le tue schede <ArrowUpRight size={18} aria-hidden="true" />
+          Schede e calendario <ArrowUpRight size={18} aria-hidden="true" />
         </Link>
       </div>
       <section className={styles.hero} aria-labelledby="next-workout">
@@ -245,7 +244,10 @@ export function TodayPage() {
                 </span>
                 <span>
                   <strong>{s.snapshot.name}</strong>
-                  <small>{dateTime(s.startedAt)}</small>
+                  <small>
+                    {dateTime(s.startedAt)}
+                    {journal.recoveredIds.has(s.id) ? ' · Storico recuperato' : ''}
+                  </small>
                 </span>
                 <ArrowUpRight size={18} aria-hidden="true" />
               </Link>

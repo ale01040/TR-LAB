@@ -5,6 +5,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import type { Entity } from '@tr-lab/contracts';
 import { ProgramPage } from '../../apps/web/src/pages/ProgramPage';
 import { program } from '../helpers/fixtures';
+import { MemoryRouter } from 'react-router-dom';
 
 const state = vi.hoisted(() => ({ entities: [] as Entity[], save: vi.fn(), notify: vi.fn() }));
 vi.mock('../../apps/web/src/components/AppProvider', () => ({ useApp: () => state }));
@@ -27,7 +28,11 @@ it('l’anteprima mostra accumulo e scarico senza modificare la scheda approvata
   state.entities = [{ id: p.id, kind: 'program', revision: '2', data: p }];
   state.save.mockClear();
   const user = userEvent.setup();
-  render(<ProgramPage />);
+  render(
+    <MemoryRouter>
+      <ProgramPage />
+    </MemoryRouter>,
+  );
   expect(screen.getAllByText(/· lavoro ·/)).toHaveLength(3);
   await user.selectOptions(screen.getByLabelText('Anteprima settimana'), '1');
   expect(screen.getAllByText(/· lavoro ·/)).toHaveLength(5);

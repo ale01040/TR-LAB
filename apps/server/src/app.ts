@@ -18,6 +18,7 @@ import {
 import { AuthService, authRoutes, HttpError } from './auth.js';
 import { loadConfig, type Config } from './config.js';
 import { readCursor, signCursor } from './crypto.js';
+import { engineRoutes, decideProposal } from './engine.js';
 export async function buildApp(
   config: Config = loadConfig(),
   { serveWeb = true, onPool }: { serveWeb?: boolean; onPool?: (pool: Pool) => void } = {},
@@ -61,7 +62,9 @@ export async function buildApp(
   await app.register(rateLimit, {
     max: 100,
     timeWindow: '1 minute',
-    errorResponseBuilder: () => ({ code: 'RATE_LIMITED' }),
+    // Asset/precache non consumano il budget delle API; la risposta conserva status e Retry-After.
+    allowList: (request) => !request.url.startsWith('/api/'),
+    errorResponseBuilder: (_request, context) => new HttpError(context.statusCode, 'RATE_LIMITED'),
   });
   app.addHook('onRequest', async (request, reply) => {
     if (request.url.startsWith('/api/')) {
@@ -114,11 +117,34 @@ export async function buildApp(
     }
   });
   authRoutes(app, auth);
+  engineRoutes(app, auth);
+  app.get('/api/sync/receipt', async (request) => {
+    const current = await auth.require(request);
+    const input = z.object({ operation_id: z.uuid() }).strict().parse(request.query);
+    const response = await current.client.rpc('tr_lab_receipt', input);
+    if (response.error) throw new HttpError(503, 'SYNC_UNAVAILABLE');
+    return { receipt: response.data === null ? null : receiptSchema.parse(response.data) };
+  });
   app.post('/api/sync/command', async (request) => {
     const current = await auth.require(request);
     const command = commandSchema.parse(request.body);
     validatePayload(command);
-    const response = await current.client.rpc('tr_lab_apply', { c: command });
+    if (command.command === 'DecideProposal')
+      return receiptSchema.parse(await decideProposal(auth, current.row.token_hash, command));
+    const response = await current.client.rpc(
+      command.protocol_version === 1
+        ? 'tr_lab_apply'
+        : command.command === 'ImportProgramDraft'
+          ? 'tr_lab_import_program'
+          : command.command === 'ReconcileExecutedWorkout'
+            ? 'tr_lab_reconcile_workout'
+            : command.command === 'PlanCycle'
+              ? 'tr_lab_plan_cycle'
+              : command.command === 'StartScheduledWorkout'
+                ? 'tr_lab_start_scheduled'
+                : 'tr_lab_apply_v2',
+      { c: command },
+    );
     if (response.error)
       throw new HttpError(
         409,
@@ -135,7 +161,9 @@ export async function buildApp(
     const response = await current.client.rpc('tr_lab_bootstrap');
     if (response.error) throw new HttpError(503, 'SYNC_UNAVAILABLE');
     const data = z.object({ sync_epoch: z.uuid(), sequence: revisionSchema }).parse(response.data);
+    const capability = await current.client.rpc('tr_lab_capabilities');
     return {
+      protocol_version: !capability.error && capability.data?.protocol_version === 2 ? 2 : 1,
       sync_epoch: data.sync_epoch,
       cursor: signCursor(
         {
@@ -151,22 +179,31 @@ export async function buildApp(
   });
   app.get('/api/sync/pull', async (request) => {
     const current = await auth.require(request);
-    const query = z.object({ cursor: z.string().max(2000) }).parse(request.query);
+    const query = z
+      .object({ cursor: z.string().max(2000), protocol: z.enum(['1', '2']).optional() })
+      .parse(request.query);
     let cursor;
     try {
       cursor = readCursor(query.cursor, current.row.user_id, auth.key);
     } catch {
       throw new HttpError(400, 'INVALID_CURSOR');
     }
-    const response = await current.client.rpc('tr_lab_pull', {
-      after_sequence: cursor.sequence,
-      until_sequence: cursor.ceiling,
-      expected_epoch: cursor.epoch,
-    });
+    const response = await current.client.rpc(
+      query.protocol === '2' ? 'tr_lab_pull_v2' : 'tr_lab_pull',
+      {
+        after_sequence: cursor.sequence,
+        until_sequence: cursor.ceiling,
+        expected_epoch: cursor.epoch,
+      },
+    );
     if (response.error)
       throw new HttpError(
         409,
-        response.error.message.includes('EPOCH_MISMATCH') ? 'EPOCH_MISMATCH' : 'SYNC_UNAVAILABLE',
+        response.error.message.includes('EPOCH_MISMATCH')
+          ? 'EPOCH_MISMATCH'
+          : response.error.message.includes('UPGRADE_REQUIRED')
+            ? 'UPGRADE_REQUIRED'
+            : 'SYNC_UNAVAILABLE',
       );
     const raw = z
       .object({

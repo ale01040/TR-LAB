@@ -60,7 +60,7 @@ I numeri indicano i capitoli nei rispettivi indici. Le verifiche elencate sono a
 | Indicazioni non definitive | Refusi come “use strinct”, note “NON SONO SICURO”, esempi PHP e riferimenti storici | Aprire voci di verifica puntuali, correggere la sintassi nell'implementazione e annotare la fonte ufficiale. Non alterare silenziosamente i materiali originali |
 | Funzioni opzionali | Le fonti distinguono alcuni consigli e opzioni, inclusa una taratura del password hashing da discutere prima dell'implementazione | Preservare queste distinzioni. Non trasformare ogni opzione in una dipendenza obbligatoria; valutare la soluzione concreta prima di richiedere decisioni |
 
-La scelta del database è chiusa. Il codice alpha e le prime prove locali sono ora disponibili: [evidenze e limiti](qualita/STATO_IMPLEMENTAZIONE.md). L'utente ha indicato un progetto Supabase esistente; non è stato creato né modificato un servizio remoto. Supabase non fornisce automaticamente progressioni o protocollo offline specifico; i gate provider/sicurezza/dispositivi restano aperti.
+La scelta del database è chiusa. Codice alpha, integrazione Supabase e rilascio Production sono disponibili: [evidenze e limiti](qualita/STATO_IMPLEMENTAZIONE.md). Il progetto Supabase fornito dall'utente è stato collegato e configurato nei successivi interventi autorizzati DEC-28/29/30; la precedente indicazione di assenza di modifiche remote descriveva soltanto la fase iniziale di pianificazione. Supabase non fornisce automaticamente progressioni o protocollo offline specifico; i gate provider/sicurezza/dispositivi restano aperti.
 
 Fonti tecniche consultate per questi punti:
 

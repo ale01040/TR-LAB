@@ -106,7 +106,7 @@ const program = {
 const hash = createHash('sha256')
   .update(readFileSync('SCHEDA PALESTRA 3 GIORNI.xlsx'))
   .digest('hex');
-writeFileSync('apps/web/src/data/catalog.json', JSON.stringify(catalog, null, 2) + '\n');
+writeFileSync('packages/contracts/src/catalog.json', JSON.stringify(catalog, null, 2) + '\n');
 writeFileSync(
   'apps/web/src/data/excel-template.json',
   JSON.stringify(

@@ -5,6 +5,7 @@ import { emergencyExport, metadata, setMetadata } from '../data/database';
 import { api, ApiError } from '../data/sync';
 import { counted, downloadJson, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
+import { RecoveryPanel } from '../components/RecoveryPanel';
 
 const messages: Record<string, string> = {
   NOT_CONFIGURED:
@@ -350,6 +351,7 @@ export function ProfilePage() {
           </button>
         </section>
       </div>
+      <RecoveryPanel />
     </>
   );
 }

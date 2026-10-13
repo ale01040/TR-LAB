@@ -1,12 +1,10 @@
 import { useRef, useState } from 'react';
 import { Check, Plus, Trash2 } from 'lucide-react';
-import { exerciseSchema, type Program, type Prescription } from '@tr-lab/contracts';
+import { type Program, type Prescription, type Exercise } from '@tr-lab/contracts';
 import { copyDay, createPrescription, moveItem } from '@tr-lab/domain';
-import rawCatalog from '../data/catalog.json';
+import { globalCatalog } from '../data/use-catalog';
 import { PrescriptionTargetsEditor } from './PrescriptionTargetsEditor';
 import styles from '../styles/App.module.css';
-
-const catalog = rawCatalog.map((e) => exerciseSchema.parse(e));
 
 export function ProgramEditor({
   program,
@@ -14,12 +12,14 @@ export function ProgramEditor({
   submit,
   busy,
   error,
+  catalog = globalCatalog,
 }: {
   program: Program;
   setProgram: (p: Program) => void;
   submit: () => void;
   busy: boolean;
   error: string;
+  catalog?: readonly Exercise[];
 }) {
   const [dayId, setDayId] = useState(program.days[0]?.id ?? '');
   const [exerciseId, setExerciseId] = useState(catalog[0]?.id ?? '');
