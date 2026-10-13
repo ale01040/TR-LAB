@@ -4,25 +4,26 @@
 
 ## 1. Quale ambiente usare
 
-- App di prova: **https://tr-g2vtw9l89-pere01040.vercel.app**.
+- App di prova: **https://tr-1hwubt4fq-pere01040.vercel.app**.
 - Database: **TR-LAB-STAGING**, riferimento **hfwatspsfhdbiogritkt**.
-- Codice pubblicato: **bd0a62b**, ramo **codex/schede-sync-motore-20261013**.
+- Codice pubblicato: **0529c0c**, ramo **codex/schede-sync-motore-20261013**; [CI Windows/Ubuntu riuscita](https://github.com/ale01040/TR-LAB/actions/runs/38429493830).
 - Non usare tr-lab.vercel.app per questi test: usa il database Production e la versione precedente.
 
 La Preview mantiene la protezione Vercel. Prima si accede al workspace Vercel, poi all'account personale TR LAB. Non condividere cookie/token o disattivare la protezione per un test. Per usare un telefono serve anche l'accesso Vercel autorizzato su quel browser. Gli account e i dati del sito precedente non vengono trasferiti automaticamente; una scheda eventualmente esportata si importa come copia/bozza, senza migrare credenziali o storico automaticamente.
 
 ## 2. Azioni tecniche delegate allo sviluppatore
 
-Sono già concluse: otto migrazioni di schema, credenziale del ruolo limitato, TLS, override Preview del ramo, deploy, dieci verifiche HTTP, callback e quindici prove delle funzioni collegate. Due account sintetici Auth collaudati con tre sessioni HTTP e token utente per RLS; percorso Chrome online Excel/calendario/diario ed esercizio/attrezzi riuscito, dati finali confrontati sul server. Questo non chiude consegna email, campagna offline/telefono o restore. Nessuna password amministrativa è richiesta.
+Sono già concluse: otto migrazioni di schema, credenziale del ruolo limitato, TLS, override Preview del ramo e quindici prove delle funzioni collegate. Due account sintetici Auth collaudati con tre sessioni HTTP e token utente per RLS; percorso Chrome online Excel/calendario/diario ed esercizio/attrezzi riuscito, dati finali confrontati sul server. Dopo la sola correzione dei conteggi al singolare, nuova Preview READY con lo stesso backend: ripetute dieci verifiche HTTP, login Chrome e anteprima XLSX; Site URL e nuovo callback persistiti, precedente callback conservato. Il rapporto associa ogni prova al deployment effettivo. Questo non chiude consegna email, campagna offline/telefono o restore. Nessuna password amministrativa è richiesta.
 
 In **Supabase → TR-LAB-STAGING → Authentication → URL Configuration**:
 
 | Impostazione | Valore |
 | --- | --- |
-| Site URL | `https://tr-g2vtw9l89-pere01040.vercel.app` |
-| Redirect URL | `https://tr-g2vtw9l89-pere01040.vercel.app/api/auth/callback\?state=*` |
+| Site URL | `https://tr-1hwubt4fq-pere01040.vercel.app` |
+| Redirect URL attuale | `https://tr-1hwubt4fq-pere01040.vercel.app/api/auth/callback\?state=*` |
+| Redirect URL precedente conservato | `https://tr-g2vtw9l89-pere01040.vercel.app/api/auth/callback\?state=*` |
 
-Conservare eventuali altre origini di sviluppo realmente necessarie; niente wildcard su tutti i domini Vercel. Il backslash rende il punto interrogativo letterale nel matcher, l'asterisco copre solo state. L'origine BFF deriva dal VERCEL_URL del deployment; un altro alias non va usato senza allineare origine e callback. Salvare e verificare la configurazione persistita. [Guida ufficiale](https://supabase.com/docs/guides/auth/redirect-urls).
+Configurazione verificata dopo reload: [evidenza](../qualita/evidenze/TR-LAB-staging-corrected-auth-urls.jpg). Conservare eventuali altre origini di sviluppo realmente necessarie; niente wildcard su tutti i domini Vercel. Il backslash rende il punto interrogativo letterale nel matcher, l'asterisco copre solo state. L'origine BFF deriva dal VERCEL_URL del deployment; un altro alias non va usato senza allineare origine e callback. [Guida ufficiale](https://supabase.com/docs/guides/auth/redirect-urls).
 
 La lettura delle impostazioni pubbliche ha confermato email abilitata, conferma email attiva, registrazione consentita e Google disabilitato. Mantenerle: non rimuovere la conferma per ottenere artificialmente un test riuscito. SMTP Gmail e OAuth Google richiedono le configurazioni della [guida dedicata](CONFIGURAZIONE_GMAIL_GOOGLE.md). Nello staging il callback **del provider Google**, da verificare nel dashboard prima dell'inserimento in Google Cloud, è `https://hfwatspsfhdbiogritkt.supabase.co/auth/v1/callback`; è distinto dal callback BFF sopra.
 
@@ -33,7 +34,7 @@ La lettura delle impostazioni pubbliche ha confermato email abilitata, conferma 
 3. Per Gmail dedicato, completare personalmente verifica in due passaggi e generazione/inserimento della password per app. Per Google Cloud, completare le autenticazioni/consensi richiesti. Nessun segreto in chat, repository o frontend.
 4. Eseguire la prova fisica del telefono al §4: indicare modello, OS/browser, tab o PWA installata e risultato. L'emulazione desktop non dimostra sospensione o conservazione sul telefono reale.
 
-Per il collaudo automatico dell'import in Chrome, l'estensione richiede «Consenti l'accesso agli URL dei file»: autorizzazione temporanea ricevuta. Il titolare lo attiva da chrome://extensions → ChatGPT → Dettagli, quindi lo disattiva al termine. Il browser di automazione rifiuta gli URL chrome://; lo sviluppatore non aggira questo limite. Si seleziona soltanto QA-STAGING.xlsx sintetico, senza caricare workbook personali. La disponibilità del permesso non cambia la politica dell'app: il parsing Excel rimane sul dispositivo.
+Il collaudo automatico dell'import in Chrome è terminato. L'estensione ha richiesto «Consenti l'accesso agli URL dei file»: autorizzazione temporanea ricevuta e attivazione effettuata dal titolare. Ora il titolare deve disattivarlo da chrome://extensions → ChatGPT → Dettagli; chiusura richiesta, ancora da confermare. Il browser di automazione rifiuta gli URL chrome://; lo sviluppatore non aggira questo limite. È stato selezionato soltanto QA-STAGING.xlsx sintetico, senza caricare workbook personali. La disponibilità del permesso non cambia la politica dell'app: il parsing Excel rimane sul dispositivo.
 
 Lo sviluppatore gestisce controlli SQL/API, analisi degli errori, eventuali correzioni con regressioni, documentazione, GitHub e rilascio dopo i gate. Il titolare comunica soltanto esito e testo/codice dell'errore; non invia link email, esportazioni personali o credenziali.
 

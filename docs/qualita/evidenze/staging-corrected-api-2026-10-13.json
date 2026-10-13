@@ -1,0 +1,75 @@
+{
+  "origin": "https://tr-1hwubt4fq-pere01040.vercel.app",
+  "commit": "0529c0c2e0b40de91e6e6ebd1aa8abd631c8de02",
+  "deployment": "dpl_Qhvw2QDEHzPzQudpjUQzaWpETe4e",
+  "checkedAt": "2026-10-13T16:26:12.565Z",
+  "results": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ready",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/sync/bootstrap",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/unknown",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/google",
+      "status": 503,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/profilo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/sw.js",
+      "status": 200,
+      "passed": true
+    }
+  ],
+  "authSettings": {
+    "email": true,
+    "google": false,
+    "autoconfirm": false,
+    "signupDisabled": false
+  },
+  "platformEventTriggerRequestRejected": true
+}

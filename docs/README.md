@@ -1,6 +1,6 @@
 # Manuale di progetto — indice e ordine di lettura
 
-Ultimo incremento: [schede, sync e motore](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), con codice, test e gate aperti, sul [ramo di consegna GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013). [Formato Excel effettivo](specifiche/FORMATO_EXCEL_IMPLEMENTATO.md), [collaudo/migrazioni/rollback](operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [registro dei metodi](fonti/REGISTRO_REGOLE.md). Le nuove funzioni sono nella [Preview di staging](https://tr-g2vtw9l89-pere01040.vercel.app/profilo); il dominio stabile resta sulla baseline. Prima del merge in main occorrono il collaudo degli account/dispositivi e i gate di rilascio.
+Ultimo incremento: [schede, sync e motore](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), con codice, test e gate aperti, sul [ramo di consegna GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013). [Formato Excel effettivo](specifiche/FORMATO_EXCEL_IMPLEMENTATO.md), [collaudo/migrazioni/rollback](operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [registro dei metodi](fonti/REGISTRO_REGOLE.md). Le nuove funzioni sono nella [Preview di staging aggiornata](https://tr-1hwubt4fq-pere01040.vercel.app/profilo), codice 0529c0c; il dominio stabile resta sulla baseline. Prima del merge in main occorrono la campagna completa di collaudo degli account/dispositivi e i gate di rilascio.
 
 Baseline precedente: [rapporto del 13 ottobre 2026](qualita/VERIFICA_2026_10_13.md), con difetti corretti, test e limiti allora rilevati.
 
