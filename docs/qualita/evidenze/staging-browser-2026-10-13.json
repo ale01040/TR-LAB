@@ -1,0 +1,24 @@
+{
+  "origin": "https://tr-g2vtw9l89-pere01040.vercel.app",
+  "sourceCommit": "bd0a62b",
+  "checkedAt": "2026-10-13T16:06:52.969Z",
+  "results": [
+    {
+      "account": "A",
+      "approvedProgram": true,
+      "completedSession": true,
+      "sets": 3,
+      "decimalLoadsPreserved": true,
+      "rirZeroPreserved": true,
+      "nullPreserved": true,
+      "importReportPersisted": true
+    },
+    {
+      "account": "B",
+      "foreignSessionVisible": false
+    }
+  ],
+  "scope": "Chrome online: XLSX worker/review/editor/explicit approval/calendar/workout/reload, then user-token PostgREST comparison",
+  "offlineBrowserTested": false,
+  "phoneTested": false
+}

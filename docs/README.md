@@ -1,10 +1,10 @@
 # Manuale di progetto — indice e ordine di lettura
 
-Ultimo incremento: [schede, sync e motore](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), con codice, test e gate aperti, sul [ramo di consegna GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013). [Formato Excel effettivo](specifiche/FORMATO_EXCEL_IMPLEMENTATO.md), [collaudo/migrazioni/rollback](operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [registro dei metodi](fonti/REGISTRO_REGOLE.md). Le nuove funzioni non sono ancora sul sito Vercel: prima del merge in main occorrono staging, migrazioni e collaudo.
+Ultimo incremento: [schede, sync e motore](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), con codice, test e gate aperti, sul [ramo di consegna GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013). [Formato Excel effettivo](specifiche/FORMATO_EXCEL_IMPLEMENTATO.md), [collaudo/migrazioni/rollback](operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [registro dei metodi](fonti/REGISTRO_REGOLE.md). Le nuove funzioni sono nella [Preview di staging](https://tr-g2vtw9l89-pere01040.vercel.app/profilo); il dominio stabile resta sulla baseline. Prima del merge in main occorrono il collaudo degli account/dispositivi e i gate di rilascio.
 
 Baseline precedente: [rapporto del 13 ottobre 2026](qualita/VERIFICA_2026_10_13.md), con difetti corretti, test e limiti allora rilevati.
 
-Preparazione della pubblicazione: [staging del 13 ottobre](qualita/STAGING_2026_10_13.md), con corrispondenza delle migrazioni, credenziali separate, readiness e gate di collaudo.
+Pubblicazione di prova: [staging del 13 ottobre](qualita/STAGING_2026_10_13.md), con corrispondenza delle migrazioni, credenziali separate, deploy READY, verifiche HTTP e gate aperti. [Passaggi concreti per il collaudo](operazioni/COLLAUDO_PREVIEW_STAGING.md).
 
 Piano da completare: [piano esecutivo del 13 ottobre](piani/PIANO_PROSSIME_FUNZIONI.md), con [collaudo sync](piani/COLLAUDO_SINCRONIZZAZIONE.md), [Excel, catalogo e calendario](piani/SCHEDE_EXCEL_CATALOGO_CALENDARIO.md), [generatore e progressioni](piani/GENERATORE_E_PROGRESSIONI.md) e [fonti ufficiali consultate](piani/FONTI_TECNICHE.md). Il rapporto corrente distingue le parti implementate dai gate non chiusi.
 

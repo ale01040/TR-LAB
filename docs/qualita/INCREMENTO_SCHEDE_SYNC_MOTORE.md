@@ -1,6 +1,6 @@
 # Incremento locale — schede, sincronizzazione e motore
 
-13 ottobre 2026 · DEV-068/069. Questo rapporto descrive il codice nuovo, i controlli effettivi e i gate aperti. Il [ramo di consegna GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013) raccoglie l'incremento con deploy Git Vercel disabilitato per quel ramo. L'alpha pubblicata è documentata nei rapporti precedenti; **l'incremento non è distribuito su Vercel e le nuove migrazioni non sono applicate al cloud**. Gli esiti CI del ramo vanno verificati nelle Actions, separatamente dalle prove locali riportate qui. Non è una dichiarazione di assenza universale di bug o di validazione scientifica.
+13 ottobre 2026 · DEV-068/069. Questo rapporto descrive il codice nuovo, i controlli effettivi e i gate aperti. Il [ramo di consegna GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013) raccoglie l'incremento con deploy Git Vercel disabilitato per quel ramo. L'alpha pubblicata è documentata nei rapporti precedenti. Aggiornamento DEV-070: incremento pubblicato manualmente nella Preview isolata, migrazioni applicate soltanto a TR-LAB-STAGING e CI del commit bd0a62b riuscita; [evidenze e limiti del cloud](STAGING_2026_10_13.md). Il dominio stabile e il suo database restano sulla baseline. Le prove locali descritte qui non diventano automaticamente prove di Auth o di telefoni reali. Non è una dichiarazione di assenza universale di bug o di validazione scientifica.
 
 ## 1. Risultato e stato dei ticket
 
@@ -22,7 +22,7 @@ In Programma, l'import `.xlsx` apre il report, richiede le associazioni/fasi man
 
 In Libreria si creano o duplicano varianti personali, si correggono nome/istruzioni e si archiviano. L'identità fisica di una variante già salvata non cambia con una modifica di nome: per un diverso movimento/convenzione si duplica. Una variante archiviata resta negli snapshot storici, ma non è disponibile per nuove prescrizioni. Condivisione per JSON converte riferimenti privati in snapshot incorporati, senza accesso all'archivio del proprietario.
 
-Nel Profilo si dichiarano luoghi, categorie, convenzioni, tagli di carico effettivi e identificazione testuale della macchina. I kg dell'interfaccia diventano grammi interi; i tagli sono ordinati e i duplicati respinti. Dichiarare una categoria “macchina” non significa avere qualunque movimento disponibile.
+In Libreria, nel pannello attrezzatura, si dichiarano luoghi, categorie, convenzioni, tagli di carico effettivi e identificazione testuale della macchina. I kg dell'interfaccia diventano grammi interi; i tagli sono ordinati e i duplicati respinti. Dichiarare una categoria “macchina” non significa avere qualunque movimento disponibile.
 
 Nel calendario si pianifica da una **versione approvata**, si rivedono tutte le date e si conferma l'intervallo. Ogni occorrenza conserva programma/giornata/settimana/fuso. Rinvio e data reale sono distinti; il passare dei giorni non chiude una seduta e non fa avanzare una progressione. Avvio e completamento sono collegati alle transizioni del diario.
 

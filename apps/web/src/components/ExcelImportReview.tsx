@@ -9,6 +9,7 @@ import {
 import { mapWorkoutWorkbook, uuidSequence, type ImportChoices } from '@tr-lab/domain';
 import { useCatalog } from '../data/use-catalog';
 import { PrivateExerciseForm } from './PrivateExerciseForm';
+import { counted } from './Shared';
 import styles from '../styles/App.module.css';
 export function ExcelImportReview({
   workbook,
@@ -77,8 +78,9 @@ export function ExcelImportReview({
   return (
     <>
       <p>
-        {preview.days} giornate · {preview.positions} posizioni · {preview.weeks} settimane. Il file
-        resta sul dispositivo.
+        {counted(preview.days, 'giornata', 'giornate')} ·{' '}
+        {counted(preview.positions, 'posizione', 'posizioni')} ·{' '}
+        {counted(preview.weeks, 'settimana', 'settimane')}. Il file resta sul dispositivo.
       </p>
       <div className={styles.formGrid}>
         <label>

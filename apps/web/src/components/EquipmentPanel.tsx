@@ -3,7 +3,7 @@ import { equipmentProfileSchema, type EquipmentProfile } from '@tr-lab/contracts
 import { parseDecimal } from '@tr-lab/domain';
 import { useApp } from './AppProvider';
 import { equipmentLabels } from './PrivateExerciseForm';
-import { Dialog, errorMessage, loadBasisLabel } from './Shared';
+import { counted, Dialog, errorMessage, loadBasisLabel } from './Shared';
 import styles from '../styles/App.module.css';
 type Editing = Omit<EquipmentProfile, 'items'> & {
   items: (EquipmentProfile['items'][number] & { loadsText: string })[];
@@ -96,7 +96,7 @@ export function EquipmentPanel() {
       </p>
       {profiles.map((p) => (
         <button key={p.id} onClick={() => begin(p)}>
-          {p.name} · {p.items.length} attrezzi
+          {p.name} · {counted(p.items.length, 'attrezzo', 'attrezzi')}
         </button>
       ))}
       {editing && (

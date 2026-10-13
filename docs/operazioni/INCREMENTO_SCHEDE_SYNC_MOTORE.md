@@ -4,11 +4,11 @@
 
 ## 1. Stato e sequenza di rilascio
 
-Il codice e le quattro migrazioni aggiuntive sono raccolti nel [ramo GitHub codex/schede-sync-motore-20261013](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013). Le nuove migrazioni non sono applicate al cloud. L'alpha pubblicata e i suoi rapporti precedenti restano una consegna separata. Un push su main può attivare Vercel: non usarlo come prima prova di queste migrazioni.
+Il codice e le quattro migrazioni aggiuntive sono raccolti nel [ramo GitHub codex/schede-sync-motore-20261013](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013). Le otto migrazioni di schema complessive sono applicate a TR-LAB-STAGING; la [Preview isolata](https://tr-g2vtw9l89-pere01040.vercel.app/profilo) è READY e i controlli HTTP sono passati. [Rapporto cloud](../qualita/STAGING_2026_10_13.md), [collaudo pratico](COLLAUDO_PREVIEW_STAGING.md). Il database Production non ha ricevuto le nuove migrazioni. L'alpha pubblicata e i suoi rapporti precedenti restano una consegna separata. Un push su main può attivare Vercel: non usarlo come prima prova di queste migrazioni.
 
-`vercel.json` disabilita i deploy Git soltanto per questo ramo, attraverso `git.deploymentEnabled`, secondo la [documentazione ufficiale](https://vercel.com/docs/project-configuration/git-configuration). Le Actions GitHub restano attive. La regola non protegge un merge in main o un deploy CLI manuale: prima di entrambi completare la sequenza sotto. Quando lo staging è isolato e aggiornato, rimuovere la sola regola del ramo per provarne la Preview; non cambiare le credenziali Production per una prova. Il caricamento su GitHub non equivale a un rilascio dell'app.
+`vercel.json` disabilita i deploy Git soltanto per questo ramo, attraverso `git.deploymentEnabled`, secondo la [documentazione ufficiale](https://vercel.com/docs/project-configuration/git-configuration). Le Actions GitHub restano attive. Il deploy di prova è stato effettuato via CLI con override Preview riservati al ramo e funzione in arn1, vicino al database di staging. La regola è conservata per evitare nuovi link/callback automatici durante il collaudo; non protegge un merge in main o un deploy CLI manuale. Il caricamento su GitHub non equivale a un rilascio sul dominio stabile.
 
-Ordine: controlli locali → PostgreSQL isolato con connessioni reali → Supabase di staging distinto da Production → due account/dispositivi → revisione del consenso e dei metodi → Preview collegata allo staging → aggiornamento e rollback provati → rilascio sul dominio stabile. Separare ambiente, account di test e dati sintetici; non applicare il ripristino o la sostituzione di epoch al progetto reale per ottenere una prova.
+Ordine: controlli locali → PostgreSQL isolato con connessioni reali → Supabase di staging distinto da Production → Preview collegata allo staging → due account/dispositivi → revisione del consenso e dei metodi → aggiornamento e rollback provati → rilascio sul dominio stabile. La Preview precede il collaudo degli account per fornire l'origine HTTPS effettiva. Separare ambiente, account di test e dati sintetici; non applicare il ripristino o la sostituzione di epoch al progetto reale per ottenere una prova.
 
 I test PGlite applicano tutte le migrazioni e validano RLS/RPC, ma simulano l'identità SQL. Non provano GoTrue, PostgREST, pooler/TLS o due transazioni TCP parallele. I test browser attuali usano la modalità dispositivo, senza credenziali cloud.
 
@@ -17,11 +17,11 @@ I test PGlite applicano tutte le migrazioni e validano RLS/RPC, ma simulano l'id
 Toolchain bloccata in package.json/lockfile: Node24.21 e npm11.19. Dalla radice:
 
 ```powershell
-npm ci
-npm run check
-npm run format:check
-npm audit --audit-level=low
-npm run test:e2e
+npm.cmd ci
+npm.cmd run check
+npm.cmd run format:check
+npm.cmd audit --audit-level=low
+npm.cmd run test:e2e
 ```
 
 `check` comprende TypeScript, lint, unit, integrazione, build PWA/server e sei controlli HTTP del bundle Vercel isolato. `test:e2e` richiede la build e Chrome locale già installato; in CI Ubuntu il workflow installa Chromium. Il server di prova occupa 127.0.0.1:3007, non riusa altri server e non legge `.env` né contatta Supabase. Non spegnere la sessione di lavoro dell'utente sulla porta 3001.

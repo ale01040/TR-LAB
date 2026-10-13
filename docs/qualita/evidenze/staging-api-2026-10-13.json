@@ -1,0 +1,71 @@
+{
+  "origin": "https://tr-g2vtw9l89-pere01040.vercel.app",
+  "sourceCommit": "bd0a62b",
+  "runId": "ab499068-0975-4078-ae70-ff272dadc81e",
+  "checkedAt": "2026-10-13T15:50:26.847Z",
+  "results": [
+    {
+      "test": "ImportProgramDraft with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "ApproveProgram with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "SavePrivateExercise with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "SaveEquipmentProfile with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "PlanCycle with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "StartScheduledWorkout with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "SaveSet with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "SaveSet with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "SaveSet with idempotent receipt where applicable",
+      "passed": true
+    },
+    {
+      "test": "FinishWorkout",
+      "passed": true
+    },
+    {
+      "test": "B cannot reference program owned by A",
+      "passed": true
+    },
+    {
+      "test": "Independent session A receives exact results, RIR0 and null preserved",
+      "passed": true
+    },
+    {
+      "test": "B pull contains no records of A",
+      "passed": true
+    },
+    {
+      "test": "Direct PostgREST RLS with real A/B user tokens",
+      "passed": true
+    },
+    {
+      "test": "Mismatched account header rejected",
+      "passed": true
+    }
+  ],
+  "phoneTested": false,
+  "offlineBrowserTested": false,
+  "emailDeliveryTested": false
+}

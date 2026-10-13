@@ -2,6 +2,8 @@
 
 Incremento del 13 ottobre: **import diretto Excel con review e bozza, esercizi personali, attrezzatura, calendario, recupero dei conflitti e fondazioni del motore con consenso esplicito**. [Ramo di consegna su GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013), [funzioni/prove/limiti](docs/qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [formato Excel](docs/specifiche/FORMATO_EXCEL_IMPLEMENTATO.md), [migrazioni e collaudo](docs/operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md). Questo ramo non attiva il deploy automatico Vercel e non contiene metodi di allenamento attivi. Il sito stabile resta sulla baseline: il rilascio dell'incremento richiede staging, quattro nuove migrazioni e validazione dei gate prima del merge in main.
 
+**Nuova Preview isolata:** [TR LAB staging](https://tr-g2vtw9l89-pere01040.vercel.app/profilo), collegata a TR-LAB-STAGING. Otto migrazioni di schema, callback salvato, backend pronto, dieci controlli HTTP e quindici verifiche delle funzioni collegate riusciti. Login reale di due account sintetici, isolamento RLS e percorso Chrome online Excel/calendario/diario verificati; CI del codice collaudato superata su Windows/Ubuntu. Protezione Vercel conservata. Consegna email, Google, campagna offline/telefono reale e restore restano da completare: [rapporto aggiornato](docs/qualita/STAGING_2026_10_13.md), [passaggi di collaudo](docs/operazioni/COLLAUDO_PREVIEW_STAGING.md). Gli account e i dati del sito stabile non vengono copiati nello staging.
+
 Alpha HTTPS sul dominio stabile: [TR LAB](https://tr-lab.vercel.app), collegata a Supabase. Build Git Production verificata con tredici controlli HTTP e quattro GET anonime senza credenziali Vercel. [Rilascio e limiti](docs/qualita/RILASCIO_DOMINIO_STABILE.md), [procedura](docs/operazioni/DEPLOY_VERCEL.md). La [Preview precedente](https://tr-9lstvuhyr-pere01040.vercel.app) resta separata e protetta dal workspace.
 
 Per il pacchetto ZIP da estrarre e caricare manualmente su Netlify Drop: [procedura Netlify](docs/operazioni/DEPLOY_NETLIFY.md). Distribuisce l'alpha in modalità dispositivo, senza backend o credenziali cloud.
@@ -9,8 +11,8 @@ Per il pacchetto ZIP da estrarre e caricare manualmente su Netlify Drop: [proced
 PWA per schede, diario di allenamento offline, misure e target nutrizionali personali. Versione **0.1.0 alpha**, utilizzabile sul dispositivo senza provider; Supabase collegato a locale, Preview e Production con ruolo limitato e TLS verificato. Login riuscito nella Preview riferito dal committente; login positivo sul dominio stabile, consegna email, Google e sync multi-device richiedono ancora collaudo. Site URL e callback sono configurati; SMTP e Google restano da attivare: [completare Auth](docs/operazioni/COMPLETARE_AUTH.md). Gli archivi locali non si trasferiscono automaticamente tra dispositivi o domini.
 
 ```powershell
-npm ci
-npm run dev
+npm.cmd ci
+npm.cmd run dev
 ```
 
 Senza `.env`, aprire **http://localhost:5173** per usare la modalità dispositivo. Per collegare il progetto esistente seguire [Avvio locale e Supabase](docs/operazioni/AVVIO_LOCALE.md), senza inserire segreti nel repository. `npm run build` e `npm run preview` servono per la prova della PWA con service worker.
@@ -19,7 +21,7 @@ Controlli: `npm run check`, `npm run format:check`, `npm audit --audit-level=low
 
 Scelte confermate: PWA per telefono/PC, Supabase, account personali, diario offline, condivisione per copia e proposte automatiche applicate soltanto dopo conferma esplicita. Lo sviluppo segue entrambe le raccolte web incluse, con gli adattamenti registrati e commenti mirati e completi.
 
-Nella baseline pubblicata: editor manuale e ciclo, approvazione esplicita e versioni, struttura Excel adattata con anteprima, formato JSON documentato, sedute/serie/lati/RIR/timer, peso e circonferenze, macro manuali, copia della scheda e backup locale. BFF Auth e protocollo sync presenti; RPC/grant/isolamento della baseline verificati sul database reale. Google disabilitato finché provider e flag non sono configurati. Le nuove funzioni locali sono descritte nel rapporto sopra; metodi attivi, automazione completa, assistente AI e gate della beta pubblica restano nella roadmap. Il database condiviso fra ambienti è un limite esplicito dell'alpha autorizzata, non la separazione richiesta per la versione completa.
+Nella baseline pubblicata: editor manuale e ciclo, approvazione esplicita e versioni, struttura Excel adattata con anteprima, formato JSON documentato, sedute/serie/lati/RIR/timer, peso e circonferenze, macro manuali, copia della scheda e backup locale. BFF Auth e protocollo sync presenti; RPC/grant/isolamento della baseline verificati sul database reale. Google disabilitato finché provider e flag non sono configurati. Le nuove funzioni sono descritte nel rapporto sopra; metodi attivi, automazione completa, assistente AI e gate della beta pubblica restano nella roadmap. La Preview precedente condivide il database Production, limite esplicito dell'alpha autorizzata; la nuova Preview usa invece lo staging separato.
 
 Per attivare Gmail SMTP e Google seguire la [guida dettagliata](docs/operazioni/CONFIGURAZIONE_GMAIL_GOOGLE.md). `npm run auth:preflight` controlla i servizi pubblici senza inviare email; `-- --require-google` richiede anche il provider abilitato. Non sostituisce un login reale o una prova di consegna.
 

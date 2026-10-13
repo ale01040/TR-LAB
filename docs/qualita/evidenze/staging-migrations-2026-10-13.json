@@ -1,0 +1,64 @@
+{
+  "project_ref": "hfwatspsfhdbiogritkt",
+  "project_name": "TR-LAB-STAGING",
+  "source_commit": "bd0a62b6a9a0b6263459600cca2be947adea8973",
+  "verified_date": "2026-10-13",
+  "checksum_algorithm": "SHA-256",
+  "checksum_scope": "Bytes dei file locali applicati, inclusi i terminatori di riga; versioni e nomi remoti verificati tramite list_migrations.",
+  "schema_migrations": [
+    {
+      "file": "supabase/migrations/202610110001_core.sql",
+      "remote_version": "20261013142351",
+      "remote_name": "core",
+      "sha256": "0979b89cd8f46bc66e46f183b6309ecf3ee5df7f13284b7d93b381bc77dd6779"
+    },
+    {
+      "file": "supabase/migrations/20261011205512_runtime_session_role.sql",
+      "remote_version": "20261013142357",
+      "remote_name": "runtime_session_role",
+      "sha256": "84dd622da4c8c18d78fc148382151bb384adb29c78143d0d5f6b96f0bead522d"
+    },
+    {
+      "file": "supabase/migrations/20261011205803_database_access_hardening.sql",
+      "remote_version": "20261013142402",
+      "remote_name": "database_access_hardening",
+      "sha256": "8805817142a76e2dbb1267c23bee46dea643bfb51182322e7baf43add48db97b"
+    },
+    {
+      "file": "supabase/migrations/20261011210811_verified_request_identity.sql",
+      "remote_version": "20261013142406",
+      "remote_name": "verified_request_identity",
+      "sha256": "3b8d644d3658dfb88b123781525e551c07e3993436282a64d2ebc0039293d283"
+    },
+    {
+      "file": "supabase/migrations/20261012233715_session_refresh_lease.sql",
+      "remote_version": "20261013142410",
+      "remote_name": "session_refresh_lease",
+      "sha256": "b2c637704a63a7d682d436f0ac0e69c4d42eff12a308e5537316bced46414fe6"
+    },
+    {
+      "file": "supabase/migrations/20261013092510_personal_catalog_calendar.sql",
+      "remote_version": "20261013142415",
+      "remote_name": "personal_catalog_calendar",
+      "sha256": "61e16c7ecb8138978428662c3e59a15c62dea3427d47e5d9ba206fcaab92c643"
+    },
+    {
+      "file": "supabase/migrations/20261013094530_proposal_consent.sql",
+      "remote_version": "20261013142420",
+      "remote_name": "proposal_consent",
+      "sha256": "cccff0b7cf583fddee251f15c788e5e7cf7d5d2255426c0925022a3996f61e0f"
+    },
+    {
+      "file": "supabase/migrations/20261013104158_imports_and_executed_workout_recovery.sql",
+      "remote_version": "20261013142424",
+      "remote_name": "imports_and_executed_workout_recovery",
+      "sha256": "84bb784b3a7351409db3f65e5af0019a3af10178c08d061c68757840b9f6eece"
+    }
+  ],
+  "private_provisioning": {
+    "remote_version": "20261013143835",
+    "remote_name": "runtime_password_provisioning",
+    "sql_included": false,
+    "credentials_included": false
+  }
+}
