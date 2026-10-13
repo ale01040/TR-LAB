@@ -19,6 +19,7 @@ import { AuthService, authRoutes, HttpError } from './auth.js';
 import { loadConfig, type Config } from './config.js';
 import { readCursor, signCursor } from './crypto.js';
 import { engineRoutes, decideProposal } from './engine.js';
+import { databaseSchemaReady } from './database-readiness.js';
 export async function buildApp(
   config: Config = loadConfig(),
   { serveWeb = true, onPool }: { serveWeb?: boolean; onPool?: (pool: Pool) => void } = {},
@@ -108,8 +109,8 @@ export async function buildApp(
   app.get('/api/ready', async (_request, reply) => {
     if (!auth.pool) return reply.status(503).send({ ready: false, code: 'NOT_CONFIGURED' });
     try {
-      // Prova sia la connessione sia il grant realmente necessario al BFF; nessun dato personale.
-      await auth.pool.query('select token_hash from tr_lab_private.sessions limit 0');
+      if (!(await databaseSchemaReady(auth.pool)))
+        return reply.status(503).send({ ready: false, code: 'DATABASE_SCHEMA_OUTDATED' });
       return { ready: true };
     } catch {
       app.log.error({ code: 'DATABASE_UNAVAILABLE' }, 'Database non disponibile');

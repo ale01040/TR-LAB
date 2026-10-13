@@ -1,11 +1,13 @@
 import { Pool } from 'pg';
 import { loadConfig } from '../apps/server/src/config';
 import { databasePoolConfig } from '../apps/server/src/database';
+import { databaseSchemaReady } from '../apps/server/src/database-readiness';
 let pool: Pool | undefined;
 try {
   const config = loadConfig();
   if (!config.DATABASE_URL) throw new Error('NOT_CONFIGURED');
   pool = new Pool({ ...databasePoolConfig(config), max: 1 });
+  const schemaReady = await databaseSchemaReady(pool);
   const result = await pool.query(`select
     current_database() as database,
     to_regclass('public.tr_lab_records') is not null as records_present,
@@ -17,6 +19,7 @@ try {
     JSON.stringify(
       {
         connected: true,
+        schemaReady,
         checks: result.rows[0],
         note: 'Controllo in sola lettura; non prova Auth, grant completi o sincronizzazione.',
       },
@@ -24,6 +27,7 @@ try {
       2,
     ),
   );
+  if (!schemaReady) process.exitCode = 1;
 } catch {
   console.error(
     'Preflight non riuscito. Verifica configurazione, SSL, password e rete. Nessuna modifica applicata e nessuna connection string stampata.',
