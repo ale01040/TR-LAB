@@ -1,6 +1,6 @@
 # Manuale di progetto — indice e ordine di lettura
 
-Incremento UI/UX del 14 ottobre: [Preview corrente](https://tr-bfq6gm2tu-pere01040.vercel.app), codice `8de6e07`, [CI Windows/Linux riuscita](https://github.com/ale01040/TR-LAB/actions/runs/38574207876). [Piano Nielsen](piani/UX_NIELSEN.md), [motion, fonti e scelte](design/MOTION_E_MICROINTERAZIONI.md). Feedback su accesso/uscita e salvataggi, requisiti password, guida locale e riduzione del movimento. Stato effettivo di test, callback email e rilascio nel [rapporto UX](qualita/UX_NIELSEN_2026_10_14.md); non sostituisce il collaudo degli account su telefoni reali. Protezione Vercel conservata.
+Incremento UI/UX del 14 ottobre: [Preview corrente](https://tr-1aiibylrf-pere01040.vercel.app), codice `5b19768`, [CI Windows/Linux riuscita](https://github.com/ale01040/TR-LAB/actions/runs/38592060667). [Piano Nielsen](piani/UX_NIELSEN.md), [motion, fonti e scelte](design/MOTION_E_MICROINTERAZIONI.md). Feedback su accesso/uscita e salvataggi, requisiti password, guida locale e riduzione del movimento. Stato effettivo di test, callback email e rilascio nel [rapporto UX](qualita/UX_NIELSEN_2026_10_14.md); non sostituisce il collaudo degli account su telefoni reali. Protezione Vercel conservata.
 
 Redesign del 14 ottobre: [piano e roadmap visuale](piani/REDESIGN_OPEN.md), [fonti/font/misure](design/README.md), [Design DNA](design/TR_LAB_OPEN_DNA.json), [prove e limiti](qualita/REDESIGN_2026_10_14.md). Open, Inter locale, temi e nessuna immagine: DEC-32–35. Non chiude i gate cloud/telefono/restore del prodotto.
 

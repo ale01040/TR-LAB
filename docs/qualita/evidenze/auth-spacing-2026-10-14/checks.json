@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-10-14T15:54:38.1838337Z",
+  "commit": "5b1976855ab187071b6fbc83f55bc7d8bcbb2cf8",
+  "origin": "https://tr-1aiibylrf-pere01040.vercel.app",
+  "css": {
+    "gapRem": 1,
+    "observedViewportWidth": 2545,
+    "observedGapCssPixels": 16,
+    "horizontalOverflow": false
+  },
+  "localChecks": {
+    "typecheck": true,
+    "build": true,
+    "e2ePassed": 4,
+    "projects": [
+      "desktop 1280x800",
+      "mobile 390x844"
+    ],
+    "format": true
+  },
+  "ci": {
+    "platforms": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "conclusion": "success",
+    "id": 38592060667,
+    "url": "https://github.com/ale01040/TR-LAB/actions/runs/38592060667"
+  },
+  "attemptedNativeMobileOverrideEffective": false,
+  "hardwarePhoneTested": false,
+  "newDependency": false,
+  "backendChanged": false
+}

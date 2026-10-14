@@ -4,9 +4,9 @@
 
 ## 1. Quale ambiente usare
 
-- App di prova corrente: **https://tr-bfq6gm2tu-pere01040.vercel.app**. Incremento UI/motion del 14 ottobre: [prove e limiti](../qualita/UX_NIELSEN_2026_10_14.md).
+- App di prova corrente: **https://tr-1aiibylrf-pere01040.vercel.app**. Incremento UI/motion del 14 ottobre: [prove e limiti](../qualita/UX_NIELSEN_2026_10_14.md).
 - Database: **TR-LAB-STAGING**, riferimento **hfwatspsfhdbiogritkt**.
-- Codice pubblicato corrente: **8de6e07**, ramo **codex/schede-sync-motore-20261013**; [CI Windows/Ubuntu riuscita](https://github.com/ale01040/TR-LAB/actions/runs/38574207876). La Preview 0529c0c del 13 ottobre resta una baseline storica delle prove delle funzioni.
+- Codice pubblicato corrente: **5b19768**, ramo **codex/schede-sync-motore-20261013**; [CI Windows/Ubuntu riuscita](https://github.com/ale01040/TR-LAB/actions/runs/38592060667). La Preview 0529c0c del 13 ottobre resta una baseline storica delle prove delle funzioni.
 - Non usare tr-lab.vercel.app per questi test: usa il database Production e la versione precedente.
 
 La Preview mantiene la protezione Vercel. Prima si accede al workspace Vercel, poi all'account personale TR LAB. Non condividere cookie/token o disattivare la protezione per un test. Per usare un telefono serve anche l'accesso Vercel autorizzato su quel browser. Gli account e i dati del sito precedente non vengono trasferiti automaticamente; una scheda eventualmente esportata si importa come copia/bozza, senza migrare credenziali o storico automaticamente.
@@ -19,13 +19,14 @@ In **Supabase → TR-LAB-STAGING → Authentication → URL Configuration**:
 
 | Impostazione | Valore |
 | --- | --- |
-| Site URL | `https://tr-bfq6gm2tu-pere01040.vercel.app` |
-| Redirect URL attuale | `https://tr-bfq6gm2tu-pere01040.vercel.app/api/auth/callback\?state=*` |
+| Site URL | `https://tr-1aiibylrf-pere01040.vercel.app` |
+| Redirect URL attuale | `https://tr-1aiibylrf-pere01040.vercel.app/api/auth/callback\?state=*` |
 | Redirect precedente conservato | `https://tr-g2vtw9l89-pere01040.vercel.app/api/auth/callback\?state=*` |
 | Redirect precedente conservato | `https://tr-1hwubt4fq-pere01040.vercel.app/api/auth/callback\?state=*` |
 | Redirect precedente conservato | `https://tr-6gs3n8np2-pere01040.vercel.app/api/auth/callback\?state=*` |
+| Redirect precedente conservato | `https://tr-bfq6gm2tu-pere01040.vercel.app/api/auth/callback\?state=*` |
 
-Configurazione corrente verificata dopo reload: [evidenza del 14 ottobre](../qualita/evidenze/ux-2026-10-14/preview-auth-config.png). La [cattura del 13 ottobre](../qualita/evidenze/TR-LAB-staging-corrected-auth-urls.jpg) rimane storica. Conservare eventuali altre origini di sviluppo realmente necessarie; niente wildcard su tutti i domini Vercel. Il backslash rende il punto interrogativo letterale nel matcher, l'asterisco copre solo state. L'origine BFF deriva dal VERCEL_URL del deployment; un altro alias non va usato senza allineare origine e callback. [Guida ufficiale](https://supabase.com/docs/guides/auth/redirect-urls).
+Configurazione corrente verificata dopo reload: [evidenza del 14 ottobre](../qualita/evidenze/auth-spacing-2026-10-14/auth-config.png). La [cattura del 13 ottobre](../qualita/evidenze/TR-LAB-staging-corrected-auth-urls.jpg) rimane storica. Conservare eventuali altre origini di sviluppo realmente necessarie; niente wildcard su tutti i domini Vercel. Il backslash rende il punto interrogativo letterale nel matcher, l'asterisco copre solo state. L'origine BFF deriva dal VERCEL_URL del deployment; un altro alias non va usato senza allineare origine e callback. [Guida ufficiale](https://supabase.com/docs/guides/auth/redirect-urls).
 
 La lettura delle impostazioni pubbliche ha confermato email abilitata, conferma email attiva, registrazione consentita e Google disabilitato. Mantenerle: non rimuovere la conferma per ottenere artificialmente un test riuscito. SMTP Gmail e OAuth Google richiedono le configurazioni della [guida dedicata](CONFIGURAZIONE_GMAIL_GOOGLE.md). Nello staging il callback **del provider Google**, da verificare nel dashboard prima dell'inserimento in Google Cloud, è `https://hfwatspsfhdbiogritkt.supabase.co/auth/v1/callback`; è distinto dal callback BFF sopra.
 

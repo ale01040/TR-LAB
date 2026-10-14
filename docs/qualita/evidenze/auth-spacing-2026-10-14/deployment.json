@@ -1,0 +1,13 @@
+{
+  "id": "dpl_F1P88i1sWCSiVZT3RLpJyKgbVGWB",
+  "url": "https://tr-1aiibylrf-pere01040.vercel.app",
+  "readyState": "READY",
+  "target": "preview",
+  "project": "prj_IpG5DKSPZX4Tn1yw90eAfILehujH",
+  "branch": "codex/schede-sync-motore-20261013",
+  "commit": "5b1976855ab187071b6fbc83f55bc7d8bcbb2cf8",
+  "serverSha256": "bd0bf439e45e4090b9175aa36545d262d0bb005d0bfb823afc959349aaa38924",
+  "stagingProject": "hfwatspsfhdbiogritkt",
+  "region": "arn1",
+  "checkedAt": "2026-10-14T15:46:13.115Z"
+}
