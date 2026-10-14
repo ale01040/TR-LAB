@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import { useApp } from './components/AppProvider';
 import { counted } from './components/Shared';
+import { Feedback } from './components/Feedback';
+import { ToastHost } from './components/ToastHost';
 import styles from './styles/App.module.css';
 
 const TodayPage = lazy(() => import('./pages/TodayPage').then((m) => ({ default: m.TodayPage })));
@@ -30,6 +32,9 @@ const LibraryPage = lazy(() =>
 const ProfilePage = lazy(() =>
   import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })),
 );
+const HelpPage = lazy(() =>
+  import('./pages/HelpPage').then((module) => ({ default: module.HelpPage })),
+);
 
 const links = [
   { to: '/', name: 'Oggi', icon: Home },
@@ -44,7 +49,20 @@ export function App() {
     // Le nuove sezioni partono dal titolo, non dallo scroll della pagina precedente.
     window.scrollTo(0, 0);
   }, [pathname]);
-  const { account, user, online, loading, pending, blocked, notice, syncing, sync } = useApp();
+  const {
+    account,
+    user,
+    configured,
+    online,
+    loading,
+    pending,
+    blocked,
+    notice,
+    syncing,
+    loggingOut,
+    sync,
+    dismissNotice,
+  } = useApp();
   const [update, setUpdate] = useState<(() => Promise<void>) | null>(null);
   useEffect(() => {
     const receive = (event: Event) =>
@@ -81,20 +99,26 @@ export function App() {
           <div className={styles.connection} role="status">
             {!online && <WifiOff size={16} aria-hidden="true" />}
             <span>
-              {!online
-                ? 'Offline · dati sul dispositivo'
-                : user
-                  ? blocked
-                    ? counted(blocked, 'conflitto da rivedere', 'conflitti da rivedere')
-                    : pending
-                      ? counted(pending, 'operazione in attesa', 'operazioni in attesa')
-                      : 'Account personale'
-                  : 'Solo su questo dispositivo'}
+              {loggingOut
+                ? 'Uscita in corso…'
+                : !online
+                  ? 'Offline · dati sul dispositivo'
+                  : user
+                    ? syncing
+                      ? 'Sincronizzazione in corso…'
+                      : blocked
+                        ? counted(blocked, 'conflitto da rivedere', 'conflitti da rivedere')
+                        : pending
+                          ? counted(pending, 'operazione in attesa', 'operazioni in attesa')
+                          : 'Account personale'
+                    : configured
+                      ? 'Non hai effettuato l’accesso'
+                      : 'Solo su questo dispositivo'}
             </span>
             {user && online && (
               <button
                 className={styles.iconButton}
-                onClick={() => void sync()}
+                onClick={() => void sync(true)}
                 disabled={syncing}
                 aria-label="Sincronizza adesso"
               >
@@ -106,9 +130,12 @@ export function App() {
             </NavLink>
           </div>
         </div>
-        {notice && (
-          <div className={styles.notice} role="status">
-            {notice}
+        <ToastHost notice={notice} dismiss={dismissNotice} />
+        {notice && notice.tone !== 'success' && (
+          <div className={styles.notice}>
+            <Feedback key={notice.id} tone={notice.tone} dismiss={dismissNotice}>
+              {notice.message}
+            </Feedback>
           </div>
         )}
         {update && (
@@ -117,7 +144,7 @@ export function App() {
             <button onClick={() => void update()}>Aggiorna ora</button>
           </div>
         )}
-        <main id="main" className={styles.main} key={account}>
+        <main id="main" tabIndex={-1} className={styles.main} key={account}>
           {loading ? (
             <p role="status">Apro il tuo spazio…</p>
           ) : (
@@ -129,6 +156,7 @@ export function App() {
                 <Route path="/progressi" element={<ProgressPage />} />
                 <Route path="/libreria" element={<LibraryPage />} />
                 <Route path="/profilo" element={<ProfilePage />} />
+                <Route path="/aiuto" element={<HelpPage />} />
                 <Route
                   path="*"
                   element={
@@ -146,6 +174,9 @@ export function App() {
         </main>
         <footer className={styles.footer}>
           TR LAB <span>Allenati. Registra. Comprendi.</span>
+          <NavLink className={styles.textLink} to="/aiuto">
+            Guida e aiuto
+          </NavLink>
           <small>
             © {new Date().getFullYear()} TR LAB ·{' '}
             <span className={styles.printOnly}>TR LAB · {window.location.origin}/</span>

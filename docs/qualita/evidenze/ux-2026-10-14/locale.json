@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-14T12:45:01.404Z",
+  "branch": "codex/schede-sync-motore-20261013",
+  "scope": "locale, fixture sintetiche, nessuna prova cloud attribuita",
+  "unit": {
+    "files": 19,
+    "passed": 90
+  },
+  "integration": {
+    "files": 14,
+    "passed": 71
+  },
+  "e2e": {
+    "passed": 10,
+    "projects": [
+      "Chrome desktop 1280x800",
+      "Chrome mobile 390x844"
+    ],
+    "reflowWidths": [
+      320,
+      430,
+      768
+    ]
+  },
+  "typecheck": true,
+  "lint": true,
+  "format": true,
+  "build": true,
+  "vercelPackageChecks": 6,
+  "secretsAuditPassed": true,
+  "privateFileExcluded": true,
+  "hardwareTested": false
+}

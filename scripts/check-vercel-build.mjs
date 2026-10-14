@@ -48,7 +48,11 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 try {
   const session = await fetch(`${origin}/api/auth/session`);
   assert.equal(session.status, 200);
-  assert.deepEqual(await session.json(), { user: null, configured: false });
+  assert.deepEqual(await session.json(), {
+    user: null,
+    configured: false,
+    providers: { google: false },
+  });
   assert.equal(session.headers.get('cache-control'), 'no-store');
   assert.equal((await fetch(`${origin}/api/ready`)).status, 503);
   assert.equal((await fetch(`${origin}/api/sync/bootstrap`)).status, 401);

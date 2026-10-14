@@ -41,6 +41,8 @@ Versione 1.3 · 12 ottobre 2026. Registro delle decisioni del committente e dei 
 | DEC-33 | Scuro predefinito, chiaro opzionale; diario con righe compatte e campi comodi da toccare | Preferenza persistente, varianti complete, controllo contrasto/touch/stampa |
 | DEC-34 | Inter libero simile, ospitato nell'app e disponibile offline | WOFF2 locale e OFL; non distribuire Monument Grotesk commerciale senza licenza |
 | DEC-35 | Non usare immagini | Ultima istruzione sostituisce la precedente preferenza fotografica: atmosfera CSS, logo testuale, niente foto/video/illustrazioni; icone funzionali e favicon SVG distinte dai media decorativi |
+| DEC-36 | Migliorare UI/UX secondo le dieci euristiche di Nielsen mantenendo Open | Stati verificati, validazione sul campo, controllo del logout, aiuto e riscontri sui salvataggi; [piano UX](piani/UX_NIELSEN.md) |
+| DEC-37 | Leggere le fonti motion fornite, conservarne i punti importanti e applicare il movimento dove utile | [Guida motion](design/MOTION_E_MICROINTERAZIONI.md), effetti brevi e opzionali, senza immagini né attese artificiali; le animazioni non decidono esito, consenso o sincronizzazione |
 
 La generazione usa solo contenuti e metodi pertinenti all'ambito confermato. Il diario è uno strumento di registrazione; non deve classificare condizioni mediche o formulare diagnosi dalle misure.
 

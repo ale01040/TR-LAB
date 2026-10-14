@@ -5,7 +5,7 @@ import { useCatalog } from '../data/use-catalog';
 import { useApp } from '../components/AppProvider';
 import { PrivateExerciseForm } from '../components/PrivateExerciseForm';
 import { EquipmentPanel } from '../components/EquipmentPanel';
-import { Dialog, errorMessage } from '../components/Shared';
+import { counted, Dialog, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
 const equipmentLabels = {
   barbell: 'Bilanciere',
@@ -100,7 +100,30 @@ export function LibraryPage() {
           </select>
         </label>
       </div>
-      <EquipmentPanel />
+      <div className={styles.actionStrip}>
+        <p className={styles.hint} role="status">
+          {counted(visible.length, 'esercizio trovato', 'esercizi trovati')}
+        </p>
+        {(search || equipment !== 'all' || scope !== 'all') && (
+          <button
+            type="button"
+            className={styles.secondary}
+            onClick={() => {
+              setSearch('');
+              setEquipment('all');
+              setScope('all');
+            }}
+          >
+            Azzera i filtri
+          </button>
+        )}
+      </div>
+      {!visible.length && (
+        <p>
+          Nessun esercizio corrisponde ai filtri. Cambia la ricerca oppure azzera i filtri per
+          vedere il catalogo.
+        </p>
+      )}
       <div className={styles.libraryGrid}>
         {visible.map((e, i) => (
           <button className={styles.libraryCard} key={e.id} onClick={() => setSelected(e.id)}>
@@ -119,9 +142,7 @@ export function LibraryPage() {
           </button>
         ))}
       </div>
-      {!visible.length && (
-        <p className={styles.hint}>Nessun esercizio corrisponde a questi filtri.</p>
-      )}
+      <EquipmentPanel />
       {exercise && (
         <Dialog title={exercise.name} close={() => setSelected('')}>
           <span className={styles.pill}>{equipmentLabels[exercise.equipment]}</span>
@@ -191,7 +212,7 @@ export function LibraryPage() {
                       })
                         .then(() => {
                           setSelected('');
-                          notify('Esercizio archiviato sul dispositivo.');
+                          notify('Esercizio archiviato sul dispositivo.', 'success');
                         })
                         .catch((e) => notify(errorMessage(e)));
                     }}
@@ -213,7 +234,7 @@ export function LibraryPage() {
             {...form}
             done={() => {
               setForm(null);
-              notify('Esercizio personale salvato sul dispositivo.');
+              notify('Esercizio personale salvato sul dispositivo.', 'success');
             }}
           />
         </Dialog>

@@ -115,3 +115,19 @@ Specifiche e ticket: [piano Open](../piani/REDESIGN_OPEN.md), RF-16/18, ADR-11/1
 | QA-DES-02 | Layout e accessibilità delle cinque rotte | Zero overflow nelle larghezze provate, niente immagini/video/Canvas o sfondi URL; nessuna violazione axe serious/critical |
 | QA-DES-03 | Excel, approvazione, calendario, diario offline | Consenso esplicito conservato, RIR zero/virgola e risultati persistiti; input almeno 44 px nelle larghezze provate |
 | QA-DES-04 | Contrasto, stampa e fedeltà cromatica | Token leggibili, stampa chiara; report delle quattro palette integrali, FAIL fotografici dichiarati senza falsare soglie |
+
+## 9. Nielsen e motion — incremento del 14 ottobre
+
+[Piano UX](../piani/UX_NIELSEN.md), [motion/fonti](../design/MOTION_E_MICROINTERAZIONI.md), [esiti reali](UX_NIELSEN_2026_10_14.md). RF account/dati/diario e RF-16/18, ADR-11/12; i casi non chiudono i gate hardware o cloud di altre funzioni.
+
+| ID | Caso | Atteso |
+| --- | --- | --- |
+| QA-NIEL-01 | Requisiti, mismatch e maggiore età; form invalido al tocco | Nessuna richiesta, errori associati, focus utile, nome del campo stabile e pulsante fermo al blur |
+| QA-NIEL-02 | Accesso lento/fallito/200 senza sessione | Un invio, campi conservati in errore, successo solo dopo verifica, provider indisponibile non mostrato |
+| QA-NIEL-03 | Uscita annullata, remota fallita, intento non scrivibile | Nessuna perdita, account conservato se non persiste l'intento; revoca pendente distinta dalla riuscita |
+| QA-NIEL-04 | Cache account fallita e sync fallita | Accesso valido distinto dalla memoria offline; warning persistente e nessuna falsa sincronizzazione |
+| QA-NIEL-05 | Serie/fine seduta lente o fallite, misure/target | Invio singolo, edit/chiusura bloccati, note conservate, esito locale e stato dirty riconoscibili |
+| QA-NIEL-06 | Toast, filtri e guida offline | Success scade con pause, errori persistono, focus/annunci corretti, reset filtri e ricerca guida disponibili |
+| QA-MOT-01 | Motion app/OS, cambio a pagina aperta e reload | Basta una preferenza ridotta per togliere gli effetti; testo/funzioni invariati, preferenza persistente |
+| QA-MOT-02 | Effetti durante dialogo, navigazione e logout | Contenuto reale, niente copia account precedente, focus e azioni non attendono fine movimento |
+| QA-MOT-03 | Performance e comfort sui dispositivi fisici | Profili e osservazioni con browser/OS dichiarati; nessuna garanzia di FPS o comfort derivata da screenshot/axe |

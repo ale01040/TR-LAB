@@ -182,7 +182,11 @@ export function PrivateExerciseForm({
         )}
         {error && <p role="alert">{error}</p>}
         <button className={styles.primary} disabled={busy}>
-          {stage ? 'Aggiungi questa variante all’importazione' : 'Salva il mio esercizio'}
+          {busy
+            ? 'Salvo l’esercizio…'
+            : stage
+              ? 'Aggiungi questa variante all’importazione'
+              : 'Salva il mio esercizio'}
         </button>
       </fieldset>
     </form>

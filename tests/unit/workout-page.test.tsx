@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -22,6 +22,18 @@ beforeEach(() => {
   app.save.mockResolvedValue(undefined);
   db.metadata.mockResolvedValue(null);
   db.setMetadata.mockResolvedValue(undefined);
+  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+    configurable: true,
+    value: function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    },
+  });
+  Object.defineProperty(HTMLDialogElement.prototype, 'close', {
+    configurable: true,
+    value: function (this: HTMLDialogElement) {
+      this.removeAttribute('open');
+    },
+  });
 });
 function renderWorkout() {
   const p = structuredClone(program());
@@ -89,4 +101,60 @@ it('chiude il timer anche se il suo stato non può essere salvato, avvisando del
   );
   expect(screen.queryByRole('timer')).toBeNull();
   expect(db.setMetadata).toHaveBeenCalledWith(expect.stringMatching(/^device:timer:/), '0');
+});
+it('conclusione lenta: blocca modifiche e chiusura, conserva le note dopo un errore e consente di riprovare', async () => {
+  let rejectSave: (reason: Error) => void = () => {
+    throw new Error('Salvataggio differito non inizializzato');
+  };
+  const pendingSave = new Promise<void>((_resolve, reject) => {
+    rejectSave = reject;
+  });
+  app.save.mockReturnValueOnce(pendingSave);
+  const user = renderWorkout();
+  await user.click(screen.getByRole('button', { name: 'Concludi seduta' }));
+  const dialog = screen.getByRole('dialog', { name: 'Concludi questa seduta' });
+  const notes = within(dialog).getByLabelText('Note finali') as HTMLTextAreaElement;
+  await user.type(notes, 'Seduta interrotta, riprendo domani.');
+  await user.dblClick(within(dialog).getByRole('button', { name: 'Confermo la conclusione' }));
+  expect(app.save).toHaveBeenCalledTimes(1);
+  expect(app.save).toHaveBeenLastCalledWith(
+    'FinishWorkout',
+    expect.objectContaining({
+      kind: 'session',
+      data: expect.objectContaining({
+        status: 'completed',
+        notes: 'Seduta interrotta, riprendo domani.',
+      }),
+    }),
+  );
+  expect(notes.disabled).toBe(true);
+  expect(within(dialog).getByRole('button', { name: 'Chiudi' }).hasAttribute('disabled')).toBe(
+    true,
+  );
+  await user.type(notes, ' Questa modifica non deve entrare.');
+  await user.click(within(dialog).getByRole('button', { name: 'Chiudi' }));
+  const cancel = new Event('cancel', { cancelable: true });
+  fireEvent(dialog, cancel);
+  expect(cancel.defaultPrevented).toBe(true);
+  expect(screen.getByRole('dialog')).toBe(dialog);
+  expect(notes.value).toBe('Seduta interrotta, riprendo domani.');
+  expect(app.notify).not.toHaveBeenCalled();
+  await act(async () => {
+    rejectSave(new Error('Salvataggio locale non disponibile'));
+  });
+  expect((await within(dialog).findByRole('alert')).textContent).toContain(
+    'Salvataggio locale non disponibile',
+  );
+  expect(notes.disabled).toBe(false);
+  expect(notes.value).toBe('Seduta interrotta, riprendo domani.');
+  expect(app.save).toHaveBeenCalledTimes(1);
+  expect(app.notify).not.toHaveBeenCalled();
+  await user.click(within(dialog).getByRole('button', { name: 'Confermo la conclusione' }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  expect(app.save).toHaveBeenCalledTimes(2);
+  expect(app.save.mock.lastCall?.[1].data.notes).toBe('Seduta interrotta, riprendo domani.');
+  expect(app.notify).toHaveBeenCalledWith(
+    'Seduta conclusa. I risultati e i target originali sono conservati.',
+    'success',
+  );
 });

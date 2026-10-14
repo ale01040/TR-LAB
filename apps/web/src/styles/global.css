@@ -32,6 +32,8 @@
   --radius-pill: 999rem;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --duration: 180ms;
+  --duration-fast: 120ms;
+  --duration-enter: 160ms;
   font-family: var(--font-ui);
   font-synthesis: none;
   font-optical-sizing: auto;
@@ -120,7 +122,14 @@ button {
   transition:
     background-color var(--duration) var(--ease),
     border-color var(--duration) var(--ease),
-    color var(--duration) var(--ease);
+    color var(--duration) var(--ease),
+    transform var(--duration-fast) var(--ease);
+}
+/* Il riscontro al tocco non ritarda il click né il commit del dato. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) button:not(:disabled):active {
+    transform: translateY(1px);
+  }
 }
 button:disabled {
   opacity: 0.55;
@@ -164,6 +173,11 @@ input[type='checkbox'] {
 }
 input::placeholder {
   color: var(--muted);
+}
+input[aria-invalid='true'],
+select[aria-invalid='true'],
+textarea[aria-invalid='true'] {
+  border-color: var(--error);
 }
 input[inputmode='decimal'],
 input[inputmode='numeric'],
@@ -219,9 +233,33 @@ fieldset {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+:root[data-motion='reduce'] *,
+:root[data-motion='reduce'] *::before,
+:root[data-motion='reduce'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+/* Appare il nuovo contenuto reale; nessuna copia della vista/account precedente. */
+@keyframes contentEnter {
+  from {
+    opacity: 0.94;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) main h1,
+  :root:not([data-motion='reduce']) details[open] > :not(summary),
+  :root:not([data-motion='reduce']) [role='alert'],
+  :root:not([data-motion='reduce']) dialog[open] {
+    animation: contentEnter var(--duration-enter) var(--ease);
   }
 }
 @media print {

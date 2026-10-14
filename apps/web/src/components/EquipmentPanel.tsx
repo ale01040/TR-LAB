@@ -77,7 +77,7 @@ export function EquipmentPanel() {
         data,
       });
       setEditing(null);
-      notify('Attrezzatura salvata sul dispositivo.');
+      notify('Attrezzatura salvata sul dispositivo.', 'success');
     } catch (e) {
       setError(errorMessage(e));
     } finally {
@@ -102,6 +102,7 @@ export function EquipmentPanel() {
       {editing && (
         <Dialog
           title="Attrezzatura disponibile"
+          busy={busy}
           close={() => {
             if (!busy) setEditing(null);
           }}
@@ -229,7 +230,7 @@ export function EquipmentPanel() {
               </button>
               {error && <p role="alert">{error}</p>}
               <button className={styles.primary} disabled={busy}>
-                Salva il profilo
+                {busy ? 'Salvo il profilo…' : 'Salva il profilo'}
               </button>
             </fieldset>
           </form>

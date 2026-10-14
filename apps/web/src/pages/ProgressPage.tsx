@@ -1,10 +1,11 @@
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { Check, Plus, Ruler, Scale } from 'lucide-react';
 import { measurementSchema, nutritionSchema, type Measurement } from '@tr-lab/contracts';
 import { parseDecimal, workoutVolume, journalData } from '@tr-lab/domain';
 import { useApp } from '../components/AppProvider';
 import { counted, errorMessage } from '../components/Shared';
 import styles from '../styles/App.module.css';
+import { Feedback } from '../components/Feedback';
 
 const labels = { weight: 'Peso', waist: 'Vita', chest: 'Torace', arm: 'Braccio', thigh: 'Coscia' };
 const today = () => new Date().toLocaleDateString('sv-SE');
@@ -36,7 +37,12 @@ export function ProgressPage() {
   const [date, setDate] = useState(today());
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [operation, setOperation] = useState<'measurement' | 'nutrition' | null>(null);
+  const busy = operation !== null;
+  const saving = useRef(false);
+  const [measurementFeedback, setMeasurementFeedback] = useState('');
+  const [nutritionFeedback, setNutritionFeedback] = useState('');
+  const [savedNutrition, setSavedNutrition] = useState('');
   const [calories, setCalories] = useState('');
   const [protein, setProtein] = useState('');
   const [fat, setFat] = useState('');
@@ -45,11 +51,17 @@ export function ProgressPage() {
   const [nutritionError, setNutritionError] = useState('');
   async function addMeasurement(event: FormEvent) {
     event.preventDefault();
-    setBusy(true);
+    if (saving.current) return;
+    saving.current = true;
+    setOperation('measurement');
+    setMeasurementFeedback('');
     setError('');
     try {
       const quantity = parseDecimal(value);
-      if (quantity === null) throw new Error('Inserisci un numero valido.');
+      if (quantity === null || quantity <= 0)
+        throw new Error(
+          `${labels[kind]}: inserisci un numero maggiore di zero in ${kind === 'weight' ? 'kg' : 'cm'}.`,
+        );
       const m = measurementSchema.parse({
         id: crypto.randomUUID(),
         date,
@@ -61,17 +73,24 @@ export function ProgressPage() {
       });
       await save('SaveMeasurement', { id: m.id, kind: 'measurement', revision: '0', data: m });
       setValue('');
-      notify('Misurazione salvata.');
+      setMeasurementFeedback(
+        `${labels[kind]} ${quantity.toLocaleString('it-IT')} ${kind === 'weight' ? 'kg' : 'cm'} del ${new Date(date + 'T12:00:00').toLocaleDateString('it-IT')}: salvato sul dispositivo.`,
+      );
+      notify('Misura salvata sul dispositivo.', 'success');
     } catch (error) {
       setError(errorMessage(error));
     } finally {
-      setBusy(false);
+      saving.current = false;
+      setOperation(null);
     }
   }
   async function confirmNutrition(event: FormEvent) {
     event.preventDefault();
     setNutritionError('');
-    setBusy(true);
+    if (saving.current || nutritionUnchanged) return;
+    saving.current = true;
+    setOperation('nutrition');
+    setNutritionFeedback('');
     try {
       const n = nutritionSchema.parse({
         id: crypto.randomUUID(),
@@ -84,17 +103,32 @@ export function ProgressPage() {
         confirmedAt: new Date().toISOString(),
       });
       await save('SaveNutritionTarget', { id: n.id, kind: 'nutrition', revision: '0', data: n });
-      notify('Target confermati con la decorrenza indicata.');
+      setNutritionFeedback(
+        `Obiettivi confermati e salvati sul dispositivo: ${n.calories} kcal dal ${new Date(n.effectiveFrom + 'T12:00:00').toLocaleDateString('it-IT')}.`,
+      );
+      notify('Obiettivi nutrizionali confermati e salvati sul dispositivo.', 'success');
+      setSavedNutrition(JSON.stringify([n.calories, n.protein, n.fat, n.carbs, n.effectiveFrom]));
     } catch (error) {
       setNutritionError(errorMessage(error));
     } finally {
-      setBusy(false);
+      saving.current = false;
+      setOperation(null);
     }
   }
   const energy =
     (parseDecimal(protein) ?? 0) * 4 +
     (parseDecimal(fat) ?? 0) * 9 +
     (parseDecimal(carbs) ?? 0) * 4;
+  const nutritionUnchanged =
+    !!savedNutrition &&
+    savedNutrition ===
+      JSON.stringify([
+        parseDecimal(calories),
+        parseDecimal(protein),
+        parseDecimal(fat),
+        parseDecimal(carbs),
+        from,
+      ]);
   return (
     <>
       <div className={styles.pageHeading}>
@@ -157,64 +191,84 @@ export function ProgressPage() {
             <h2>Aggiungi una misura</h2>
             <Ruler size={22} aria-hidden="true" />
           </div>
-          <form onSubmit={(e) => void addMeasurement(e)}>
-            <div className={styles.formGrid}>
-              <label>
-                Tipo
-                <select
-                  value={kind}
-                  onChange={(e) => {
-                    setKind(e.target.value as Measurement['kind']);
-                    setSide('none');
-                  }}
-                >
-                  {Object.entries(labels).map(([key, label]) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Data
-                <input
-                  type="date"
-                  required
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              </label>
-              <label>
-                Valore ({kind === 'weight' ? 'kg' : 'cm'})
-                <input
-                  required
-                  inputMode="decimal"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                />
-              </label>
-              <label>
-                Lato
-                <select
-                  value={side}
-                  onChange={(e) => setSide(e.target.value as Measurement['side'])}
-                  disabled={kind === 'weight' || kind === 'waist' || kind === 'chest'}
-                >
-                  <option value="none">Non applicabile</option>
-                  <option value="left">Sinistro</option>
-                  <option value="right">Destro</option>
-                </select>
-              </label>
-            </div>
-            {error && (
-              <p role="alert" className={styles.error}>
-                {error}
-              </p>
-            )}
-            <button type="submit" disabled={busy} className={styles.primary}>
-              <Plus size={18} aria-hidden="true" />
-              Salva misurazione
-            </button>
+          <form onSubmit={(e) => void addMeasurement(e)} aria-busy={operation === 'measurement'}>
+            <fieldset disabled={busy} className={styles.editorFields}>
+              <legend className={styles.srOnly}>Dati della misurazione</legend>
+              <div className={styles.formGrid}>
+                <label>
+                  Tipo
+                  <select
+                    value={kind}
+                    onChange={(e) => {
+                      setKind(e.target.value as Measurement['kind']);
+                      setMeasurementFeedback('');
+                      setSide('none');
+                    }}
+                  >
+                    {Object.entries(labels).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Data
+                  <input
+                    type="date"
+                    required
+                    value={date}
+                    onChange={(e) => {
+                      setDate(e.target.value);
+                      setMeasurementFeedback('');
+                    }}
+                  />
+                </label>
+                <label>
+                  Valore ({kind === 'weight' ? 'kg' : 'cm'})
+                  <input
+                    required
+                    inputMode="decimal"
+                    value={value}
+                    onChange={(e) => {
+                      setValue(e.target.value);
+                      setMeasurementFeedback('');
+                      setError('');
+                    }}
+                  />
+                </label>
+                <label>
+                  Lato
+                  <select
+                    value={side}
+                    onChange={(e) => {
+                      setSide(e.target.value as Measurement['side']);
+                      setMeasurementFeedback('');
+                    }}
+                    disabled={kind === 'weight' || kind === 'waist' || kind === 'chest'}
+                  >
+                    <option value="none">Non applicabile</option>
+                    <option value="left">Sinistro</option>
+                    <option value="right">Destro</option>
+                  </select>
+                </label>
+              </div>
+              {error && (
+                <p role="alert" className={styles.error}>
+                  {error}
+                </p>
+              )}
+              {measurementFeedback && (
+                <Feedback tone="success" title="Misurazione salvata">
+                  {measurementFeedback} Controlla lo stato della sincronizzazione per gli altri
+                  dispositivi.
+                </Feedback>
+              )}
+              <button type="submit" disabled={busy} className={styles.primary}>
+                <Plus size={18} aria-hidden="true" />
+                {operation === 'measurement' ? 'Salvo la misurazione…' : 'Salva misurazione'}
+              </button>
+            </fieldset>
           </form>
         </section>
       </div>
@@ -254,46 +308,70 @@ export function ProgressPage() {
         )}
         <details>
           <summary>Imposta nuovi obiettivi</summary>
-          <form onSubmit={(e) => void confirmNutrition(e)}>
-            <div className={styles.formGrid}>
-              {[
-                { label: 'Calorie (kcal)', value: calories, set: setCalories },
-                { label: 'Proteine (g)', value: protein, set: setProtein },
-                { label: 'Grassi (g)', value: fat, set: setFat },
-                { label: 'Carboidrati (g)', value: carbs, set: setCarbs },
-              ].map((field) => (
-                <label key={field.label}>
-                  {field.label}
+          <form onSubmit={(e) => void confirmNutrition(e)} aria-busy={operation === 'nutrition'}>
+            <fieldset disabled={busy} className={styles.editorFields}>
+              <legend className={styles.srOnly}>Obiettivi nutrizionali manuali</legend>
+              <div className={styles.formGrid}>
+                {[
+                  { label: 'Calorie (kcal)', value: calories, set: setCalories },
+                  { label: 'Proteine (g)', value: protein, set: setProtein },
+                  { label: 'Grassi (g)', value: fat, set: setFat },
+                  { label: 'Carboidrati (g)', value: carbs, set: setCarbs },
+                ].map((field) => (
+                  <label key={field.label}>
+                    {field.label}
+                    <input
+                      required
+                      inputMode="decimal"
+                      value={field.value}
+                      onChange={(e) => {
+                        field.set(e.target.value);
+                        setNutritionFeedback('');
+                        setNutritionError('');
+                      }}
+                    />
+                  </label>
+                ))}
+                <label>
+                  Decorrenza
                   <input
+                    type="date"
                     required
-                    inputMode="decimal"
-                    value={field.value}
-                    onChange={(e) => field.set(e.target.value)}
+                    value={from}
+                    onChange={(e) => {
+                      setFrom(e.target.value);
+                      setNutritionFeedback('');
+                    }}
                   />
                 </label>
-              ))}
-              <label>
-                Decorrenza
-                <input
-                  type="date"
-                  required
-                  value={from}
-                  onChange={(e) => setFrom(e.target.value)}
-                />
-              </label>
-            </div>
-            <p className={styles.hint}>
-              Energia dei macro: {energy.toLocaleString('it-IT')} kcal (4 / 9 / 4). Sono ammessi
-              arrotondamenti entro il 2%, con minimo 20 kcal.
-            </p>
-            {nutritionError && (
-              <p role="alert" className={styles.error}>
-                {nutritionError}
+              </div>
+              <p className={styles.hint}>
+                Energia dei macro: {energy.toLocaleString('it-IT')} kcal (4 / 9 / 4). Sono ammessi
+                arrotondamenti entro il 2%, con minimo 20 kcal.
               </p>
-            )}
-            <button className={styles.primary} disabled={busy} type="submit">
-              Confermo questi target <Check size={18} aria-hidden="true" />
-            </button>
+              {nutritionError && (
+                <p role="alert" className={styles.error}>
+                  {nutritionError}
+                </p>
+              )}
+              {nutritionFeedback && (
+                <Feedback tone="success" title="Obiettivi salvati">
+                  {nutritionFeedback} I target precedenti restano nello storico.
+                </Feedback>
+              )}
+              <button
+                className={styles.primary}
+                disabled={busy || nutritionUnchanged}
+                type="submit"
+              >
+                {operation === 'nutrition'
+                  ? 'Conferma in corso…'
+                  : nutritionUnchanged
+                    ? 'Target già confermati'
+                    : 'Confermo questi target'}{' '}
+                <Check size={18} aria-hidden="true" />
+              </button>
+            </fieldset>
           </form>
         </details>
         {nutrition

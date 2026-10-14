@@ -239,13 +239,13 @@
     "motion": {
       "easing": "cubic-bezier(0.2,0.7,0.2,1)",
       "duration_scale": {
-        "micro": "180ms",
+        "micro": "120ms pressione; 160ms ingresso; 180ms colore",
         "normal": "180ms",
         "macro": "0ms; nessuna scena animata"
       },
-      "entrance_pattern": "Contenuto immediato; nessuna animazione di ingresso",
+      "entrance_pattern": "Contenuto immediato; 160ms opacity .94-1 su titolo/dialogo/errori/disclosure; toast success 160ms opacity e piccolo slide, nessuna sequenza obbligatoria",
       "exit_pattern": "Chiusura immediata, focus restituito dal dialogo",
-      "philosophy": "minimal functional; reduced-motion elimina transizioni non necessarie"
+      "philosophy": "Minimal functional DEC-37; preferenza app o sistema elimina gli effetti opzionali; nessuna attesa per commit, snapshot account o dato simulato"
     },
     "components": {
       "button_style": "CTA avorio su scuro; secondaria trasparente con bordo; pill 3rem min-height; etichette esplicite",

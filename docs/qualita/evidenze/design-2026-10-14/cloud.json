@@ -1,0 +1,110 @@
+{
+  "origin": "https://tr-6gs3n8np2-pere01040.vercel.app",
+  "commit": "43e99b134774019b2976b1c493369dde72722e13",
+  "checkedAt": "2026-10-14T10:40:27.786Z",
+  "results": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ready",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/sync/bootstrap",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/assets/InterVariable-DiVDrmQJ.woff2",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/sync/bootstrap",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/sync/bootstrap",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/session",
+      "status": 200,
+      "passed": true
+    }
+  ],
+  "configured": true,
+  "ready": true,
+  "fontIdentical": true,
+  "stagingAccountsVerified": 2,
+  "scope": "HTTP, asset font, login/session/bootstrap/logout dei due account sintetici; nessuna nuova scrittura dati allenamento",
+  "offlineCloudTested": false,
+  "phoneTested": false
+}

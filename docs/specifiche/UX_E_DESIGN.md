@@ -1,6 +1,6 @@
 # Esperienza d'uso e specifica dell'interfaccia
 
-Versione 1.3 · 14 ottobre 2026. Specifica del comportamento. Nome TR LAB e direzione visuale confermati in DEC-32–35: Open, Inter locale, scuro predefinito/chiaro opzionale, righe compatte e nessuna immagine. [Piano del redesign](../piani/REDESIGN_OPEN.md) e [collaudo](../qualita/REDESIGN_2026_10_14.md). Validazione sui telefoni reali ancora da completare.
+Versione 1.4 · 14 ottobre 2026. Specifica del comportamento. DEC-32–37: Open, Inter locale, scuro predefinito/chiaro opzionale, righe compatte, nessuna immagine, feedback secondo Nielsen e motion funzionale. [Piano del redesign](../piani/REDESIGN_OPEN.md), [piano UX](../piani/UX_NIELSEN.md), [motion](../design/MOTION_E_MICROINTERAZIONI.md) e [collaudo dell'incremento](../qualita/UX_NIELSEN_2026_10_14.md). Validazione sui telefoni reali ancora da completare.
 
 ## 1. Priorità di design
 
@@ -70,4 +70,14 @@ Output F1: mappa navigazione, flussi, componenti, frame mobile/desktop, temi e s
 
 L'editor delle bozze ha target individuali in «Serie e target»: carico, ripetizioni min/max, RIR, recupero, tipo e lato. Modificare un valore riguarda solo quella serie. Copia/riordino di giornate e serie conservano gli originali; le nuove copie hanno ID distinti. L'ordine della seduta raggruppa riscaldamento, lavoro ed extra. La selezione della giornata segue l'ID, non la posizione.
 
-Il riepilogo consente «Anteprima settimana» con gli stessi target risolti per la seduta, senza mutare il programma. I campi sono bloccati durante il salvataggio. Specifica, limiti e prove: [editor delle schede](EDITOR_SCHEDE.md). Gli esercizi a tempo, calendario/rinvii e catalogo privato restano fuori da questa consegna; nessuna modifica automatica o approvazione implicita.
+Il riepilogo consente «Anteprima settimana» con gli stessi target risolti per la seduta, senza mutare il programma. I campi sono bloccati durante il salvataggio. Specifica, limiti e prove: [editor delle schede](EDITOR_SCHEDE.md). Gli esercizi a tempo restano fuori da questa consegna. Calendario/rinvii e catalogo privato sono implementati nell'[incremento successivo](../qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), con propri gate cloud; nessuna modifica automatica o approvazione implicita.
+
+## 9. Accesso, feedback e movimento
+
+L'accesso è completato quando il server verifica la sessione. Requisiti di formato, due password coincidenti, richiesta ricevuta e consegna email sono stati distinti. Il form conserva i valori in errore, blocca richieste doppie, mette a fuoco il primo campo invalido e mantiene stabile lo spazio dei messaggi: nessun pulsante deve sfuggire al tocco quando un campo perde focus. La cache locale non scrivibile produce un avviso distinto da un accesso valido.
+
+Logout annullabile e conservazione locale esplicita; se manca la rete, la revoca remota resta pendente. Google non può aggirare questa guardia. Dialoghi e campi durante commit non si chiudono né cambiano, anche nelle note finali della seduta. Input falliti restano disponibili per correzione e nuovo invio.
+
+Feedback globale fuori dal contenuto ricreato per account. Conferme ripetibili: toast success di cinque secondi, timer sospeso su puntatore, focus e scheda nascosta, annuncio separato stabile e cleanup. Errori, avvisi e informazioni critiche persistono; salvataggio locale e sincronizzazione remota sono sempre distinti. Il risultato resta riconoscibile anche dopo la scadenza della notifica.
+
+Motion secondo la guida collegata: CSS locale breve, nessuna immagine o dipendenza nuova, nessun ritardo nell'azione o simulazione di progresso. «Riduci animazioni» nel Profilo è persistente; `prefers-reduced-motion` prevale anche se l'app segue il dispositivo. Nessuna animazione di uscita o snapshot conserva la vista dell'account precedente. Le conferme esplicite del dominio non dipendono dai tempi degli effetti.

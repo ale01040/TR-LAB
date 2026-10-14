@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { Pool } from 'pg';
 import { z } from 'zod';
-import { credentialsSchema } from '@tr-lab/contracts';
+import { authPasswordRequirements, credentialsSchema } from '@tr-lab/contracts';
 import type { Config } from './config.js';
 import { decrypt, encrypt, hash, opaque } from './crypto.js';
 import { databasePoolConfig } from './database.js';
@@ -245,14 +245,14 @@ export class AuthService {
   }
 }
 function passwordPolicy(password: string) {
-  if (password.length < 12 || Buffer.byteLength(password, 'utf8') > 72)
-    throw new HttpError(400, 'INVALID_PASSWORD');
+  if (!authPasswordRequirements(password).valid) throw new HttpError(400, 'INVALID_PASSWORD');
 }
 export function authRoutes(app: FastifyInstance, auth: AuthService) {
   app.get('/api/auth/session', async (request) => {
     const result = await auth.resolve(request);
     return {
       configured: !!auth.pool,
+      providers: { google: !!auth.pool && auth.config.GOOGLE_AUTH_ENABLED },
       user: result
         ? {
             id: result.row.user_id,
@@ -296,9 +296,10 @@ export function authRoutes(app: FastifyInstance, auth: AuthService) {
       .strict()
       .parse(request.body);
     const flow = await auth.flow('recover', reply);
-    await auth
+    const result = await auth
       .client(undefined, flow.storage)
       .auth.resetPasswordForEmail(input.email, { redirectTo: flow.redirect });
+    if (result.error) throw new HttpError(503, 'RECOVERY_UNAVAILABLE');
     return {
       message:
         'Se l’indirizzo è registrato, riceverai le istruzioni via email. Apri il link sullo stesso browser.',

@@ -1,93 +1,127 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { ArrowDownToLine, ArrowRight, LogOut, Moon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowDownToLine, LogOut, Moon, Sun } from 'lucide-react';
 import { useApp } from '../components/AppProvider';
 import { emergencyExport, metadata, setMetadata } from '../data/database';
-import { api, ApiError } from '../data/sync';
-import { counted, downloadJson, errorMessage } from '../components/Shared';
+import { counted, Dialog, downloadJson, errorMessage } from '../components/Shared';
+import { AuthForm } from '../components/AuthForm';
+import { Feedback } from '../components/Feedback';
 import styles from '../styles/App.module.css';
 import { RecoveryPanel } from '../components/RecoveryPanel';
 
-const messages: Record<string, string> = {
-  NOT_CONFIGURED:
-    'Accesso non disponibile in questa anteprima. Schede e diario restano sul dispositivo.',
-  INVALID_CREDENTIALS: 'Accesso non riuscito. Controlla email e password.',
-  GOOGLE_NOT_CONFIGURED: 'Accesso Google non ancora configurato. Usa email e password.',
-  RATE_LIMITED: 'Troppi tentativi. Attendi prima di riprovare.',
-  INVALID_PASSWORD: 'Usa una passphrase di almeno 12 caratteri, entro 72 byte UTF-8.',
-  CSRF_REJECTED: 'La sessione è cambiata. Ricarica la pagina e riprova.',
-};
 export function ProfilePage() {
-  const { account, user, configured, online, pending, blocked, logout, refreshAuth, notify, sync } =
-    useApp();
-  const [mode, setMode] = useState<'login' | 'signup' | 'recover'>('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [adults, setAdults] = useState(false);
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
+  const {
+    account,
+    user,
+    configured,
+    online,
+    pending,
+    blocked,
+    logout,
+    notify,
+    sync,
+    syncing,
+    loggingOut,
+    authVerified,
+    accountCacheError,
+    authServiceState,
+    refreshAuth,
+  } = useApp();
+  const [exitDialog, setExitDialog] = useState(false);
   const [light, setLight] = useState(false);
+  const [themeBusy, setThemeBusy] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(
+    document.documentElement.dataset.motion === 'reduce',
+  );
+  const [motionBusy, setMotionBusy] = useState(false);
+  const [exportBusy, setExportBusy] = useState(false);
+  const [retryBusy, setRetryBusy] = useState(false);
   const [lastSync, setLastSync] = useState<string | null>(null);
   useEffect(() => {
-    void metadata('theme').then((theme) => {
-      const value = theme === 'light';
-      setLight(value);
-      document.documentElement.dataset.theme = value ? 'light' : 'dark';
-    });
-  }, []);
-  useEffect(() => {
-    void metadata(`${account}:last-sync`).then(setLastSync);
-  }, [account, pending]);
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    setBusy(true);
-    setError('');
-    try {
-      if (await metadata('logout-pending')) {
-        await refreshAuth();
-        if (await metadata('logout-pending'))
-          throw new Error('Completa l’uscita precedente prima di accedere.');
-      }
-      const result = await api<{ message: string }>(
-        user?.recovery ? '/auth/password' : `/auth/${mode}`,
-        'POST',
-        user?.recovery
-          ? { password }
-          : mode === 'recover'
-            ? { email }
-            : { email, password, ...(mode === 'signup' ? { adults } : {}) },
+    let cancelled = false;
+    void Promise.all([metadata('theme'), metadata('motion')])
+      .then(([theme, motion]) => {
+        if (cancelled) return;
+        setLight(theme === 'light');
+        setReduceMotion(motion === 'reduce');
+      })
+      .catch(() =>
+        notify(
+          'Non riesco a leggere le preferenze salvate. Puoi riprovare a scegliere il tema.',
+          'warning',
+        ),
       );
-      setPassword('');
-      notify(result.message);
-      await refreshAuth();
-    } catch (error) {
-      setError(
-        error instanceof ApiError
-          ? (messages[error.code] ?? 'Operazione non riuscita. Riprova tra poco.')
-          : errorMessage(error),
+    return () => {
+      cancelled = true;
+    };
+  }, [notify]);
+  useEffect(() => {
+    let cancelled = false;
+    void metadata(account + ':last-sync')
+      .then((value) => {
+        if (!cancelled) setLastSync(value);
+      })
+      .catch(() => {
+        if (!cancelled) setLastSync(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [account, pending, syncing]);
+  async function changeTheme() {
+    if (themeBusy) return;
+    setThemeBusy(true);
+    try {
+      const next = !light;
+      await setMetadata('theme', next ? 'light' : 'dark');
+      setLight(next);
+      document.documentElement.dataset.theme = next ? 'light' : 'dark';
+      notify(next ? 'Tema chiaro salvato.' : 'Tema scuro salvato.', 'success');
+    } catch {
+      notify(
+        'Non è stato possibile salvare la preferenza. Il tema precedente è ancora attivo.',
+        'error',
       );
     } finally {
-      setBusy(false);
-    }
-  }
-  async function google() {
-    setBusy(true);
-    try {
-      const result = await api<{ url: string }>('/auth/google', 'POST', {});
-      window.location.assign(result.url);
-    } catch (error) {
-      setError(
-        error instanceof ApiError
-          ? (messages[error.code] ?? 'Accesso Google non riuscito. Riprova tra poco.')
-          : errorMessage(error),
-      );
-      setBusy(false);
+      setThemeBusy(false);
     }
   }
   async function exportLocal() {
+    if (exportBusy) return;
+    setExportBusy(true);
     try {
       downloadJson(await emergencyExport(account), 'TR-LAB-recupero-locale.json');
+      notify(
+        'Backup preparato. Controlla il download del browser e conservalo in un posto sicuro.',
+        'success',
+      );
     } catch (error) {
-      notify(errorMessage(error));
+      notify(errorMessage(error), 'error');
+    } finally {
+      setExportBusy(false);
+    }
+  }
+  async function changeMotion() {
+    if (motionBusy) return;
+    setMotionBusy(true);
+    try {
+      const next = !reduceMotion;
+      await setMetadata('motion', next ? 'reduce' : 'system');
+      document.documentElement.dataset.motion = next ? 'reduce' : 'system';
+      setReduceMotion(next);
+      notify(
+        next
+          ? 'Animazioni ridotte su questo dispositivo.'
+          : 'Animazioni impostate secondo le preferenze del dispositivo.',
+        'success',
+      );
+    } catch {
+      notify(
+        'Non posso salvare la preferenza delle animazioni. L’impostazione precedente resta attiva.',
+        'error',
+      );
+    } finally {
+      setMotionBusy(false);
     }
   }
   const conflicts = user ? blocked : 0;
@@ -106,43 +140,27 @@ export function ProfilePage() {
             <h2>
               {user ? 'Account personale' : configured ? 'Accedi a TR LAB' : 'Modalità dispositivo'}
             </h2>
-            <span className={styles.badge}>{user ? 'Personale' : 'Modalità dispositivo'}</span>
+            <span className={styles.badge}>
+              {user
+                ? authVerified
+                  ? 'Accesso verificato'
+                  : 'Account sul dispositivo'
+                : configured
+                  ? 'Accesso da completare'
+                  : 'Modalità dispositivo'}
+            </span>
           </div>
           {user?.recovery ? (
-            <form onSubmit={(e) => void submit(e)}>
-              <p>
-                Hai aperto il recupero password. Scegli una nuova passphrase per riattivare il tuo
-                account.
-              </p>
-              <label>
-                Nuova password
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  minLength={12}
-                  maxLength={128}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </label>
-              <p className={styles.hint}>
-                Almeno 12 caratteri, entro 72 byte UTF-8. Le altre sessioni TR LAB saranno chiuse.
-              </p>
-              {error && (
-                <p className={styles.error} role="alert">
-                  {error}
-                </p>
-              )}
-              <button type="submit" className={styles.primary} disabled={busy || !online}>
-                {busy ? 'Attendi…' : 'Conferma la nuova password'}
-              </button>
-              <button type="button" onClick={() => void logout()}>
-                Annulla ed esci
-              </button>
-            </form>
+            <AuthForm recovery />
           ) : user ? (
             <>
+              {accountCacheError && (
+                <Feedback tone="warning" title="Memoria locale dell’account non aggiornata">
+                  La sessione sul server è verificata. Controlla lo spazio del browser prima di
+                  usare il diario offline: non posso memorizzare l’account per il prossimo avvio
+                  senza rete.
+                </Feedback>
+              )}
               <p>
                 <strong>{user.email}</strong>
               </p>
@@ -151,10 +169,18 @@ export function ProfilePage() {
                 una sessione valida sul server.
               </p>
               <div className={styles.actionStrip}>
-                <button className={styles.secondary} disabled={!online} onClick={() => void sync()}>
-                  Sincronizza adesso
+                <button
+                  className={styles.secondary}
+                  disabled={!online || syncing || loggingOut}
+                  onClick={() => void sync(true)}
+                >
+                  {syncing ? 'Sincronizzazione in corso…' : 'Sincronizza adesso'}
                 </button>
-                <button className={styles.danger} onClick={() => void logout()}>
+                <button
+                  className={styles.secondary}
+                  disabled={loggingOut || exportBusy}
+                  onClick={() => setExitDialog(true)}
+                >
                   <LogOut size={18} aria-hidden="true" />
                   Esci da questo dispositivo
                 </button>
@@ -168,6 +194,33 @@ export function ProfilePage() {
                 .
               </p>
             </>
+          ) : !configured && authServiceState === 'unreachable' ? (
+            <>
+              <p role="alert" className={styles.error}>
+                Il servizio account non risponde. I dati locali restano disponibili; questo non
+                significa che email o password siano sbagliate.
+              </p>
+              <button
+                type="button"
+                className={styles.secondary}
+                disabled={!online || retryBusy}
+                onClick={async () => {
+                  setRetryBusy(true);
+                  try {
+                    await refreshAuth();
+                  } catch {
+                    notify(
+                      'Il servizio account non è ancora raggiungibile. Riprova più tardi.',
+                      'warning',
+                    );
+                  } finally {
+                    setRetryBusy(false);
+                  }
+                }}
+              >
+                {retryBusy ? 'Verifico la connessione…' : 'Riprova la connessione'}
+              </button>
+            </>
           ) : !configured ? (
             <p className={styles.setupNote}>
               In questa anteprima puoi usare schede, diario e misure sul dispositivo. Login e
@@ -176,102 +229,7 @@ export function ProfilePage() {
               automaticamente tra telefono e PC.
             </p>
           ) : (
-            <>
-              <div className={styles.tabs} role="group" aria-label="Modalità di accesso">
-                <button
-                  className={mode === 'login' ? styles.activeTab : ''}
-                  onClick={() => setMode('login')}
-                >
-                  Accedi
-                </button>
-                <button
-                  className={mode === 'signup' ? styles.activeTab : ''}
-                  onClick={() => setMode('signup')}
-                >
-                  Registrati
-                </button>
-              </div>
-              <form onSubmit={(e) => void submit(e)}>
-                <label>
-                  Email
-                  <input
-                    required
-                    type="email"
-                    autoComplete="email"
-                    maxLength={254}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </label>
-                {mode !== 'recover' && (
-                  <label>
-                    Password
-                    <input
-                      type="password"
-                      required
-                      minLength={mode === 'signup' ? 12 : 1}
-                      maxLength={128}
-                      autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </label>
-                )}
-                {mode === 'signup' && (
-                  <>
-                    <p className={styles.hint}>
-                      Passphrase di almeno 12 caratteri, fino a 72 byte UTF-8. La registrazione è
-                      gratuita.
-                    </p>
-                    <label className={styles.checkbox}>
-                      <input
-                        type="checkbox"
-                        required
-                        checked={adults}
-                        onChange={(e) => setAdults(e.target.checked)}
-                      />
-                      Confermo di essere maggiorenne. L'app è destinata all'allenamento non clinico.
-                    </label>
-                  </>
-                )}
-                {error && (
-                  <p className={styles.error} role="alert">
-                    {error}
-                  </p>
-                )}
-                <button className={styles.primary} type="submit" disabled={busy || !online}>
-                  {busy
-                    ? 'Attendi…'
-                    : mode === 'signup'
-                      ? 'Crea account'
-                      : mode === 'recover'
-                        ? 'Richiedi recupero password'
-                        : 'Accedi'}
-                  <ArrowRight size={18} aria-hidden="true" />
-                </button>
-              </form>
-              <div className={styles.actionStrip}>
-                <button
-                  className={styles.secondary}
-                  disabled={busy || !online}
-                  onClick={() => void google()}
-                >
-                  Continua con Google
-                </button>
-                <button
-                  onClick={() => {
-                    setMode('recover');
-                    setError('');
-                  }}
-                >
-                  Password dimenticata?
-                </button>
-              </div>
-              <p className={styles.hint}>
-                Le schede create senza login rimangono sul dispositivo. Per trasferirle al tuo
-                account, esporta una copia JSON e importala dopo l'accesso.
-              </p>
-            </>
+            <AuthForm />
           )}
         </section>
         <section className={styles.panel}>
@@ -286,12 +244,8 @@ export function ProfilePage() {
             </div>
             <button
               className={styles.secondary}
-              onClick={() => {
-                const value = !light;
-                setLight(value);
-                document.documentElement.dataset.theme = value ? 'light' : 'dark';
-                void setMetadata('theme', value ? 'light' : 'dark');
-              }}
+              disabled={themeBusy}
+              onClick={() => void changeTheme()}
             >
               {light ? <Moon size={18} aria-hidden="true" /> : <Sun size={18} aria-hidden="true" />}
               {light ? 'Scuro' : 'Chiaro'}
@@ -299,12 +253,34 @@ export function ProfilePage() {
           </div>
           <div className={styles.preference}>
             <div>
+              <strong>Animazioni</strong>
+              <small>{reduceMotion ? 'Ridotte in TR LAB' : 'Secondo il dispositivo'}</small>
+            </div>
+            <button
+              className={styles.secondary}
+              disabled={motionBusy}
+              aria-pressed={reduceMotion}
+              onClick={() => void changeMotion()}
+            >
+              {motionBusy
+                ? 'Salvo…'
+                : reduceMotion
+                  ? 'Usa preferenza dispositivo'
+                  : 'Riduci animazioni'}
+            </button>
+          </div>
+          <div className={styles.preference}>
+            <div>
               <strong>Backup del dispositivo</strong>
               <small>Archivio base, risultati e operazioni in attesa.</small>
             </div>
-            <button className={styles.secondary} onClick={() => void exportLocal()}>
+            <button
+              className={styles.secondary}
+              disabled={exportBusy || loggingOut}
+              onClick={() => void exportLocal()}
+            >
               <ArrowDownToLine size={18} aria-hidden="true" />
-              Esporta
+              {exportBusy ? 'Preparo il backup…' : 'Esporta'}
             </button>
           </div>
           <p className={styles.hint}>
@@ -323,13 +299,14 @@ export function ProfilePage() {
           <details>
             <summary>Stato di questa versione</summary>
             <p>
-              Schede manuali, struttura Excel adattata, diario offline, peso, circonferenze e target
-              manuali. Il servizio account è predisposto per il collegamento e il collaudo.
+              Schede manuali, import Excel nei formati supportati, calendario, esercizi personali,
+              diario offline, peso, circonferenze e target manuali. L’area account indica se hai
+              effettuato l’accesso.
             </p>
             <p>
-              Progressioni, generatore, assistente AI, parser XLSX completo e condivisione tramite
-              link richiedono i successivi gate della roadmap. Nessuna regola candidata è attiva sui
-              tuoi target.
+              Generatore, progressioni e assistente AI non sono ancora attivi. Le schede già
+              approvate non vengono modificate automaticamente; ogni proposta richiede la tua
+              conferma.
             </p>
             <p className={styles.hint}>
               Questa alpha non è ancora un servizio pubblico collaudato. Privacy operativa,
@@ -339,12 +316,20 @@ export function ProfilePage() {
           <button
             className={styles.textLink}
             onClick={async () => {
-              const persistent = await navigator.storage?.persist?.();
-              notify(
-                persistent
-                  ? 'Il browser ha concesso la conservazione persistente.'
-                  : 'Il browser non garantisce la conservazione. Esporta regolarmente un backup.',
-              );
+              try {
+                const persistent = await navigator.storage?.persist?.();
+                notify(
+                  persistent
+                    ? 'Il browser ha concesso la conservazione persistente.'
+                    : 'Il browser non garantisce la conservazione. Esporta regolarmente un backup.',
+                  persistent ? 'success' : 'warning',
+                );
+              } catch {
+                notify(
+                  'Non riesco a verificare la conservazione del browser. Esporta un backup.',
+                  'warning',
+                );
+              }
             }}
           >
             Richiedi conservazione persistente
@@ -352,6 +337,67 @@ export function ProfilePage() {
         </section>
       </div>
       <RecoveryPanel />
+      <p className={styles.hint}>
+        <Link to="/aiuto#accesso">Guida per accesso, dati e sincronizzazione</Link>
+      </p>
+      {exitDialog && (
+        <Dialog
+          title="Uscire da questo dispositivo?"
+          busy={loggingOut || syncing}
+          close={() => setExitDialog(false)}
+        >
+          <p>
+            I dati del tuo account restano conservati in questo browser. Dopo l’uscita saranno
+            nascosti fino al prossimo accesso.
+          </p>
+          <p>
+            {pending
+              ? counted(
+                  pending,
+                  'modifica ancora da sincronizzare',
+                  'modifiche ancora da sincronizzare',
+                ) + '. Uscire non le cancella, ma non le invia ad altri dispositivi.'
+              : 'Nessuna modifica in attesa di sincronizzazione.'}
+          </p>
+          {!online && (
+            <p className={styles.hint}>
+              Sei offline: la sessione sul server potrà essere chiusa quando torna la connessione.
+            </p>
+          )}
+          {syncing && <p role="status">Sincronizzazione in corso. Attendi l’esito.</p>}
+          <div className={styles.dialogActions}>
+            <button
+              type="button"
+              className={styles.secondary}
+              disabled={loggingOut || syncing}
+              onClick={() => setExitDialog(false)}
+            >
+              Resta nel tuo account
+            </button>
+            {!!pending && online && (
+              <button
+                type="button"
+                className={styles.secondary}
+                disabled={syncing || loggingOut}
+                onClick={() => void sync(true)}
+              >
+                Sincronizza prima
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.primary}
+              disabled={loggingOut || syncing}
+              onClick={async () => {
+                await logout();
+                setExitDialog(false);
+              }}
+            >
+              {loggingOut ? 'Uscita in corso…' : 'Esci conservando i dati'}
+            </button>
+          </div>
+        </Dialog>
+      )}
     </>
   );
 }

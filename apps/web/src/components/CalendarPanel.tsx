@@ -77,6 +77,7 @@ export function CalendarPanel() {
       setPlanning(false);
       notify(
         'Calendario salvato sul dispositivo. Le date e le settimane del ciclo sono esplicite.',
+        'success',
       );
     } catch (e) {
       setError(errorMessage(e));
@@ -221,6 +222,7 @@ export function CalendarPanel() {
       {planning && (
         <Dialog
           title="Pianifica il ciclo"
+          busy={busy}
           close={() => {
             if (!busy) setPlanning(false);
           }}
@@ -338,6 +340,7 @@ export function CalendarPanel() {
       {moving && (
         <Dialog
           title="Sposta la seduta"
+          busy={busy}
           close={() => {
             if (!busy) setMoving(null);
           }}

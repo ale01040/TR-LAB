@@ -1,5 +1,7 @@
 # TR LAB
 
+UI/UX: feedback verificati su accesso/uscita e salvataggi, errori vicino ai campi, guida offline e motion breve disattivabile, nello stile Open senza immagini. [Piano Nielsen](docs/piani/UX_NIELSEN.md), [guida motion e fonti](docs/design/MOTION_E_MICROINTERAZIONI.md), [prove e limiti](docs/qualita/UX_NIELSEN_2026_10_14.md).
+
 Redesign del 14 ottobre: **stile editoriale nero/avorio, Inter locale, tema chiaro opzionale e nessuna immagine**, con atmosfera calda in CSS e diario compatto. [Piano/roadmap del design](docs/piani/REDESIGN_OPEN.md), [fonti e DNA](docs/design/README.md), [collaudo e limiti](docs/qualita/REDESIGN_2026_10_14.md). Implementato sul ramo di consegna; il dominio Production resta soggetto ai gate del prodotto.
 
 Incremento del 13 ottobre: **import diretto Excel con review e bozza, esercizi personali, attrezzatura, calendario, recupero dei conflitti e fondazioni del motore con consenso esplicito**. [Ramo di consegna su GitHub](https://github.com/ale01040/TR-LAB/tree/codex/schede-sync-motore-20261013), [funzioni/prove/limiti](docs/qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [formato Excel](docs/specifiche/FORMATO_EXCEL_IMPLEMENTATO.md), [migrazioni e collaudo](docs/operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md). Questo ramo non attiva il deploy automatico Vercel e non contiene metodi di allenamento attivi. Il sito stabile resta sulla baseline: il rilascio dell'incremento richiede staging, quattro nuove migrazioni e validazione dei gate prima del merge in main.

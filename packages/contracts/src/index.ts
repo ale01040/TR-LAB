@@ -1,4 +1,5 @@
 export * from './core';
+export * from './auth-policy';
 export * from './engine';
 export * from './catalog';
 export * from './import-recovery';

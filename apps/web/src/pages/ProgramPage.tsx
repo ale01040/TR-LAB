@@ -117,7 +117,7 @@ export function ProgramPage() {
       openDraft(null);
       setSelected(valid.id);
       setWeekIndex(0);
-      notify('Bozza salvata. Approvala quando i target sono pronti.');
+      notify('Bozza salvata. Approvala quando i target sono pronti.', 'success');
     } catch (error) {
       setError(errorMessage(error));
     } finally {
@@ -131,7 +131,7 @@ export function ProgramPage() {
       const value = { ...approval, status: 'approved' as const };
       await save('ApproveProgram', { id: value.id, kind: 'program', revision: '0', data: value });
       setApproval(null);
-      notify('Scheda approvata. Puoi iniziare una seduta da Oggi.');
+      notify('Scheda approvata. Puoi iniziare una seduta da Oggi.', 'success');
     } catch (error) {
       setError(errorMessage(error));
     } finally {
@@ -412,7 +412,7 @@ export function ProgramPage() {
         </div>
       )}
       {draft && (
-        <Dialog title="Editor della scheda" close={() => openDraft(null)}>
+        <Dialog title="Editor della scheda" busy={busy} close={() => openDraft(null)}>
           <ProgramEditor
             catalog={[...catalog, ...(importOrigin?.variants.map((v) => v.exercise) ?? [])]}
             program={draft}

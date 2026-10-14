@@ -134,7 +134,9 @@ test('Excel → bozza → conferma → calendario → diario offline, conserva i
   await page.getByRole('button', { name: /Concludi/ }).click();
   await page.getByRole('button', { name: 'Confermo la conclusione' }).click();
   await expect(
-    page.getByText('Seduta conclusa. I risultati e i target originali sono conservati.'),
+    page
+      .getByRole('region', { name: 'Notifica temporanea' })
+      .getByText('Seduta conclusa. I risultati e i target originali sono conservati.'),
   ).toBeVisible();
   await page.goto('/programma');
   await expect(page.locator('#calendario')).toContainText('Conclusa');

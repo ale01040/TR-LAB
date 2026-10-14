@@ -1,5 +1,7 @@
 # Design TR LAB — font, fonti e misure
 
+Per il movimento leggere [Motion e microinterazioni](MOTION_E_MICROINTERAZIONI.md): sintesi delle 40 fonti fornite, compatibilità, alternative, token, privacy e prove. Gli effetti dell'incremento Nielsen sono scelte TR LAB; le immagini statiche Open non ne documentano il comportamento.
+
 14 ottobre 2026. [Piano eseguibile](../piani/REDESIGN_OPEN.md), [Design DNA](TR_LAB_OPEN_DNA.json), [collaudo](../qualita/REDESIGN_2026_10_14.md).
 
 ## Provenienza e vincoli

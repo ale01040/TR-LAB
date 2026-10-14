@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Check, ChevronLeft, Clock3, Flag, Save } from 'lucide-react';
 import { setSchema, type Prescription, type SetLog, type Target } from '@tr-lab/contracts';
@@ -19,6 +19,8 @@ export function WorkoutPage() {
   const logs = journal.sets.filter((l) => l.sessionId === id);
   const [finish, setFinish] = useState(false);
   const [busy, setBusy] = useState(false);
+  const finishing = useRef(false);
+  const [finishError, setFinishError] = useState('');
   const [notes, setNotes] = useState(session?.notes ?? '');
   const [deadline, setDeadline] = useState<number | null>(null);
   const [now, setNow] = useState(Date.now());
@@ -77,10 +79,12 @@ export function WorkoutPage() {
         return;
       }
     }
-    notify('Serie salvata sul dispositivo.');
+    notify('Serie salvata sul dispositivo.', 'success');
   }
   async function endSession() {
-    if (!session) return;
+    if (!session || finishing.current) return;
+    finishing.current = true;
+    setFinishError('');
     setBusy(true);
     try {
       const value = {
@@ -97,10 +101,11 @@ export function WorkoutPage() {
       });
       setFinish(false);
       setDeadline(null);
-      notify('Seduta conclusa. I risultati e i target originali sono conservati.');
+      notify('Seduta conclusa. I risultati e i target originali sono conservati.', 'success');
     } catch (error) {
-      notify(errorMessage(error));
+      setFinishError(errorMessage(error));
     } finally {
+      finishing.current = false;
       setBusy(false);
     }
   }
@@ -147,6 +152,17 @@ export function WorkoutPage() {
           Storico recuperato da dati locali, di sola lettura. Conserva snapshot ed esecuzioni; non
           approva sul server il piano da cui proviene.
         </p>
+      )}
+      {session.status === 'active' && (
+        <details>
+          <summary>Come registrare e salvare una serie</summary>
+          <p>
+            Il target è ciò che era previsto. Inserisci il risultato reale e premi Salva o Invio.
+            RIR indica le ripetizioni che pensi di avere ancora disponibili: zero è valido. Il
+            carico segue la convenzione indicata per l’esercizio.{' '}
+            <Link to="/aiuto#diario">Apri la guida del diario</Link>.
+          </p>
+        </details>
       )}
       {session.status === 'completed' && session.notes && (
         <section className={styles.panel}>
@@ -243,7 +259,7 @@ export function WorkoutPage() {
         </section>
       ))}
       {finish && (
-        <Dialog title="Concludi questa seduta" close={() => setFinish(false)}>
+        <Dialog title="Concludi questa seduta" close={() => setFinish(false)} busy={busy}>
           <p>
             {counted(completed, 'serie eseguita', 'serie eseguite')}.{' '}
             {missing > 0
@@ -252,10 +268,21 @@ export function WorkoutPage() {
           </p>
           <label>
             Note finali
-            <textarea value={notes} maxLength={3000} onChange={(e) => setNotes(e.target.value)} />
+            <textarea
+              disabled={busy}
+              value={notes}
+              maxLength={3000}
+              onChange={(e) => setNotes(e.target.value)}
+            />
           </label>
+          {finishError && (
+            <p role="alert" className={styles.error}>
+              {finishError} Le note restano disponibili; riprova il salvataggio.
+            </p>
+          )}
           <button className={styles.primary} disabled={busy} onClick={() => void endSession()}>
-            Confermo la conclusione <Check size={18} aria-hidden="true" />
+            {busy ? 'Concludo la seduta…' : 'Confermo la conclusione'}{' '}
+            <Check size={18} aria-hidden="true" />
           </button>
         </Dialog>
       )}
@@ -293,6 +320,12 @@ function SetRow({
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const saving = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const feedbackId = useId();
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<'load' | 'reps' | 'rir', string>>>(
+    {},
+  );
   useEffect(() => {
     if (!dirty && log) {
       setLoad(log.loadGrams === null ? '' : String(log.loadGrams / 1000));
@@ -301,10 +334,35 @@ function SetRow({
     }
   }, [log, dirty]);
   async function commit(status: 'completed' | 'skipped') {
+    if (saving.current) return;
+    const weight = load.trim() ? parseDecimal(load) : null;
+    const repetitions = parseDecimal(reps);
+    const reserve = rir.trim() ? parseDecimal(rir) : null;
+    const invalid: Partial<Record<'load' | 'reps' | 'rir', string>> = {};
+    if (load.trim() && (weight === null || weight < 0))
+      invalid.load = 'Carico non valido. Usa un numero non negativo, ad esempio 12,5 kg.';
+    if (
+      status === 'completed' &&
+      (repetitions === null ||
+        !Number.isInteger(repetitions) ||
+        repetitions < 1 ||
+        repetitions > 1000)
+    )
+      invalid.reps = 'Inserisci le ripetizioni eseguite: un intero tra 1 e 1000.';
+    if (rir.trim() && (reserve === null || reserve < 0 || reserve > 10))
+      invalid.rir = 'Inserisci un RIR tra 0 e 10. Zero è valido.';
+    setFieldErrors(invalid);
+    const first = Object.keys(invalid)[0];
+    if (first) {
+      setError('Controlla i campi indicati. La serie non è stata salvata.');
+      const field = formRef.current?.elements.namedItem(first);
+      if (field instanceof HTMLElement) field.focus();
+      return;
+    }
+    saving.current = true;
     setBusy(true);
     setError('');
     try {
-      const weight = load.trim() ? parseDecimal(load) : null;
       if (load.trim() && weight === null)
         throw new Error('Carico non valido. Usa ad esempio 12,5.');
       const value = setSchema.parse({
@@ -326,6 +384,7 @@ function SetRow({
     } catch (error) {
       setError(errorMessage(error));
     } finally {
+      saving.current = false;
       setBusy(false);
     }
   }
@@ -336,8 +395,10 @@ function SetRow({
   };
   return (
     <form
+      ref={formRef}
       className={`${styles.setRow} ${log && !dirty ? styles.setSaved : ''}`}
       onSubmit={onSubmit}
+      aria-busy={busy}
     >
       <div className={styles.setLabel}>
         <strong>
@@ -373,41 +434,74 @@ function SetRow({
           <label className={styles.setField}>
             <span className={styles.setFieldCaption}>Kg</span>
             <input
+              name="load"
+              disabled={busy}
+              aria-invalid={!!fieldErrors.load}
+              aria-describedby={fieldErrors.load ? `${feedbackId}-load` : undefined}
               aria-label={`${label}, carico in kg`}
               inputMode="decimal"
               placeholder="—"
               value={load}
               onChange={(e) => {
                 setLoad(e.target.value);
+                setFieldErrors((value) => ({ ...value, load: '' }));
+                setError('');
                 setDirty(true);
               }}
             />
+            {fieldErrors.load && (
+              <span id={`${feedbackId}-load`} className={styles.fieldError}>
+                {fieldErrors.load}
+              </span>
+            )}
           </label>
           <label className={styles.setField}>
             <span className={styles.setFieldCaption}>Ripetizioni</span>
             <input
+              name="reps"
+              disabled={busy}
+              aria-invalid={!!fieldErrors.reps}
+              aria-describedby={fieldErrors.reps ? `${feedbackId}-reps` : undefined}
               aria-label={`${label}, ripetizioni`}
               inputMode="numeric"
               placeholder="—"
               value={reps}
               onChange={(e) => {
                 setReps(e.target.value);
+                setFieldErrors((value) => ({ ...value, reps: '' }));
+                setError('');
                 setDirty(true);
               }}
             />
+            {fieldErrors.reps && (
+              <span id={`${feedbackId}-reps`} className={styles.fieldError}>
+                {fieldErrors.reps}
+              </span>
+            )}
           </label>
           <label className={styles.setField}>
             <span className={styles.setFieldCaption}>RIR</span>
             <input
+              name="rir"
+              disabled={busy}
+              aria-invalid={!!fieldErrors.rir}
+              aria-describedby={fieldErrors.rir ? `${feedbackId}-rir` : undefined}
               aria-label={`${label}, RIR`}
               inputMode="decimal"
               placeholder="—"
               value={rir}
               onChange={(e) => {
                 setRir(e.target.value);
+                setFieldErrors((value) => ({ ...value, rir: '' }));
+                setError('');
                 setDirty(true);
               }}
             />
+            {fieldErrors.rir && (
+              <span id={`${feedbackId}-rir`} className={styles.fieldError}>
+                {fieldErrors.rir}
+              </span>
+            )}
           </label>
           <div className={styles.setActions}>
             <button
@@ -421,6 +515,7 @@ function SetRow({
               ) : (
                 <Save size={17} aria-hidden="true" />
               )}
+              <span>{busy ? 'Salvo…' : log && !dirty ? 'Salvata' : 'Salva'}</span>
             </button>
             {!log && (
               <button type="button" disabled={busy} onClick={() => void commit('skipped')}>
@@ -429,6 +524,19 @@ function SetRow({
             )}
           </div>
         </>
+      )}
+      {!readOnly && (
+        <p className={styles.setFeedback} role="status">
+          {busy
+            ? 'Salvataggio in corso…'
+            : dirty
+              ? 'Modifiche da salvare: premi Salva.'
+              : log
+                ? log.status === 'skipped'
+                  ? 'Serie saltata e registrata sul dispositivo.'
+                  : 'Serie salvata sul dispositivo.'
+                : 'Da registrare. I valori previsti non sono risultati salvati.'}
+        </p>
       )}
       {error && (
         <p role="alert" className={styles.setError}>

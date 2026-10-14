@@ -5,6 +5,9 @@ declare const styles: {
   readonly addExercise: string;
   readonly agendaActions: string;
   readonly agendaItem: string;
+  readonly authField: string;
+  readonly authFieldMessage: string;
+  readonly authForm: string;
   readonly avatar: string;
   readonly badge: string;
   readonly bigMetric: string;
@@ -28,14 +31,21 @@ declare const styles: {
   readonly exerciseRow: string;
   readonly exerciseTitle: string;
   readonly eyebrow: string;
+  readonly feedback: string;
+  readonly feedbackBody: string;
+  readonly feedbackError: string;
+  readonly fieldError: string;
   readonly footer: string;
   readonly formGrid: string;
+  readonly helpArticle: string;
+  readonly helpText: string;
   readonly hero: string;
   readonly heroText: string;
   readonly hidden: string;
   readonly hint: string;
   readonly iconButton: string;
   readonly inlineEmpty: string;
+  readonly inputInvalid: string;
   readonly libraryCard: string;
   readonly libraryFilters: string;
   readonly libraryGrid: string;
@@ -49,6 +59,7 @@ declare const styles: {
   readonly notice: string;
   readonly pageHeading: string;
   readonly panel: string;
+  readonly passwordControl: string;
   readonly pill: string;
   readonly preference: string;
   readonly primary: string;
@@ -58,6 +69,7 @@ declare const styles: {
   readonly programList: string;
   readonly progressTrack: string;
   readonly proposalColumns: string;
+  readonly requirements: string;
   readonly rowIcon: string;
   readonly saveButton: string;
   readonly savedButton: string;
@@ -66,6 +78,7 @@ declare const styles: {
   readonly selectedProgram: string;
   readonly setActions: string;
   readonly setError: string;
+  readonly setFeedback: string;
   readonly setField: string;
   readonly setFieldCaption: string;
   readonly setHeader: string;
@@ -90,6 +103,7 @@ declare const styles: {
   readonly targetSummary: string;
   readonly textLink: string;
   readonly timer: string;
+  readonly toastRegion: string;
   readonly topLabel: string;
   readonly topbar: string;
   readonly twoColumns: string;
