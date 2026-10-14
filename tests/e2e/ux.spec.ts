@@ -116,6 +116,9 @@ test('motion opzionale, filtri, guida offline e riscontro di una misura locale',
     await page.locator('h1').evaluate((node) => getComputedStyle(node).animationDuration),
   ).toBe('0.16s');
   await page.getByRole('button', { name: 'Riduci animazioni', exact: true }).click();
+  // L'esito viene applicato dopo la transazione locale: reload soltanto dopo il commit.
+  await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduce');
+  await expect(page.getByRole('button', { name: 'Usa preferenza dispositivo' })).toBeEnabled();
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduce');
   expect(await page.locator('h1').evaluate((node) => getComputedStyle(node).animationName)).toBe(

@@ -53,6 +53,8 @@ export function App() {
     account,
     user,
     configured,
+    authVerified,
+    authServiceState,
     online,
     loading,
     pending,
@@ -103,17 +105,25 @@ export function App() {
                 ? 'Uscita in corso…'
                 : !online
                   ? 'Offline · dati sul dispositivo'
-                  : user
-                    ? syncing
-                      ? 'Sincronizzazione in corso…'
-                      : blocked
-                        ? counted(blocked, 'conflitto da rivedere', 'conflitti da rivedere')
-                        : pending
-                          ? counted(pending, 'operazione in attesa', 'operazioni in attesa')
-                          : 'Account personale'
-                    : configured
-                      ? 'Non hai effettuato l’accesso'
-                      : 'Solo su questo dispositivo'}
+                  : loading || authServiceState === 'checking'
+                    ? 'Verifico l’accesso…'
+                    : authServiceState === 'unreachable'
+                      ? user
+                        ? 'Account sul dispositivo · accesso da verificare'
+                        : 'Servizio account non raggiungibile'
+                      : user
+                        ? syncing
+                          ? 'Sincronizzazione in corso…'
+                          : blocked
+                            ? counted(blocked, 'conflitto da rivedere', 'conflitti da rivedere')
+                            : pending
+                              ? counted(pending, 'operazione in attesa', 'operazioni in attesa')
+                              : authVerified
+                                ? 'Account personale'
+                                : 'Account sul dispositivo'
+                        : configured
+                          ? 'Non hai effettuato l’accesso'
+                          : 'Solo su questo dispositivo'}
             </span>
             {user && online && (
               <button

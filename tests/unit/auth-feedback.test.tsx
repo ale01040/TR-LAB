@@ -100,6 +100,26 @@ async function login() {
   ).toBeTruthy();
   return user;
 }
+it('controllo account lento: indica verifica in corso invece della modalità dispositivo', async () => {
+  let complete!: (value: unknown) => void;
+  mock.api.mockReturnValue(
+    new Promise((resolve) => {
+      complete = resolve;
+    }),
+  );
+  render(
+    <MemoryRouter initialEntries={['/profilo']}>
+      <AppProvider>
+        <App />
+      </AppProvider>
+    </MemoryRouter>,
+  );
+  await screen.findByText('Verifico l’accesso…');
+  expect(screen.queryByText('Solo su questo dispositivo', { exact: true })).toBeNull();
+  await waitFor(() => expect(mock.api).toHaveBeenCalledWith('/auth/session'));
+  complete({ configured: true, providers: { google: false }, user: null });
+  await screen.findByRole('form', { name: 'Accesso' });
+});
 it('conferme di accesso e uscita sopravvivono al remount del contenuto per account', async () => {
   const user = await login();
   expect(screen.getByText('synthetic@example.org')).toBeTruthy();

@@ -51,6 +51,7 @@ test('temi persistenti, font locale, navigazione e reflow senza media decorativi
     if (light) {
       await page.goto('/profilo');
       await page.getByRole('button', { name: 'Chiaro', exact: true }).click();
+      await expect(page.getByRole('button', { name: 'Scuro', exact: true })).toBeEnabled();
       await page.reload();
       await expect(page.getByRole('button', { name: 'Scuro', exact: true })).toBeVisible();
     }
