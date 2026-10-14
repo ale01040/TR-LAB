@@ -108,12 +108,6 @@ export function TodayPage() {
             </a>
           )}
         </div>
-        <div className={styles.heroArt} aria-hidden="true">
-          <div className={styles.artOrbit} />
-          <div className={styles.artOrbit2} />
-          <Dumbbell strokeWidth={1} />
-          <span>TR / 001</span>
-        </div>
       </section>
       <div className={styles.stats}>
         <div>
@@ -222,7 +216,6 @@ export function TodayPage() {
             </>
           ) : (
             <div className={styles.inlineEmpty}>
-              <CalendarIllustration />
               <p>Il programma è ancora una pagina bianca.</p>
               <Link to="/programma">
                 Prepara una scheda e approvala per iniziare{' '}
@@ -260,20 +253,11 @@ export function TodayPage() {
             </div>
           )}
           <div className={styles.smallNote}>
-            <span className={styles.limeDot} />
+            <span className={styles.statusDot} />
             Ogni risultato racconta una parte del percorso.
           </div>
         </section>
       </div>
     </>
-  );
-}
-function CalendarIllustration() {
-  return (
-    <div className={styles.emptyGrid} aria-hidden="true">
-      {Array.from({ length: 9 }, (_, i) => (
-        <span key={i} />
-      ))}
-    </div>
   );
 }

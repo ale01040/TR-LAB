@@ -104,3 +104,14 @@ Rilascio pubblico vietato con difetti di perdita dati, accesso tra utenti, appli
 Ogni rapporto indica commit, migrazioni, versioni browser/tool, dataset, comandi, risultato, log con dati sensibili oscurati e difetti. Conservare artefatti in `docs/reports/<fase>/` o nel sistema CI con riferimenti stabili. Un'altra persona deve poter ripetere i casi principali.
 
 La validazione documentale controlla coerenza, link e tracciabilità. È distinta dal collaudo dell’app: codice presente, prove eseguite e gate aperti sono nello [stato implementazione](STATO_IMPLEMENTAZIONE.md) e nei rapporti collegati.
+
+## 8. Redesign del 14 ottobre 2026
+
+Specifiche e ticket: [piano Open](../piani/REDESIGN_OPEN.md), RF-16/18, ADR-11/12, WEB-02–06. Risultati nel [rapporto](REDESIGN_2026_10_14.md); i casi non chiudono il collaudo completo del prodotto.
+
+| ID | Caso | Atteso |
+| --- | --- | --- |
+| QA-DES-01 | Tema persistente e font offline | Scuro predefinito, chiaro conservato dopo reload/rotte, WOFF2 locale funzionante offline |
+| QA-DES-02 | Layout e accessibilità delle cinque rotte | Zero overflow nelle larghezze provate, niente immagini/video/Canvas o sfondi URL; nessuna violazione axe serious/critical |
+| QA-DES-03 | Excel, approvazione, calendario, diario offline | Consenso esplicito conservato, RIR zero/virgola e risultati persistiti; input almeno 44 px nelle larghezze provate |
+| QA-DES-04 | Contrasto, stampa e fedeltà cromatica | Token leggibili, stampa chiara; report delle quattro palette integrali, FAIL fotografici dichiarati senza falsare soglie |

@@ -1,5 +1,7 @@
 # Roadmap di sviluppo e consegna
 
+Incremento visuale del 14 ottobre: [DES-01–08](piani/REDESIGN_OPEN.md), RF-16/18, ADR-11/12, WEB-02–06. Inter locale, temi e nessuna immagine sono confermati; prove visuali distinte dai gate sync, telefoni reali, Auth e ripristino.
+
 Aggiornamento del codice locale del 13 ottobre: [ticket, prove e lavoro rimasto](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md), [collaudo/migrazioni/rollback](operazioni/INCREMENTO_SCHEDE_SYNC_MOTORE.md). Le implementazioni parziali non chiudono le fasi: conservare i criteri S/C/A/D/R del piano esecutivo e le prove provider/telefoni richieste.
 
 Versione 1.3 — 12 ottobre 2026. Piano di esecuzione e consegna della versione completa. Per requisiti usare [piano operativo](PIANO_OPERATIVO.md); per contratti e scelte seguire l'[indice delle specifiche](README.md). Alpha locale, Preview e dominio stabile Production collegati a Supabase attuano parti di F1–F5/F7–F8: DEC-30 autorizza l'alpha e non chiude automaticamente quelle fasi. Stato e prossimo ordine esecutivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md#5-prossime-consegne-in-ordine); prove del link corto e limiti nel [rapporto rilascio](qualita/RILASCIO_DOMINIO_STABILE.md).
@@ -78,7 +80,7 @@ Consegne: specifica funzionale aggiornata, glossario, registro decisioni, matric
 
 Prototipare almeno: onboarding, Oggi, editor, generazione, registrazione serie, riepilogo, conferma proposta, volume e copia a un amico. Mostrare sia telefono sia desktop, con stati vuoti e di errore.
 
-Concordare palette, icona e immagini; progettare tema chiaro, tema scuro, stampa e navigazione accessibile secondo entrambe le raccolte. Il prototipo deve mostrare anche gli errori dei form e il recupero dei dati inseriti.
+Applicare DEC-32–35 e il piano del redesign: nero/avorio, Inter locale, scuro/chiaro e nessuna immagine. Conservare favicon tecnica e icone funzionali, stampa e navigazione accessibile secondo entrambe le raccolte. Il prototipo deve mostrare anche gli errori dei form e il recupero dei dati inseriti.
 
 Sessioni di prova proposte con 5–8 persone, se disponibili. Far eseguire attività reali: iniziare una scheda, registrare una superserie, correggere un valore, distinguere carico per manubrio da totale, rifiutare una progressione e riprendere una seduta. Annotare errori e tempi senza guidare i passaggi.
 

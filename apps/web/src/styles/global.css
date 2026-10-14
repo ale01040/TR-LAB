@@ -1,30 +1,57 @@
+@font-face {
+  font-family: 'InterVariable';
+  src: url('../assets/fonts/InterVariable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
-  --background: #101412;
-  --surface: #181d19;
-  --surface-raised: #222921;
-  --text: #f1f4eb;
-  --muted: #a0aa9d;
-  --border: #343d33;
-  --accent: #c9f16d;
-  --accent-text: #132007;
+  /* Nero/avorio misurati nel riferimento 02; i colori caldi sono decorativi. */
+  --background: #010000;
+  --surface: #100d0b;
+  --surface-raised: #1d1815;
+  --text: #efeae5;
+  --muted: #b7afa8;
+  --border: #39312b;
+  --control-border: #766b62;
+  --accent: #efeae5;
+  --accent-text: #0b0301;
+  --focus: #f5c5ab;
   --error: #ffb4a6;
-  --shadow: 0 1.25rem 4rem #0006;
-  font-family: 'DM Sans', system-ui, sans-serif;
+  --warm-core: #cc5b30;
+  --warm-soft: #e1735c;
+  --warm-deep: #3f0f05;
+  --hero-text: #fefefd;
+  --hero-muted: #f5e7dd;
+  --shadow: 0 1.25rem 4rem #0008;
+  --font-ui: 'InterVariable', 'Helvetica Neue', Arial, sans-serif;
+  --radius-small: 0.35rem;
+  --radius-medium: 0.75rem;
+  --radius-pill: 999rem;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration: 180ms;
+  font-family: var(--font-ui);
   font-synthesis: none;
+  font-optical-sizing: auto;
+  /* La barra mobile fissa non deve coprire il controllo raggiunto tramite focus/ancora. */
+  scroll-padding-block: 1rem 6rem;
 }
 :root[data-theme='light'] {
   color-scheme: light;
-  --background: #f4f5ef;
-  --surface: #fff;
-  --surface-raised: #e9eee2;
-  --text: #19201a;
-  --muted: #546150;
-  --border: #ccd5c7;
-  --accent: #426b12;
-  --accent-text: #fff;
+  --background: #f5f1eb;
+  --surface: #fffdf9;
+  --surface-raised: #e9e2d9;
+  --text: #211b16;
+  --muted: #65584c;
+  --border: #d0c5b8;
+  --control-border: #8b7966;
+  --accent: #211b16;
+  --accent-text: #fffdf9;
+  --focus: #9a4422;
   --error: #9b2115;
-  --shadow: 0 1.25rem 4rem #22332218;
+  --shadow: 0 1.25rem 4rem #211b1618;
 }
 * {
   box-sizing: border-box;
@@ -34,7 +61,7 @@ body {
   background: var(--background);
   color: var(--text);
   font-size: 1rem;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 h1,
 h2,
@@ -46,18 +73,19 @@ p {
 h1,
 h2,
 h3 {
-  font-family: 'Manrope', system-ui, sans-serif;
-  line-height: 1.18;
-  letter-spacing: -0.035em;
+  font-family: var(--font-ui);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  font-weight: 400;
 }
 h1 {
-  font-size: clamp(2rem, 3vw, 2.8rem);
-  font-weight: 700;
-  margin-bottom: 0.75rem;
+  font-size: clamp(2.35rem, 4.5vw, 4.4rem);
+  font-weight: 400;
+  margin-bottom: 1rem;
 }
 h2 {
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1.65rem;
+  font-weight: 400;
 }
 h3 {
   font-size: 1.12rem;
@@ -81,6 +109,7 @@ select,
 textarea,
 summary {
   -webkit-tap-highlight-color: transparent;
+  scroll-margin-block: 1rem 6rem;
 }
 button {
   cursor: pointer;
@@ -88,13 +117,17 @@ button {
   color: inherit;
   border: 0;
   background: none;
+  transition:
+    background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
 }
 button:disabled {
   opacity: 0.55;
-  cursor: wait;
+  cursor: not-allowed;
 }
 :focus-visible {
-  outline: 0.1875rem solid var(--accent);
+  outline: 0.1875rem solid var(--focus);
   outline-offset: 0.25rem;
 }
 label {
@@ -115,9 +148,9 @@ textarea {
   min-height: 2.75rem;
   padding: 0.7rem 0.85rem;
   color: var(--text);
-  border: 1px solid var(--border);
-  background: var(--background);
-  border-radius: 0.6rem;
+  border: 1px solid var(--control-border);
+  background: var(--surface);
+  border-radius: var(--radius-small);
 }
 textarea {
   min-height: 5rem;
@@ -131,6 +164,11 @@ input[type='checkbox'] {
 }
 input::placeholder {
   color: var(--muted);
+}
+input[inputmode='decimal'],
+input[inputmode='numeric'],
+input[type='number'] {
+  font-variant-numeric: tabular-nums;
 }
 small {
   color: var(--muted);
@@ -187,7 +225,8 @@ fieldset {
   }
 }
 @media print {
-  :root {
+  :root,
+  :root[data-theme='light'] {
     color-scheme: light;
     --background: #fff;
     --surface: #fff;
@@ -208,7 +247,7 @@ fieldset {
     font-family: Georgia, serif;
   }
   a {
-    text-decoration: none;
+    text-decoration: underline;
   }
   button,
   input,

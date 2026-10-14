@@ -1,5 +1,7 @@
 # Piano operativo — applicazione allenamenti
 
+Interfaccia del 14 ottobre: [piano del redesign Open](piani/REDESIGN_OPEN.md), DEC-32–35. Nessuna immagine, Inter locale, scuro predefinito/chiaro opzionale e diario a righe compatte. Il redesign non attiva metodi/progressioni o modifica target senza consenso.
+
 Stato del codice locale del 13 ottobre: [incremento schede/sync/motore](qualita/INCREMENTO_SCHEDE_SYNC_MOTORE.md). Import Excel, catalogo personale, calendario e recupero hanno implementazioni/prove locali; metodi attivi, automazione completa e gate provider/dispositivi restano aperti. Il rapporto della baseline pubblicata sotto non sostituisce questo aggiornamento e nessuna fase è chiusa implicitamente.
 
 Versione 1.3 del 12 ottobre 2026. Specifica della versione completa per lo sviluppo. Le scelte confermate sono distinte dalle raccomandazioni tecniche e dai parametri da validare. Alpha locale, Preview e dominio stabile Production sono collegati a Supabase: DEC-30 autorizza la pubblicazione dell'alpha, con database condiviso dichiarato. Requisiti e funzioni qui descritti sono completati soltanto con le prove di fase. Stato effettivo nel [rapporto implementazione](qualita/STATO_IMPLEMENTAZIONE.md), evidenze del link corto nel [rapporto rilascio](qualita/RILASCIO_DOMINIO_STABILE.md).

@@ -1,0 +1,483 @@
+{
+  "meta": {
+    "name": "TR LAB · Open, senza immagini",
+    "description": "Design editoriale nero/avorio ispirato alle viste pubbliche Open e adattato alla PWA di allenamento; niente foto/video/illustrazioni.",
+    "source_references": [
+      "https://o-p-e-n.com/",
+      "https://o-p-e-n.com/all",
+      "https://apps.apple.com/us/app/open-breathwork-meditation/id1482725254",
+      "misure/riferimento-01.json",
+      "misure/riferimento-02.json",
+      "misure/riferimento-03.json",
+      "misure/riferimento-04.json"
+    ],
+    "created_at": "2026-10-14",
+    "evidence": "Font/colori del web osservati nel DOM; palette dei PNG misurata deterministicamente. Layout, breakpoints, durata e tema chiaro sono scelte TR LAB. Il font iOS non è identificato.",
+    "instructions": "Scuro predefinito, chiaro opzionale; Inter locale; righe del diario compatte; istruzione finale non usare immagini prevale sul precedente orientamento fotografico."
+  },
+  "design_system": {
+    "color": {
+      "palette_type": "monochromatic",
+      "primary": {
+        "hex": "#efeae5",
+        "role": "Testo principale e CTA su scuro; azione funzionale in --accent, indipendente dal caldo decorativo"
+      },
+      "secondary": {
+        "hex": "#cc5b30",
+        "role": "Gradiente caldo decorativo, misurato nel riferimento 01; non testo o stato"
+      },
+      "accent": {
+        "hex": "#a04b1f",
+        "role": "Cluster caldo del riferimento 02; provenienza della direzione cromatica, non colore del testo o CTA"
+      },
+      "neutral": {
+        "scale": [
+          "#efeae5",
+          "#c6b5ac",
+          "#b7afa8",
+          "#93857e",
+          "#766b62",
+          "#5e4f49",
+          "#39312b",
+          "#1d1815",
+          "#100d0b",
+          "#010000"
+        ],
+        "usage": "Dal chiaro allo scuro. #efeae5 è il cluster text del riferimento 02 e il foreground su fondo #010000. #b7afa8 e #766b62 sono adattamenti per contrasto di metadati/controlli; non misure fotografiche."
+      },
+      "semantic": {
+        "success": "#efeae5",
+        "warning": "#efeae5",
+        "error": "#ffb4a6",
+        "info": "#efeae5"
+      },
+      "surface": {
+        "background": "#010000",
+        "card": "#100d0b",
+        "elevated": "#1d1815"
+      },
+      "contrast_strategy": "Testo normale almeno 4.5:1; contorni e focus necessari 3:1. Stati distinguibili anche con testo/icona. Velo scuro sul hero; token hero costanti nei due temi.",
+      "measurement": {
+        "k": 8,
+        "sampling": {
+          "method": "deterministic_stratified",
+          "max_pixels": 160000,
+          "sampled_pixels": 160000
+        }
+      },
+      "measured_palette": [
+        {
+          "hex": "#010000",
+          "coverage": 0.5604,
+          "role": "background"
+        },
+        {
+          "hex": "#2a1309",
+          "coverage": 0.2218,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#632d13",
+          "coverage": 0.1099,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#a04b1f",
+          "coverage": 0.0925,
+          "role": "accent"
+        },
+        {
+          "hex": "#efeae5",
+          "coverage": 0.0089,
+          "role": "text"
+        },
+        {
+          "hex": "#5e4f49",
+          "coverage": 0.0027,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#93857e",
+          "coverage": 0.0027,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#c6b5ac",
+          "coverage": 0.0011,
+          "role": "unassigned"
+        }
+      ],
+      "light_variant": {
+        "background": "#f5f1eb",
+        "card": "#fffdf9",
+        "elevated": "#e9e2d9",
+        "text": "#211b16",
+        "muted": "#65584c",
+        "control_border": "#8b7966",
+        "focus": "#9a4422",
+        "error": "#9b2115"
+      },
+      "mapping_note": "La palette misurata comprende fotografie e cornice della promo. Il DNA documenta quella misura; implementazione senza immagini può differire nelle coperture. Le differenze vanno riportate senza falsare soglie o palette."
+    },
+    "typography": {
+      "type_scale": {
+        "display": {
+          "size": "clamp(3.5rem, 6vw, 6rem); mobile clamp(3.4rem, 10vw, 5rem)",
+          "weight": 400,
+          "line_height": 1.02,
+          "tracking": "-0.055em"
+        },
+        "heading_1": {
+          "size": "clamp(2.35rem, 4.5vw, 4.4rem)",
+          "weight": 400,
+          "line_height": 1.1,
+          "tracking": "-0.04em"
+        },
+        "heading_2": {
+          "size": "1.65rem; titolo scheda clamp(1.8rem, 3vw, 2.8rem)",
+          "weight": 400,
+          "line_height": 1.1,
+          "tracking": "-0.04em"
+        },
+        "heading_3": {
+          "size": "1.12rem",
+          "weight": 400,
+          "line_height": 1.1,
+          "tracking": "-0.04em"
+        },
+        "body": {
+          "size": "1rem",
+          "weight": 400,
+          "line_height": 1.5,
+          "tracking": "normal"
+        },
+        "body_small": {
+          "size": "0.9rem",
+          "weight": 400,
+          "line_height": 1.5,
+          "tracking": "normal"
+        },
+        "caption": {
+          "size": "0.75rem",
+          "weight": 400,
+          "line_height": 1.5,
+          "tracking": "normal"
+        },
+        "overline": {
+          "size": "0.6875rem",
+          "weight": 400,
+          "line_height": 1.5,
+          "tracking": "0.08em"
+        }
+      },
+      "font_families": {
+        "heading": "InterVariable, Helvetica Neue, Arial, sans-serif",
+        "body": "InterVariable, Helvetica Neue, Arial, sans-serif",
+        "mono": "InterVariable con numeri tabulari; nessun font mono distribuito"
+      },
+      "font_style_notes": "Sans neutra locale, peso 400 nei titoli e 400/500/600 nelle gerarchie funzionali. Inter sostituisce Monument Grotesk secondo scelta esplicita; non è una copia esatta. Georgia/serif 12pt solo in stampa."
+    },
+    "spacing": {
+      "base_unit": "0.25rem",
+      "scale": [
+        "0.25rem",
+        "0.5rem",
+        "0.75rem",
+        "1rem",
+        "1.25rem",
+        "1.5rem",
+        "2rem",
+        "2.5rem",
+        "3rem",
+        "3.5rem"
+      ],
+      "content_density": "spacious nella home, comfortable nelle schede, compact nel diario",
+      "section_rhythm": "2–3.5rem tra sezioni, padding relativo ridotto su mobile; nessun vuoto che separi input dal target"
+    },
+    "layout": {
+      "grid_system": "CSS Grid/flex responsivi, minmax(0,1fr)",
+      "max_content_width": "82rem",
+      "columns": "Tre statistiche, catalogo 3/2/1 colonne; diario 5 colonne oppure 3 campi con target e azioni adiacenti",
+      "gutter": "1–1.5rem",
+      "breakpoints": [
+        "75rem",
+        "52rem",
+        "30rem"
+      ],
+      "alignment_tendency": "mixed: marchio centrato mobile, contenuti e titoli allineati a sinistra"
+    },
+    "shape": {
+      "border_radius": {
+        "small": "0.35rem",
+        "medium": "0.75rem",
+        "large": "1rem per dialoghi esistenti",
+        "pill": "999rem"
+      },
+      "border_usage": "1px decorativo, 1px a contrasto più alto per controlli necessari",
+      "divider_style": "Separatore sottile orizzontale; nessuna cornice sui numeri di riepilogo"
+    },
+    "elevation": {
+      "shadow_style": "soft diffused solo per dialoghi",
+      "levels": {
+        "low": "none",
+        "medium": "none; superficie rialzata distingue i livelli",
+        "high": "0 1.25rem 4rem #0008 su scuro; #211b1618 su chiaro"
+      },
+      "depth_cues": "Gerarchia tipografica, spaziatura e intensità delle superfici; backdrop del dialogo"
+    },
+    "iconography": {
+      "style": "lineare funzionale, SVG nativo, nessuna illustrazione",
+      "stroke_weight": "Lucide default 2",
+      "size_scale": [
+        "16px",
+        "18px",
+        "20px",
+        "21px"
+      ],
+      "preferred_set": "Lucide già installato; icona tecnica PWA SVG esistente recolorata"
+    },
+    "motion": {
+      "easing": "cubic-bezier(0.2,0.7,0.2,1)",
+      "duration_scale": {
+        "micro": "180ms",
+        "normal": "180ms",
+        "macro": "0ms; nessuna scena animata"
+      },
+      "entrance_pattern": "Contenuto immediato; nessuna animazione di ingresso",
+      "exit_pattern": "Chiusura immediata, focus restituito dal dialogo",
+      "philosophy": "minimal functional; reduced-motion elimina transizioni non necessarie"
+    },
+    "components": {
+      "button_style": "CTA avorio su scuro; secondaria trasparente con bordo; pill 3rem min-height; etichette esplicite",
+      "input_style": "Superficie distinta e bordo control; 2.75rem min-height, testo 1rem nel diario mobile, etichette/unità vere",
+      "card_style": "Superfici editoriali piatte e separatori, hero caldo solo CSS",
+      "navigation_pattern": "Cinque rotte; header testuale desktop, barra inferiore mobile con safe area e selezione anche sottolineata",
+      "modal_style": "Dialog nativo, focus visibile, backdrop scuro; niente immagine; conferma esplicita separata",
+      "list_style": "Righe/schede di testo, nessuna miniatura; numeri e label non compressi",
+      "component_notes": "Conservare Shared, DecimalInput e stato persistito. Nessun componente nuovo per avvolgere un div. SaveStatus/offline/errori e proposte non rimossi."
+    }
+  },
+  "design_style": {
+    "aesthetic": {
+      "mood": [
+        "calmo",
+        "essenziale",
+        "caldo",
+        "preciso"
+      ],
+      "visual_metaphor": "Spazio personale per allenarsi, una pagina editoriale con un unico punto focale",
+      "era_influence": "Minimalismo tipografico contemporaneo",
+      "genre": "luxury editorial adattato a fitness utility",
+      "personality_traits": [
+        "misurato",
+        "chiaro",
+        "affidabile"
+      ],
+      "adjectives": [
+        "scuro",
+        "arioso",
+        "neutro",
+        "sobrio"
+      ]
+    },
+    "visual_language": {
+      "complexity": "minimal",
+      "ornamentation": "subtle accents CSS",
+      "whitespace_usage": "Generoso nei titoli e tra sezioni; più denso nel diario",
+      "visual_weight_distribution": "Titolo e azione della home dominano; dati funzionali restano visibili",
+      "focal_strategy": "single hero element nella home, gerarchia del task nelle altre viste",
+      "contrast_level": "alto per testo e controlli; separatori delicati",
+      "texture_usage": "none; nessuna immagine/noise bitmap"
+    },
+    "composition": {
+      "hierarchy_method": "typographic hierarchy, scale contrast e spaziatura",
+      "balance_type": "asymmetric nella home, griglia ordinata nel catalogo",
+      "flow_direction": "Verticale, lettura da sinistra a destra",
+      "grouping_strategy": "Sezioni semantiche e prossimità di target/campi/azioni",
+      "negative_space_role": "Isola titolo e azioni, senza dilatare il diario"
+    },
+    "imagery": {
+      "photo_treatment": "none: istruzione esplicita finale del committente",
+      "illustration_style": "none",
+      "graphic_elements": "Gradienti CSS statici, SVG funzionali, grafici di dati",
+      "pattern_usage": "none",
+      "image_shape": "not applicable; nessun componente immagine nell’interfaccia"
+    },
+    "interaction_feel": {
+      "feedback_style": "Messaggi testuali e stato di salvataggio; nessuna informazione solo cromatica",
+      "hover_behavior": "Variazione colore/bordo; niente zoom fotografico o trasformazioni di layout",
+      "transition_personality": "fade-subtle solo funzionale",
+      "loading_style": "Testo e stati esistenti; input bloccati quando necessario",
+      "microinteraction_density": "low"
+    },
+    "brand_voice_in_ui": {
+      "tone": "Italiano semplice e concreto",
+      "formality": "Informale rispettoso",
+      "cta_style": "direct imperative con azione esplicita",
+      "empty_state_approach": "Spiega cosa manca e offre un passo concreto; nessuna statistica inventata",
+      "error_tone": "Descrive errore e rimedio senza attribuire colpa all’utente"
+    }
+  },
+  "visual_effects": {
+    "overview": {
+      "effect_intensity": "subtle-accent",
+      "performance_tier": "lightweight",
+      "fallback_strategy": "Fondo scuro solido e contenuto funzionale; font fallback; reduced-motion",
+      "primary_technology": "CSS only"
+    },
+    "background_effects": {
+      "type": "static-gradient",
+      "description": "Due radiali caldi e un gradiente scuro con velo per la home; accento tenue nel dettaglio scheda. Non fotografia sfocata.",
+      "technology": "CSS radial-gradient/linear-gradient",
+      "params": {
+        "color_palette": [
+          "#cc5b30",
+          "#e1735c",
+          "#3f0f05",
+          "#0b0301"
+        ],
+        "speed": 0,
+        "density": "Due radiali e un fondo lineare",
+        "opacity": "Overlay scuro da 0.33 a 0.95; superficie scheda caldo 0.11",
+        "blend_mode": "normal"
+      }
+    },
+    "particle_systems": {
+      "enabled": false,
+      "type": "none",
+      "description": "Non previsto",
+      "technology": "none",
+      "params": {
+        "count": 0,
+        "shape": "none",
+        "size_range": [
+          0,
+          0
+        ],
+        "movement_pattern": "none",
+        "color_behavior": "none",
+        "interaction": "none",
+        "spawn_area": "none"
+      }
+    },
+    "3d_elements": {
+      "enabled": false,
+      "type": "none",
+      "description": "Non previsto",
+      "technology": "none",
+      "params": {
+        "renderer": "none",
+        "lighting": "none",
+        "camera": "none",
+        "materials": "none",
+        "geometry": "none",
+        "post_processing": [],
+        "interaction_model": "none"
+      }
+    },
+    "shader_effects": {
+      "enabled": false,
+      "type": "none",
+      "description": "Non previsto",
+      "technology": "none",
+      "params": {
+        "uniforms": [],
+        "vertex_manipulation": "none",
+        "fragment_output": "none",
+        "noise_type": "none",
+        "distortion": "none"
+      }
+    },
+    "scroll_effects": {
+      "parallax": {
+        "enabled": false,
+        "layers": 0,
+        "depth_range": [
+          0,
+          0
+        ],
+        "speed_curve": "none"
+      },
+      "scroll_triggered_animations": {
+        "enabled": false,
+        "trigger_points": [],
+        "animation_type": "none",
+        "scrub_behavior": "none"
+      },
+      "scroll_morphing": {
+        "enabled": false,
+        "description": "Nessun scroll hijacking o morphing"
+      }
+    },
+    "text_effects": {
+      "type": "none",
+      "description": "Testo HTML selezionabile, nessuna scomposizione animata",
+      "technology": "HTML/CSS",
+      "params": {
+        "split_strategy": "none",
+        "animation_per_unit": "none",
+        "stagger": 0,
+        "effect_style": "none"
+      }
+    },
+    "cursor_effects": {
+      "enabled": false,
+      "type": "none",
+      "description": "Cursore nativo",
+      "params": {
+        "shape": "native",
+        "size": "native",
+        "blend_mode": "normal",
+        "trail": false,
+        "interaction_zone": "none"
+      }
+    },
+    "image_effects": {
+      "type": "none",
+      "description": "Nessuna immagine prevista",
+      "technology": "none",
+      "params": {
+        "filter_pipeline": [],
+        "hover_transform": "none",
+        "reveal_animation": "none",
+        "distortion_type": "none"
+      }
+    },
+    "glassmorphism_neumorphism": {
+      "enabled": false,
+      "style": "none",
+      "params": {
+        "blur_radius": "0 per superfici; 4px solo sul backdrop funzionale del dialogo esistente",
+        "transparency": "Superfici opache",
+        "border_treatment": "Bordi semantici, non glass",
+        "shadow_type": "Ombra del dialogo",
+        "light_source_angle": "not applicable"
+      }
+    },
+    "canvas_drawings": {
+      "enabled": false,
+      "type": "none",
+      "description": "Nessun Canvas nel redesign",
+      "technology": "none",
+      "params": {
+        "draw_method": "none",
+        "animation_loop": false,
+        "color_scheme": "none",
+        "responsiveness": "Layout CSS",
+        "interaction": "none"
+      }
+    },
+    "svg_animations": {
+      "enabled": false,
+      "type": "none",
+      "description": "Icone funzionali statiche, non animazioni decorative",
+      "params": {
+        "animation_method": "none",
+        "path_morphing": false,
+        "stroke_animation": false,
+        "filter_effects": []
+      }
+    },
+    "composite_notes": "Le promo includono persone, foto e cornici; il sito web osservato usa media. L’utente ha successivamente escluso le immagini: i gradienti sono un adattamento esplicito. Non inferire animazioni o algoritmi dalle catture statiche; la fedeltà cromatica integrale può fallire senza che i token funzionali siano errati. Report integrali e contrasto separati."
+  }
+}

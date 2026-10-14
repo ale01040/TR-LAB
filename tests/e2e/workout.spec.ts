@@ -116,6 +116,21 @@ test('Excel → bozza → conferma → calendario → diario offline, conserva i
   await expect(page.getByLabel('Serie 1, ripetizioni', { exact: true })).toHaveValue('10');
   await expect(page.getByLabel('Serie 1, RIR', { exact: true })).toHaveValue('0');
   await layout(page);
+  for (const width of [320, 430, 768]) {
+    await page.setViewportSize({ width, height: 844 });
+    await layout(page);
+    for (const label of ['carico in kg', 'ripetizioni', 'RIR']) {
+      const field = page.getByLabel(`Serie 1, ${label}`, { exact: true });
+      const box = await field.boundingBox();
+      expect(box?.width).toBeGreaterThanOrEqual(44);
+      expect(box?.height).toBeGreaterThanOrEqual(44);
+    }
+  }
+  await page.setViewportSize(testInfo.project.use.viewport!);
+  await page.screenshot({
+    path: `output/playwright/design-diario-${testInfo.project.name}.png`,
+    fullPage: true,
+  });
   await page.getByRole('button', { name: /Concludi/ }).click();
   await page.getByRole('button', { name: 'Confermo la conclusione' }).click();
   await expect(

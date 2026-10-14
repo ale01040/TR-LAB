@@ -249,7 +249,7 @@ export function ProgramPage() {
             ))}
           </aside>
           {program && (
-            <section className={styles.panel}>
+            <section className={`${styles.panel} ${styles.programDetail}`}>
               <div className={styles.sectionHeading}>
                 <div>
                   <span className={styles.eyebrow}>

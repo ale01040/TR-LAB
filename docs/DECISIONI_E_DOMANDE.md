@@ -37,6 +37,10 @@ Versione 1.3 · 12 ottobre 2026. Registro delle decisioni del committente e dei 
 | DEC-29 | Trasferire i cinque valori indicati al solo Preview pere01040/tr-lab | Consenso esplicito a URL/provider/CA e a DATABASE_URL/SESSION_ENCRYPTION_KEY come Secret; nessuna credenziale amministrativa o produzione implicita |
 | DEC-30 | Configurare Production pere01040/tr-lab e pubblicare l'alpha su tr-lab.vercel.app | Consenso esplicito ai cinque valori cloud, DATABASE_URL runtime e nuova chiave sessioni come Secret, origine/modalità collegate; stesso DB Supabase condiviso dichiarato, nessuna password amministrativa o chiusura implicita dei gate beta |
 | DEC-31 | Usare Gmail dedicato come prima soluzione SMTP senza dominio proprio | Verifica in due passaggi e password per app inserita direttamente in Supabase; collaudo consegna/recupero, limiti del piccolo gruppo, rivalutazione prima della beta pubblica. Nessun account Google Cloud/OAuth già disponibile; guida e attivazione progressiva |
+| DEC-32 | Analizzare Open e riportarne lo stile nell'app | Nero/avorio e composizione editoriale; [piano del redesign](piani/REDESIGN_OPEN.md); nessun marchio/premio Open attribuito a TR LAB |
+| DEC-33 | Scuro predefinito, chiaro opzionale; diario con righe compatte e campi comodi da toccare | Preferenza persistente, varianti complete, controllo contrasto/touch/stampa |
+| DEC-34 | Inter libero simile, ospitato nell'app e disponibile offline | WOFF2 locale e OFL; non distribuire Monument Grotesk commerciale senza licenza |
+| DEC-35 | Non usare immagini | Ultima istruzione sostituisce la precedente preferenza fotografica: atmosfera CSS, logo testuale, niente foto/video/illustrazioni; icone funzionali e favicon SVG distinte dai media decorativi |
 
 La generazione usa solo contenuti e metodi pertinenti all'ambito confermato. Il diario è uno strumento di registrazione; non deve classificare condizioni mediche o formulare diagnosi dalle misure.
 
@@ -70,7 +74,7 @@ Queste domande non impediscono di avviare le fasi F0–F2. Vanno affrontate nel 
 
 | Domanda | Scelta iniziale proposta | Momento |
 | --- | --- | --- |
-| Quale identità visiva definitiva deve avere TR LAB? Ci sono app di riferimento? | Nome TR LAB confermato, palette grafite/lime alpha da valutare | Prototipo F1 |
+| Come validare l'identità visuale scelta sui dispositivi reali? | Open, Inter, temi e assenza di immagini già confermati in DEC-32–35 | Prototipo F1 e collaudo mobile |
 | Quante persone parteciperanno alle prime prove e quali telefoni usano? | Gruppo misto iPhone/Android, livelli di esperienza diversi | Prima delle prove F1 |
 | La settimana deve seguire il calendario o avanzare al completamento delle sedute? | Calendario esplicito, rinvio assistito senza perdere la fase del ciclo | Definizione dominio F0 |
 | Le proposte vanno mostrate una per volta o raggruppate? | Riepilogo per seduta con accettazione esplicita delle modifiche visibili | Prototipo F1 |

@@ -1,0 +1,141 @@
+{
+  "implementation": "docs/qualita/evidenze/design-2026-10-14/design-dark-oggi-mobile.png",
+  "reference": "docs/design/misure/riferimento-04.json",
+  "measurement": {
+    "k": 8
+  },
+  "entries": [
+    {
+      "specHex": "#030101",
+      "role": "background",
+      "nearestImageHex": "#080504",
+      "deltaE": 1.23,
+      "specCoverage": 0.6004,
+      "imageCoverage": 0.8419
+    },
+    {
+      "specHex": "#372014",
+      "role": "unassigned",
+      "nearestImageHex": "#3c1c12",
+      "deltaE": 5.11,
+      "specCoverage": 0.1123,
+      "imageCoverage": 0.1115
+    },
+    {
+      "specHex": "#42473c",
+      "role": "unassigned",
+      "nearestImageHex": "#3c1c12",
+      "deltaE": 25.31,
+      "specCoverage": 0.1035,
+      "imageCoverage": 0
+    },
+    {
+      "specHex": "#55717c",
+      "role": "unassigned",
+      "nearestImageHex": "#aeac9c",
+      "deltaE": 30.52,
+      "specCoverage": 0.044,
+      "imageCoverage": 0.004
+    },
+    {
+      "specHex": "#af591f",
+      "role": "accent",
+      "nearestImageHex": "#a67c42",
+      "deltaE": 24.64,
+      "specCoverage": 0.0435,
+      "imageCoverage": 0.0054
+    },
+    {
+      "specHex": "#929598",
+      "role": "unassigned",
+      "nearestImageHex": "#aeac9c",
+      "deltaE": 13.61,
+      "specCoverage": 0.0424,
+      "imageCoverage": 0.0108
+    },
+    {
+      "specHex": "#c9d0d7",
+      "role": "text",
+      "nearestImageHex": "#f5f5f1",
+      "deltaE": 14.68,
+      "specCoverage": 0.0323,
+      "imageCoverage": 0.0265
+    },
+    {
+      "specHex": "#de7563",
+      "role": "unassigned",
+      "nearestImageHex": "#a67c42",
+      "deltaE": 31.42,
+      "specCoverage": 0.0218,
+      "imageCoverage": 0
+    }
+  ],
+  "implementationClusters": [
+    {
+      "imageHex": "#080504",
+      "imageCoverage": 0.8375,
+      "nearestSpecHex": "#030101",
+      "nearestSpecRole": "background",
+      "deltaE": 1.23
+    },
+    {
+      "imageHex": "#3c1c12",
+      "imageCoverage": 0.0593,
+      "nearestSpecHex": "#372014",
+      "nearestSpecRole": "unassigned",
+      "deltaE": 5.11
+    },
+    {
+      "imageHex": "#6c311f",
+      "imageCoverage": 0.0522,
+      "nearestSpecHex": "#372014",
+      "nearestSpecRole": "unassigned",
+      "deltaE": 22.86
+    },
+    {
+      "imageHex": "#f5f5f1",
+      "imageCoverage": 0.0265,
+      "nearestSpecHex": "#c9d0d7",
+      "nearestSpecRole": "text",
+      "deltaE": 14.68
+    },
+    {
+      "imageHex": "#aeac9c",
+      "imageCoverage": 0.0108,
+      "nearestSpecHex": "#929598",
+      "nearestSpecRole": "unassigned",
+      "deltaE": 13.61
+    },
+    {
+      "imageHex": "#a67c42",
+      "imageCoverage": 0.0054,
+      "nearestSpecHex": "#af591f",
+      "nearestSpecRole": "accent",
+      "deltaE": 24.64
+    },
+    {
+      "imageHex": "#0e2060",
+      "imageCoverage": 0.0044,
+      "nearestSpecHex": "#030101",
+      "nearestSpecRole": "background",
+      "deltaE": 46.86
+    },
+    {
+      "imageHex": "#417ca2",
+      "imageCoverage": 0.004,
+      "nearestSpecHex": "#55717c",
+      "nearestSpecRole": "unassigned",
+      "deltaE": 17.18
+    }
+  ],
+  "meanDeltaE": 3.47,
+  "maxDeltaE": 31.42,
+  "coverageDrift": 0.4831,
+  "thresholds": {
+    "meanDeltaE": 5,
+    "maxDeltaE": 20,
+    "coverageDrift": 0.35,
+    "significantCoverage": 0.005
+  },
+  "pass": false
+}

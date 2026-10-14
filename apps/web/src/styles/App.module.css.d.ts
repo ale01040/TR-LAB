@@ -5,14 +5,10 @@ declare const styles: {
   readonly addExercise: string;
   readonly agendaActions: string;
   readonly agendaItem: string;
-  readonly alpha: string;
-  readonly artOrbit: string;
-  readonly artOrbit2: string;
   readonly avatar: string;
   readonly badge: string;
   readonly bigMetric: string;
   readonly brand: string;
-  readonly brandDot: string;
   readonly chart: string;
   readonly checkbox: string;
   readonly connection: string;
@@ -26,7 +22,6 @@ declare const styles: {
   readonly editorExercise: string;
   readonly editorFields: string;
   readonly empty: string;
-  readonly emptyGrid: string;
   readonly error: string;
   readonly exerciseNotes: string;
   readonly exerciseNumber: string;
@@ -36,7 +31,6 @@ declare const styles: {
   readonly footer: string;
   readonly formGrid: string;
   readonly hero: string;
-  readonly heroArt: string;
   readonly heroText: string;
   readonly hidden: string;
   readonly hint: string;
@@ -45,7 +39,6 @@ declare const styles: {
   readonly libraryCard: string;
   readonly libraryFilters: string;
   readonly libraryGrid: string;
-  readonly limeDot: string;
   readonly listRow: string;
   readonly macroStrip: string;
   readonly main: string;
@@ -60,6 +53,7 @@ declare const styles: {
   readonly preference: string;
   readonly primary: string;
   readonly printOnly: string;
+  readonly programDetail: string;
   readonly programLayout: string;
   readonly programList: string;
   readonly progressTrack: string;
@@ -82,13 +76,12 @@ declare const styles: {
   readonly setupNote: string;
   readonly shell: string;
   readonly sidebar: string;
-  readonly sidebarCaption: string;
-  readonly sidebarFoot: string;
   readonly skipLink: string;
   readonly smallNote: string;
   readonly srOnly: string;
   readonly statIcon: string;
   readonly stats: string;
+  readonly statusDot: string;
   readonly tableScroll: string;
   readonly tabs: string;
   readonly targetDetails: string;

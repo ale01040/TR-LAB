@@ -1,6 +1,6 @@
 # Esperienza d'uso e specifica dell'interfaccia
 
-Versione 1.2 · Specifica del comportamento. Nome confermato TR LAB; palette definitiva, icona e immagini restano da validare sul prototipo.
+Versione 1.3 · 14 ottobre 2026. Specifica del comportamento. Nome TR LAB e direzione visuale confermati in DEC-32–35: Open, Inter locale, scuro predefinito/chiaro opzionale, righe compatte e nessuna immagine. [Piano del redesign](../piani/REDESIGN_OPEN.md) e [collaudo](../qualita/REDESIGN_2026_10_14.md). Validazione sui telefoni reali ancora da completare.
 
 ## 1. Priorità di design
 
@@ -64,7 +64,7 @@ Tutte le pagine devono poter essere stampate in modo sensato; scheda e riepilogh
 
 Prima tre task: registrare un allenamento, gestire una proposta, copiare una scheda. Misurare completamento senza assistenza, errori di convenzione carico, tempo perso per trovare un comando e comprensione del salvataggio offline. Target iniziale: almeno 90% di completamento nel gruppo concordato, riportando dimensione campione e limiti.
 
-Output F1: mappa navigazione, flussi, componenti, frame mobile/desktop, temi e stampa, risultati delle prove e decisioni visuali. Nome/palette/icona vanno approvati su alternative concrete; non bloccare la prova di persistenza su una scelta estetica ancora aperta.
+Output F1: mappa navigazione, flussi, componenti, frame mobile/desktop, temi e stampa, risultati delle prove e decisioni visuali. Nome e direzione visuale hanno già decisioni esplicite; collaudare l'applicazione sui dispositivi senza riaprire la scelta o bloccare le prove di persistenza.
 
 ## 8. Editor manuale implementato
 

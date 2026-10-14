@@ -57,17 +57,10 @@ export function App() {
       <a href="#main" className={styles.skipLink}>
         Vai al contenuto
       </a>
-      <aside className={styles.sidebar}>
+      <header className={styles.sidebar}>
         <NavLink className={styles.brand ?? ''} to="/" aria-label="TR LAB, pagina iniziale">
-          <img src="/icon.svg" alt="" width="40" height="40" />
-          TR<span>LAB</span>
-          <span className={styles.brandDot}>.</span>
+          TR LAB
         </NavLink>
-        <p className={styles.sidebarCaption}>
-          IL TUO ALLENAMENTO,
-          <br />
-          CON INTENZIONE.
-        </p>
         <nav aria-label="Navigazione principale">
           {links.map(({ to, name, icon: Icon }) => (
             <NavLink
@@ -81,14 +74,9 @@ export function App() {
             </NavLink>
           ))}
         </nav>
-        <div className={styles.sidebarFoot}>
-          <span className={styles.eyebrow}>DA UN'IDEA, A UN'ABITUDINE</span>
-          <p>Una serie alla volta.</p>
-          <span className={styles.alpha}>ALPHA · 0.1</span>
-        </div>
-      </aside>
+      </header>
       <div className={styles.content}>
-        <header className={styles.topbar}>
+        <div className={styles.topbar}>
           <span className={styles.topLabel}>ALLENAMENTO / SPAZIO PERSONALE</span>
           <div className={styles.connection} role="status">
             {!online && <WifiOff size={16} aria-hidden="true" />}
@@ -117,7 +105,7 @@ export function App() {
               {user?.email[0]?.toUpperCase() ?? <UserRound size={18} aria-hidden="true" />}
             </NavLink>
           </div>
-        </header>
+        </div>
         {notice && (
           <div className={styles.notice} role="status">
             {notice}
