@@ -45,7 +45,7 @@ Diario/Progressi: distinguere in corso, input modificato, commit locale riuscito
 
 | Scelta | Vantaggio | Limite/alternativa |
 | --- | --- | --- |
-| Feedback inline e globale persistente | Visibile nel contesto, sopravvive al cambio account, controllabile dall'utente | Verificare sticky e focus su telefono; toast a scadenza rischia messaggi non letti |
+| Feedback inline/persistente e toast per conferme ripetibili | Visibile nel contesto e dopo cambio account; errori persistenti, successo con pausa del timer su focus/puntatore/scheda nascosta | Verificare spazio e focus su telefono; il toast non sostituisce lo stato permanente del dato |
 | Componenti esistenti + AuthForm/Feedback | Responsabilità chiare, stile CSS coerente, nessuna migrazione | Richiede verifica dei widget; nuova libreria di form/UI duplicava stack e convenzioni senza necessità |
 | Regola password condivisa | Client/server coerenti, casi Unicode testabili | Il formato non dimostra identità o robustezza assoluta; evitare un punteggio sicurezza inventato |
 | Aiuto locale ricercabile | Disponibile offline, testi controllati e azioni specifiche | Non sostituisce il collaudo con persone; chat AI per supporto non necessaria né già attiva |

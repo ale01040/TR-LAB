@@ -90,6 +90,11 @@ test('form account: validazione, risposta lenta, errore conservato e logout annu
   await expect(page.getByRole('region', { name: 'Notifica temporanea' })).toContainText(
     'Accesso verificato. Sei nel tuo account personale.',
   );
+  const toast = page.getByRole('region', { name: 'Notifica temporanea' });
+  await expect.poll(() => toast.evaluate((node) => node.getAnimations().length)).toBe(0);
+  await toast.getByRole('button').focus();
+  await toast.getByRole('button').press('Shift+Tab');
+  expect(await toast.evaluate((node) => node.getAnimations().length)).toBe(0);
   await page.getByRole('button', { name: 'Esci da questo dispositivo' }).click();
   const dialog = page.getByRole('dialog', { name: 'Uscire da questo dispositivo?' });
   await expect(dialog).toBeVisible();
@@ -114,7 +119,7 @@ test('motion opzionale, filtri, guida offline e riscontro di una misura locale',
   await expect(page.getByRole('heading', { name: 'Il tuo spazio.' })).toBeVisible();
   expect(
     await page.locator('h1').evaluate((node) => getComputedStyle(node).animationDuration),
-  ).toBe('0.16s');
+  ).toBe('0.24s');
   await page.getByRole('button', { name: 'Riduci animazioni', exact: true }).click();
   // L'esito viene applicato dopo la transazione locale: reload soltanto dopo il commit.
   await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduce');

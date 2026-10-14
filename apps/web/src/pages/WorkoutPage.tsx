@@ -224,7 +224,7 @@ export function WorkoutPage() {
             </div>
           </div>
           {p.notes && (
-            <details className={styles.exerciseNotes}>
+            <details className={styles.exerciseNotes} data-motion-disclosure="">
               <summary>Note della prescrizione</summary>
               <p>{p.notes}</p>
             </details>

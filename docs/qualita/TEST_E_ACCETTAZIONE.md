@@ -131,3 +131,5 @@ Specifiche e ticket: [piano Open](../piani/REDESIGN_OPEN.md), RF-16/18, ADR-11/1
 | QA-MOT-01 | Motion app/OS, cambio a pagina aperta e reload | Basta una preferenza ridotta per togliere gli effetti; testo/funzioni invariati, preferenza persistente |
 | QA-MOT-02 | Effetti durante dialogo, navigazione e logout | Contenuto reale, niente copia account precedente, focus e azioni non attendono fine movimento |
 | QA-MOT-03 | Performance e comfort sui dispositivi fisici | Profili e osservazioni con browser/OS dichiarati; nessuna garanzia di FPS o comfort derivata da screenshot/axe |
+| QA-MOT-04 | Pannello che evolve con link/campi, apri/chiudi/riapri | Nessun clipping dei controlli, focus raggiungibile, dimensione finale nativa e chiusura senza coda |
+| QA-MOT-05 | Toast, contenuti lunghi, zoom/stampa e fallback browser | Focus non riavvia il toast; contenuto leggibile e controlli disponibili con effetti ridotti o API assenti; distinguere prove browser da hardware fisico |

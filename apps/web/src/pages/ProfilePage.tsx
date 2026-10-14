@@ -296,7 +296,7 @@ export function ProfilePage() {
               </p>
             </div>
           )}
-          <details>
+          <details data-motion-disclosure="">
             <summary>Stato di questa versione</summary>
             <p>
               Schede manuali, import Excel nei formati supportati, calendario, esercizi personali,

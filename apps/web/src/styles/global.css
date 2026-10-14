@@ -34,6 +34,9 @@
   --duration: 180ms;
   --duration-fast: 120ms;
   --duration-enter: 160ms;
+  --duration-view: 240ms;
+  --duration-panel: 220ms;
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   font-family: var(--font-ui);
   font-synthesis: none;
   font-optical-sizing: auto;
@@ -245,7 +248,18 @@ fieldset {
   transition: none !important;
   scroll-behavior: auto !important;
 }
-/* Appare il nuovo contenuto reale; nessuna copia della vista/account precedente. */
+/* Solo il titolo si sposta: campi e azioni restano nella posizione utilizzabile. */
+@keyframes titleEnter {
+  from {
+    opacity: 0.9;
+    transform: translateY(0.3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Appare il contenuto reale, senza copie della vista/account precedente. */
 @keyframes contentEnter {
   from {
     opacity: 0.94;
@@ -254,12 +268,39 @@ fieldset {
     opacity: 1;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  :root:not([data-motion='reduce']) main h1,
+@media screen and (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) main h1 {
+    animation: titleEnter var(--duration-view) var(--ease-enter);
+  }
   :root:not([data-motion='reduce']) details[open] > :not(summary),
-  :root:not([data-motion='reduce']) [role='alert'],
+  :root:not([data-motion='reduce']) [role='alert'] {
+    animation: contentEnter var(--duration-enter) var(--ease-enter);
+  }
   :root:not([data-motion='reduce']) dialog[open] {
-    animation: contentEnter var(--duration-enter) var(--ease);
+    animation: contentEnter var(--duration-panel) var(--ease-enter);
+  }
+  /* Altezza intrinseca solo su note brevi senza controlli. Chiusura nativa immediata.
+     Il clipping non rende inerti i campi: escluderli anche se un pannello evolve. */
+  @supports selector(details::details-content) and (interpolate-size: allow-keywords) and
+    (transition-behavior: allow-discrete) {
+    :root:not([data-motion='reduce'])
+      details[data-motion-disclosure]:not(
+        :has(input, textarea, select, button, a, [tabindex], [contenteditable], details)
+      )::details-content {
+      interpolate-size: allow-keywords;
+      block-size: 0;
+      overflow: clip;
+      transition: none;
+    }
+    :root:not([data-motion='reduce'])
+      details[data-motion-disclosure][open]:not(
+        :has(input, textarea, select, button, a, [tabindex], [contenteditable], details)
+      )::details-content {
+      block-size: auto;
+      transition:
+        block-size var(--duration-panel) var(--ease-enter),
+        content-visibility var(--duration-panel) allow-discrete;
+    }
   }
 }
 @media print {

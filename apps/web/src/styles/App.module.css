@@ -498,14 +498,14 @@
     max-height: calc(100dvh - 9rem - env(safe-area-inset-bottom));
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .toastRegion {
-    animation: toastAppear 160ms ease-out;
+@media screen and (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .toastRegion {
+    animation: toastAppear var(--duration-panel) var(--ease-enter);
   }
 }
 @keyframes toastAppear {
   from {
-    opacity: 0;
+    opacity: 0.94;
     transform: translateY(0.35rem);
   }
   to {

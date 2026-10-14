@@ -199,11 +199,7 @@
       "max_content_width": "82rem",
       "columns": "Tre statistiche, catalogo 3/2/1 colonne; diario 5 colonne oppure 3 campi con target e azioni adiacenti",
       "gutter": "1–1.5rem",
-      "breakpoints": [
-        "75rem",
-        "52rem",
-        "30rem"
-      ],
+      "breakpoints": ["75rem", "52rem", "30rem"],
       "alignment_tendency": "mixed: marchio centrato mobile, contenuti e titoli allineati a sinistra"
     },
     "shape": {
@@ -228,24 +224,19 @@
     "iconography": {
       "style": "lineare funzionale, SVG nativo, nessuna illustrazione",
       "stroke_weight": "Lucide default 2",
-      "size_scale": [
-        "16px",
-        "18px",
-        "20px",
-        "21px"
-      ],
+      "size_scale": ["16px", "18px", "20px", "21px"],
       "preferred_set": "Lucide già installato; icona tecnica PWA SVG esistente recolorata"
     },
     "motion": {
-      "easing": "cubic-bezier(0.2,0.7,0.2,1)",
+      "easing": "cubic-bezier(0.16,1,0.3,1) ingressi/espansione; cubic-bezier(0.2,0.7,0.2,1) pressione e colore",
       "duration_scale": {
-        "micro": "120ms pressione; 160ms ingresso; 180ms colore",
-        "normal": "180ms",
+        "micro": "120ms pressione 1px; 160ms alert e contenuto details; 180ms colore",
+        "normal": "220ms dialogo/toast e apertura intrinseca delle note; 240ms titolo",
         "macro": "0ms; nessuna scena animata"
       },
-      "entrance_pattern": "Contenuto immediato; 160ms opacity .94-1 su titolo/dialogo/errori/disclosure; toast success 160ms opacity e piccolo slide, nessuna sequenza obbligatoria",
+      "entrance_pattern": "Titolo 240ms opacity .9-1 e translateY .3rem-0; alert 160ms opacity .94-1, status inline statici; dialogo 220ms sola opacity .94-1; toast 220ms opacity .94-1 e translateY .35rem-0 senza regola focus-within; details figli 160ms opacity. Note brevi readonly data-motion-disclosure: block-size 0-auto in 220ms soltanto con guardie CSS/API e assenza di input/textarea/select/button/a/tabindex/contenteditable/details annidati; fallback nativo senza altezza arbitraria",
       "exit_pattern": "Chiusura immediata, focus restituito dal dialogo",
-      "philosophy": "Minimal functional DEC-37; preferenza app o sistema elimina gli effetti opzionali; nessuna attesa per commit, snapshot account o dato simulato"
+      "philosophy": "Minimal functional DEC-37; preferenza app o sistema e stampa eliminano gli effetti opzionali; nessuna attesa per commit, snapshot account o dato simulato. L'espansione intrinseca costa layout e resta limitata a note readonly, principalmente Chromium; qualità e prove nel rapporto, non inferite dai tempi CSS"
     },
     "components": {
       "button_style": "CTA avorio su scuro; secondaria trasparente con bordo; pill 3rem min-height; etichette esplicite",
@@ -259,26 +250,12 @@
   },
   "design_style": {
     "aesthetic": {
-      "mood": [
-        "calmo",
-        "essenziale",
-        "caldo",
-        "preciso"
-      ],
+      "mood": ["calmo", "essenziale", "caldo", "preciso"],
       "visual_metaphor": "Spazio personale per allenarsi, una pagina editoriale con un unico punto focale",
       "era_influence": "Minimalismo tipografico contemporaneo",
       "genre": "luxury editorial adattato a fitness utility",
-      "personality_traits": [
-        "misurato",
-        "chiaro",
-        "affidabile"
-      ],
-      "adjectives": [
-        "scuro",
-        "arioso",
-        "neutro",
-        "sobrio"
-      ]
+      "personality_traits": ["misurato", "chiaro", "affidabile"],
+      "adjectives": ["scuro", "arioso", "neutro", "sobrio"]
     },
     "visual_language": {
       "complexity": "minimal",
@@ -306,7 +283,7 @@
     "interaction_feel": {
       "feedback_style": "Messaggi testuali e stato di salvataggio; nessuna informazione solo cromatica",
       "hover_behavior": "Variazione colore/bordo; niente zoom fotografico o trasformazioni di layout",
-      "transition_personality": "fade-subtle solo funzionale",
+      "transition_personality": "Ingressi funzionali sobri con curva di decelerazione; piccolo slide solo di titolo/toast, campi e dialogo stabili; espansione progressiva solo di note readonly, chiusura immediata",
       "loading_style": "Testo e stati esistenti; input bloccati quando necessario",
       "microinteraction_density": "low"
     },
@@ -322,7 +299,7 @@
     "overview": {
       "effect_intensity": "subtle-accent",
       "performance_tier": "lightweight",
-      "fallback_strategy": "Fondo scuro solido e contenuto funzionale; font fallback; reduced-motion",
+      "fallback_strategy": "Fondo scuro solido e contenuto funzionale; font fallback; preferenza movimento app/OS e stampa senza effetti; details nativi con fade breve dove consentito, apertura intrinseca soltanto se supportata e senza contenuto interattivo",
       "primary_technology": "CSS only"
     },
     "background_effects": {
@@ -330,12 +307,7 @@
       "description": "Due radiali caldi e un gradiente scuro con velo per la home; accento tenue nel dettaglio scheda. Non fotografia sfocata.",
       "technology": "CSS radial-gradient/linear-gradient",
       "params": {
-        "color_palette": [
-          "#cc5b30",
-          "#e1735c",
-          "#3f0f05",
-          "#0b0301"
-        ],
+        "color_palette": ["#cc5b30", "#e1735c", "#3f0f05", "#0b0301"],
         "speed": 0,
         "density": "Due radiali e un fondo lineare",
         "opacity": "Overlay scuro da 0.33 a 0.95; superficie scheda caldo 0.11",
@@ -350,10 +322,7 @@
       "params": {
         "count": 0,
         "shape": "none",
-        "size_range": [
-          0,
-          0
-        ],
+        "size_range": [0, 0],
         "movement_pattern": "none",
         "color_behavior": "none",
         "interaction": "none",
@@ -392,10 +361,7 @@
       "parallax": {
         "enabled": false,
         "layers": 0,
-        "depth_range": [
-          0,
-          0
-        ],
+        "depth_range": [0, 0],
         "speed_curve": "none"
       },
       "scroll_triggered_animations": {

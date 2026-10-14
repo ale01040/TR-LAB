@@ -1,17 +1,17 @@
 {
-  "checkedAt": "2026-10-14T12:45:01.404Z",
+  "checkedAt": "2026-10-14T13:43:28.653Z",
   "branch": "codex/schede-sync-motore-20261013",
   "scope": "locale, fixture sintetiche, nessuna prova cloud attribuita",
   "unit": {
     "files": 19,
-    "passed": 90
+    "passed": 91
   },
   "integration": {
     "files": 14,
     "passed": 71
   },
   "e2e": {
-    "passed": 10,
+    "passed": 14,
     "projects": [
       "Chrome desktop 1280x800",
       "Chrome mobile 390x844"
@@ -20,7 +20,10 @@
       320,
       430,
       768
-    ]
+    ],
+    "motionComparison": {
+      "passed": 4
+    }
   },
   "typecheck": true,
   "lint": true,
