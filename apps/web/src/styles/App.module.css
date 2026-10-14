@@ -576,8 +576,8 @@
   display: grid;
   gap: 1rem;
 }
-.authForm .actionStrip {
-  margin: 0;
+.authForm + .actionStrip:not(:empty) {
+  margin-block-start: 1rem;
 }
 .inputInvalid {
   border-color: var(--error);
