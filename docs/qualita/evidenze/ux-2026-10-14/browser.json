@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-10-14T15:05:13.0818836Z",
+  "origin": "https://tr-bfq6gm2tu-pere01040.vercel.app",
+  "commit": "8de6e070cf970788b7ebc507ed1b3f8f66515e3a",
+  "scope": "Chrome desktop del titolare, account sintetico A; nessun telefono fisico",
+  "loginVerified": true,
+  "logoutCancelledPreservedAccount": true,
+  "logoutCompleted": true,
+  "syncPendingOperationsObserved": 0,
+  "dialog": {
+    "transform": "none",
+    "focusInside": true,
+    "durationMs": 220
+  },
+  "motionReducedChecked": true,
+  "preferenceRestored": "system",
+  "home": {
+    "font": "InterVariable",
+    "horizontalOverflow": false,
+    "titleDurationMs": 240,
+    "decorativeMedia": 0
+  },
+  "authConfiguration": {
+    "reloadVerified": true,
+    "redirect": "https://tr-bfq6gm2tu-pere01040.vercel.app/api/auth/callback\\?state=*",
+    "siteUrl": "https://tr-bfq6gm2tu-pere01040.vercel.app",
+    "previousRedirectsPreserved": true,
+    "redirectCount": 4,
+    "project": "hfwatspsfhdbiogritkt"
+  },
+  "smtpDeliveryTested": false,
+  "googleTested": false,
+  "hardwareTested": false
+}

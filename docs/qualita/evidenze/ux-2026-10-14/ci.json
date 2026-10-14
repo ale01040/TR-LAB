@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-14T14:47:40.3911310Z",
+  "id": 38574207876,
+  "status": "completed",
+  "conclusion": "success",
+  "headSha": "8de6e070cf970788b7ebc507ed1b3f8f66515e3a",
+  "url": "https://github.com/ale01040/TR-LAB/actions/runs/38574207876",
+  "jobs": [
+    {
+      "name": "local-checks (windows-latest)",
+      "conclusion": "success"
+    },
+    {
+      "name": "local-checks (ubuntu-latest)",
+      "conclusion": "success"
+    }
+  ]
+}

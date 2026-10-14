@@ -1,6 +1,6 @@
 # TR LAB — verifica dell'incremento UX e motion
 
-14 ottobre 2026. [Piano Nielsen](../piani/UX_NIELSEN.md), [motion e registro fonti](../design/MOTION_E_MICROINTERAZIONI.md). Questo rapporto riguarda il nuovo incremento, successivo al redesign 43e99b1; la relativa Preview è una baseline storica, non la prova del codice nuovo. Release e riferimenti definitivi vengono riportati dopo il collaudo.
+14 ottobre 2026. Incremento pubblicato nella [Preview di staging](https://tr-bfq6gm2tu-pere01040.vercel.app), codice `8de6e070cf970788b7ebc507ed1b3f8f66515e3a`, con [CI Windows/Linux riuscita](https://github.com/ale01040/TR-LAB/actions/runs/38574207876). [Piano Nielsen](../piani/UX_NIELSEN.md), [motion e registro fonti](../design/MOTION_E_MICROINTERAZIONI.md). Questo rapporto riguarda il nuovo incremento, successivo al redesign 43e99b1; la relativa Preview precedente è una baseline storica, non la prova del codice nuovo.
 
 ## Modifiche e invarianti
 
@@ -23,15 +23,26 @@ Motion nativo: titolo 240 ms con spostamento di circa 5 px, errori 160 ms, dialo
 | Formato | Prettier passato sui file previsti dalla configurazione del repository |
 | Documenti e DNA | 48 Markdown e relativi link/tabelle: zero errori; 263 percorsi DNA presenti, zero vuoti, palette misurata preservata |
 | Audit segreti | File di consegna controllati contro i valori locali effettivi; nessun segreto trovato, file personale escluso |
-| CI e Preview | Il predecessore 6af0505 ha CI Windows/Linux e 16 controlli cloud passati; pubblicazione/CI dell'affinamento motion da registrare separatamente |
+| CI | Commit 8de6e07 passato su Windows e Ubuntu; E2E CI su Chromium/Ubuntu, controlli pacchetto/tipi/lint/unit/integrazione/formato/audit su entrambi |
+| Preview | READY su arn1, sola Preview e TR-LAB-STAGING; 16 controlli HTTP passati, font identico byte per byte, due account sintetici verificati |
 
 Il primo tentativo `npm.cmd run check` è fallito nel nuovo test API: il minimo Unicode di Zod 4.6.5 respinge sei emoji prima della policy (`INVALID_INPUT`). La prova mantiene il rifiuto 400 e l'assenza di creazione del flusso; non è stato allentato il validatore. Il check del pacchetto aveva ancora l'aspettativa precedente, senza `providers.google`: aggiornata la risposta attesa completa. Errori di tipi nei nuovi test (`exact` non previsto da Testing Library) e dipendenza hook non necessaria corretti, senza disabilitare controlli.
 
-I test locali di auth usano provider simulato e fixture sintetiche; non dimostrano consegna delle email. Le prove HTTP della nuova Preview saranno indicate distintamente. Le regressioni esistenti includono consenso, import Excel, calendario, esercizi personali e diario offline; non si deduce il loro esito dalla sola presenza del codice. Un precedente E2E Linux ricaricava prima della transazione delle preferenze: corretto aspettando il commit reale, senza timeout artificiale; CI del predecessore successiva riuscita su entrambi i sistemi.
+I test locali di auth usano provider simulato e fixture sintetiche; non dimostrano consegna delle email. Le prove HTTP della nuova Preview sono indicate distintamente. Le regressioni esistenti includono consenso, import Excel, calendario, esercizi personali e diario offline; non si deduce il loro esito dalla sola presenza del codice. Un precedente E2E Linux ricaricava prima della transazione delle preferenze: corretto aspettando il commit reale, senza timeout artificiale; CI del predecessore successiva riuscita su entrambi i sistemi.
 
 Comandi della campagna finale: `npm.cmd run check`, `npm.cmd run format:check`, `npm.cmd run test:e2e`; confronto aggiuntivo `npx.cmd playwright test tests/e2e/motion.spec.ts`. Nessuna perdita del click invalidante al blur, errori corretti e input conservati; lette le schermate effettive di validazione e misure. Test motion verifica durate calcolate, disattivazione app/OS a pagina aperta, reload, pannelli riaperti, Tab sul link, focus del dialogo, Escape e toast senza replay da focus. Lo screenshot da solo non prova il movimento. Warning non bloccante del plugin PWA su `inlineDynamicImports` deprecato, build riuscita; non modificata una dipendenza per correggere l'UX.
 
 Campioni del dialogo in [desktop](evidenze/ux-2026-10-14/motion-desktop.json) e [viewport mobile](evidenze/ux-2026-10-14/motion-mobile.json): 24 frame normali e 24 ridotti per viewport, campi sempre nella stessa posizione e nessun transform sul dialogo. Mediana degli intervalli successivi al primo circa 16,7 ms; massimo 16,8 ms desktop normale e 49,9 ms mobile normale nel confronto, circa 16,8–16,9 ms con effetti ridotti. La prima campagna aveva un intervallo mobile di 167,6 ms: non rimosso dalla valutazione, non dimostra da solo la causa del ritardo. Campioni brevi su PC, senza CPU controllata, non certificano fluidità su telefono o assenza di frame persi. QA-MOT-03 e le porzioni hardware/fallback di QA-MOT-05 restano aperte.
+
+## Preview, account e configurazione Auth
+
+[Deployment READY](evidenze/ux-2026-10-14/deployment.json) `dpl_HzL8qRZhbEU122s7HuLmD2BU4MkW`, progetto Vercel `pere01040/tr-lab`, regione arn1, database separato `hfwatspsfhdbiogritkt`. [CI](evidenze/ux-2026-10-14/ci.json) e [controlli HTTP](evidenze/ux-2026-10-14/cloud.json) si riferiscono al medesimo commit 8de6e07. Font locale identico al bundle; API private con no-store; login, sessione, bootstrap e logout verificati con entrambi gli account sintetici. Nessuna nuova scrittura di allenamento o invio email durante questo controllo.
+
+Nel browser Chrome del titolare verificati anche form → accesso reale dell'account QA A → sincronizzazione terminata senza operazioni in attesa → annullamento dell'uscita con account conservato → logout concluso e form ripristinato. Dialogo a 220 ms con focus interno e nessun transform. Preferenza ridotta elimina l'animazione; ripristinato «Secondo il dispositivo». Home: InterVariable, titolo a 240 ms, zero media decorativi e nessun overflow orizzontale nel viewport desktop osservato. [Cattura finale](evidenze/ux-2026-10-14/preview-home.png) e [registro browser](evidenze/ux-2026-10-14/browser.json); questa prova non equivale a un telefono fisico.
+
+Site URL `https://tr-bfq6gm2tu-pere01040.vercel.app` e redirect `https://tr-bfq6gm2tu-pere01040.vercel.app/api/auth/callback\?state=*` salvati nello staging. Tre redirect precedenti conservati; totale quattro, verificato dopo reload. [Prova delle impostazioni](evidenze/ux-2026-10-14/preview-auth-config.png). La disconnessione Chrome aveva impedito la prima aggiunta: completata soltanto dopo il ripristino del titolare. La lista iniziale dopo salvataggio era ancora nella cache; il reload ha confermato il valore persistito. Nessuna wildcard sull'intero dominio Vercel, modifica di protezioni, SMTP o Google.
+
+La Preview mantiene l'accesso Vercel del workspace prima del login TR LAB. La documentazione successiva può avere un commit più recente: contiene gli esiti, non modifica il runtime pubblicato 8de6e07. Il ramo non attiva deploy automatico e non è stato unito a main; il dominio Production conserva la baseline fino ai gate del rilascio.
 
 ## Revisione e capitoli applicati
 
